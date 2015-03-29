@@ -1,0 +1,30 @@
+{
+  "name": "grader",
+  "version": "0.0.1",
+  "description": "A grading application for use in a classroom.",
+  "author": "Michael Murphy <mmurph18@calpoly.edu>",
+  "scripts": {
+    "start": "node app.js",
+    "predeploy": "echo im about to deploy",
+    "postdeploy": "echo ive deployed"
+  },
+  "dependencies": {
+    "mongodb": "~2.0",
+    "express": "*",
+    "connect": "*",
+    "passport": "*"
+  },
+  "private": true,
+  "analyze": true,
+  "license": "MIT",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/murphym18/Grader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/murphym18/Grader/issues"
+  },
+  "homepage": "https://github.com/murphym18/Grader"
+}
