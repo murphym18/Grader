@@ -12,8 +12,8 @@
 <li><p>Setup your shell for MongoDB</p>
 <ul>
 <li>Append your <code>PATH</code> environment variable with &lt;MONGODB_INSTALL_DIR&gt;/bin</li>
-<li><p><em>Optional</em>: Make an alias for <code>mongod</code> so you don&#39;t command line arguments.</p>
-<p>To do this, I edited <code>~/.bash_profile</code>. It now includes something like:</p>
+<li><p><em>Optional</em>: Make an alias for <code>mongod</code> to avoid manually entering command line arguments every time.</p>
+<p>To do this, you might change <code>~/.bash_profile</code> so it includes something like:</p>
 <pre><code>export PATH=&quot;$PATH:&lt;MONGODB_INSTALL_DIR&gt;/bin&quot;
 alias mongod=&#39;mongod --config &lt;PATH_TO_CONFIG_FILE&gt;/mongodb.conf &amp;&#39; 
 </code></pre></li>
