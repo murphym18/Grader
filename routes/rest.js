@@ -17,13 +17,19 @@ function sendOne(db, type, id, res) {
    });
 }
 
+function addRestHeaders(req, res) {
+   res.setHeader('content-type', 'text/javascript');
+   res.setHeader('X-Powered-By', 'Team Node');
+}
+
 module.exports = [
    {
       path: '/:type/:id',
       funcFactory: function(app) {
          function result(req, res) {
+            addRestHeaders(req, res);
             var id = app.mkId(req.params.id);
-            sendOne(app.db, req.params.type + 's', id, res);
+            sendOne(app.db, req.params.type, id, res);
          }
          return result;
       }
@@ -32,6 +38,7 @@ module.exports = [
       path: '/:type',
       funcFactory: function(app) {
          function result(req, res) {
+            addRestHeaders(req, res);
             sendAll(app.db, req.params.type, res);
          }
          return result;

@@ -1,12 +1,37 @@
 var assert = require('assert');
+var path = require("path");
+
 var express = require('express');
 var connect = require('connect');
+var passport = require('passport');
 var rest = require(__dirname + '/rest');
+
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+
 var app = express();
+app.disable("view engine");
+app.use(logger('dev'));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.post('/login',
+    passport.authenticate('local'),
+    function(req, res) {
+       // If this function gets called, authentication was successful.
+       // `req.user` contains the authenticated user.
+       res.redirect('/users/' + req.user.username);
+    });
 
 rest.forEach(function(o) {
    app.get('/ws' + o.path, o.funcFactory(app));
 });
+
+app.use('/js/', express.static('public/javascripts'));
+app.use('/', express.static('public'));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
