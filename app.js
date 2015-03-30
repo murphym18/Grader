@@ -8,10 +8,9 @@ var http = require('http');
 var app = require("./routes/index");
 
 var mongo = require('mongodb');
+mongo.MongoClient.connect(config.db.url, dbConnected);
 
-mongo.MongoClient.connect(config.db.url, dbConected);
-
-function dbConected(err, database) {
+function dbConnected(err, database) {
    assert.equal(null, err);
    app.db = database;
    app.mkId = function(str) {
