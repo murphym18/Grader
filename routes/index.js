@@ -4,6 +4,8 @@ var path = require("path");
 var express = require('express');
 var connect = require('connect');
 var passport = require('passport');
+var localAuth = require(__dirname + '/../js/admin/local-auth');
+
 var rest = require(__dirname + '/rest');
 
 var logger = require('morgan');
@@ -17,6 +19,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+passport.use(localAuth.strategyFactory(app));
 app.post('/login',
     passport.authenticate('local'),
     function(req, res) {
@@ -29,7 +32,7 @@ rest.forEach(function(o) {
    app.get('/ws' + o.path, o.funcFactory(app));
 });
 
-app.use('/js/', express.static('public/javascripts'));
+app.use('/js/', express.static('public/javascript'));
 app.use('/', express.static('public'));
 
 
