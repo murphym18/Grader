@@ -1,37 +1,17 @@
 {
-  "name": "grader",
-  "version": "0.0.1",
-  "description": "A grading application for use in a classroom.",
-  "author": "Michael Murphy <mmurph18@calpoly.edu>",
+  "name": "Grader",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "start": "node app.js",
-    "predeploy": "echo im about to deploy",
-    "postdeploy": "echo ive deployed"
+    "start": "node ./bin/www"
   },
   "dependencies": {
-    "connect": "*",
-    "cookie-parser": "^1.3.4",
-    "debug": "^2.1.3",
-    "express": "*",
-    "jade": "^1.9.2",
-    "mongodb": "^2.0.25",
-    "monk": "*",
-    "morgan": "^1.5.2",
-    "passport": "*",
-    "serve-favicon": "^2.2.0",
-    "socket.io": "^1.3.5"
-  },
-  "private": true,
-  "analyze": true,
-  "license": "MIT",
-  "main": "index.js",
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/murphym18/Grader.git"
-  },
-  "bugs": {
-    "url": "https://github.com/murphym18/Grader/issues"
-  },
-  "homepage": "https://github.com/murphym18/Grader"
+    "body-parser": "~1.12.0",
+    "cookie-parser": "~1.3.4",
+    "debug": "~2.1.1",
+    "express": "~4.12.2",
+    "jade": "~1.9.2",
+    "morgan": "~1.5.1",
+    "serve-favicon": "~2.2.0"
+  }
 }

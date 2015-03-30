@@ -20,7 +20,7 @@ function sendOne(db, type, id, res) {
 module.exports = [
    {
       path: '/:type/:id',
-      functionFactory: function(app) {
+      funcFactory: function(app) {
          function result(req, res) {
             var id = app.mkId(req.params.id);
             sendOne(app.db, req.params.type + 's', id, res);
@@ -30,7 +30,7 @@ module.exports = [
    },
    {
       path: '/:type',
-      functionFactory: function(app) {
+      funcFactory: function(app) {
          function result(req, res) {
             sendAll(app.db, req.params.type, res);
          }

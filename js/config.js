@@ -1,5 +1,5 @@
 /**
- * DATABASE CONNECTION SETTINGS
+ * DATABASE SETTINGS
  */
 var DB_NAME = "gtest";
 var DB_TYPE = "mongodb";
