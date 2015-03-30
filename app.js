@@ -1,20 +1,30 @@
 var assert = require('assert');
-var config = require("./js/config");
-var mongo = require('mongodb').MongoClient;
 
-function Person(first, last) {
-   this.first = first;
-   this.last = last;
+var config = require("./js/config");
+var user = require("./js/admin/user");
+var role = require("./js/admin/role");
+
+var http = require('http');
+var mongo = require('mongodb');
+var app = require("./routes/index");
+
+mongo.MongoClient.connect(config.db.url, onDbConnected);
+
+function onDbConnected(err, database) {
+   assert.equal(null, err);
+   app.db = database;
+   app.mkId = function(str) {
+      var o_id = mongo.ObjectID.createFromHexString(str);
+      return o_id;
+   }
+   startApp();
 }
 
-console.log(config.db);
-MongoClient.connect(config.db.url, function(err, db) {
-   assert.equal(null, err);
-   console.log("Connected correctly to server");
-//  db.collection("people").insert(new Person("Michael", "Murphy"), function(err, r) {
-//     assert.equal(null, err);
-//     console.log(r);
-//     db.close();
-//  });
+function startApp() {
+   http.createServer(app).listen(config.http.port);
+}
 
-});
+
+
+
+

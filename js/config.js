@@ -14,20 +14,26 @@ var DB_OPTS = {
    w:1
 }
 
+/**
+ * HTTP NETWORK SETTINGS
+ */
+var HTTP_PORT = 80;
 
-
-
-var DB_QSTR = (function() {
-   var arr = [];
-   for (x in DB_OPTS) {
-      if (DB_OPTS.hasOwnProperty(x))
-         arr.push(encodeURIComponent(x) + "=" + encodeURIComponent(DB_OPTS[x]));
-   }
-   return arr.length == 0 ? "" : "?" + arr.join("&");
-})();
+var querystring = require("querystring");
 
 var DB_URL = (function() {
-   return DB_TYPE + '://' + DB_HOST + ':' + DB_PORT + '/' + DB_NAME + DB_QSTR;
+   var arr = [
+      DB_TYPE,
+      '://',
+      DB_HOST,
+      ':',
+      DB_PORT,
+      '/',
+      DB_NAME,
+      '?',
+      querystring.stringify(DB_OPTS)
+   ];
+   return arr.join("");
 })();
 
 module.exports = {
@@ -37,5 +43,9 @@ module.exports = {
       port: DB_PORT,
       options: DB_OPTS,
       url: DB_URL
+   },
+
+   http: {
+      port: HTTP_PORT
    }
 };
