@@ -1,13 +1,4 @@
-global.startHttp = function() {
-   var server = http.createServer(app).listen(config.http.port);
-   io = sockIo.listen(server);
-   io.on('connection', function(socket){
-      console.log('a user connected');
-      socket.on('disconnect', function(){
-         console.log('user disconnected');
-      });
-   });
-};
+
 
 var crypto = require('crypto');
 global.passHash = function(str) {
@@ -19,8 +10,24 @@ global.passHash = function(str) {
 var appEvent = require('./app');
 appEvent.on('routers', function() {
    var routes = require('./routes');
+   var isAuthenticated = function (req, res, next) {
+
+      if (req.isAuthenticated()){
+         console.log(req.user);
+         res.locals.user = req.user;
+         return next();
+      }
+
+      else {
+         req.session.goto = req.originalUrl;
+         res.redirect('/login');
+      }
+
+   }
    for (var sections in routes) {
-      global.app.use('/' + sections , routes[sections]);
+      var mount = '/' + sections;
+      global.app.all([mount, mount + '/*'], isAuthenticated);
+      global.app.use(mount, routes[sections]);
    }
 });
 

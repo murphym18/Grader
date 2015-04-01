@@ -11,15 +11,16 @@ mongo.MongoClient.connect(config.db.url, function (err, database) {
    DatabaseHelpers.call(database);
    global.db = database;
    module.exports.emit('ready');
+
 });
 
 function DatabaseHelpers() {
    var _that = this;
    this.createId = function(hexStr) {
-      return mongo.ObjectID.createFromHexString(str);
+      return mongo.ObjectID.createFromHexString(hexStr);
    };
    this.findById = function(type, mongoId, cb) {
-      global.db.collection(type).find({ "_id": id }, {}).toArray(function(err, result){
+      global.db.collection(type).find({ "_id": mongoId }, {}).toArray(function(err, result){
          if (err)
             cb(err, null);
          else if (result.length > 0)
@@ -28,15 +29,16 @@ function DatabaseHelpers() {
             cb(null, false);
       });
    };
-   this.collection('users', {}, function(err, collection) {
+   this.collection('users', function(err, collection) {
+      console.log(collection);
       _that.users = CollectionHelpers.call(collection);
    });
 }
 
 function CollectionHelpers() {
    var _that = this;
-   this.findId = function(mongoId, cb) {
-      this.find({ "_id": id }, {}).toArray(function(err, result){
+   this.findId = function(hexStr, cb) {
+      this.find({ "_id": mongo.ObjectID.createFromHexString(hexStr) }, {}).toArray(function(err, result){
          if (err)
             cb(err, null);
          else if (result.length > 0)

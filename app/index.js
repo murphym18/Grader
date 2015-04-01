@@ -6,7 +6,6 @@ var bodyParser = require('body-parser');
 
 var passport = require('passport');
 
-
 var http = require('http');
 var assert = require('assert');
 var socketIo = require('socket.io');
@@ -16,6 +15,8 @@ var EventEmitter = events.EventEmitter;
 module.exports = new EventEmitter();
 
 var app = express();
+var engine = require('ejs-locals');
+app.engine('ejs', engine);
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
@@ -24,11 +25,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 require('./database').on('ready', function() {
+   passport.serializeUser(serializeUser);
+   passport.deserializeUser(deserializeUser);
    var session = require('express-session');
    var MongoStore = require('connect-mongo')(session);
    var auth = require('./auth');
-
-
    app.use(session({
       store: new MongoStore({ db: db }),
       secret: config.sessionSecret,
@@ -38,14 +39,14 @@ require('./database').on('ready', function() {
    app.use(passport.initialize());
    app.use(passport.session());
    app.use(express.static('public'));
+   app.use("/", require('./login'));
    module.exports.emit('routers');
    var error = require('./errors');
    app.use(error.error404);
    app.use(error.errorHandler);
 
    passport.use(auth.localFactory());
-   passport.serializeUser(serializeUser);
-   passport.deserializeUser(deserializeUser);
+
 
    global.server = http.createServer(app).listen(config.http.port);
    module.exports.emit('ready');
@@ -59,7 +60,7 @@ function serializeUser(user, done) {
 }
 
 function deserializeUser(id, done) {
-   db.collection('users').find({_id: id }).toArray(function(err, user) {
-      done(err, user);
+   db.collection('users').find({_id: global.db.createId(id) }).toArray(function(err, user) {
+      done(err, user[0]);
    });
 }

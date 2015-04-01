@@ -1,18 +1,16 @@
 var router = require('express').Router();
 var passport = require('passport');
 
-router.get('/login', function(req, res) {
-   res.render('login', { "user": req.user });
+router.get('/:id', function(req, res) {
+   console.log(req.params.id);
+   db.findById('users', db.createId(req.params.id), function(err, user){
+      console.log(user);
+      res.render('user', {user: user});
+   })
+
 });
 
-router.post('/login', passport.authenticate('local'), function(req, res) {
-   res.redirect('/');
-});
 
-router.get('/logout', function(req, res) {
-   req.logout();
-   res.redirect('/');
-});
 
 
 

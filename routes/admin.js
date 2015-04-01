@@ -1,11 +1,11 @@
 var router = require('express').Router();
+
 var admin = require('../model/admin');
-router.get('/', function(req, res) {
-   res.render('admin/index');
-});
+
+
 
 router.get('/create-user', function(req, res) {
-   res.render('admin/create-user');
+   res.render('create-user');
 });
 
 router.post('/create-user', function(req, res, next) {
@@ -33,6 +33,10 @@ router.post('/create-user', function(req, res, next) {
 
 
    res.redirect('/')
+});
+
+router.get('/', function(req, res) {
+   res.render('admin');
 });
 
 module.exports = router;

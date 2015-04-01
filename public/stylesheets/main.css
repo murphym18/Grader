@@ -89,6 +89,47 @@ textarea {
    ========================================================================== */
 
 
+div.error {
+   padding: 0.4em;
+   color: #dd0000;
+}
+
+main.login {
+   padding: 0.5em;
+}
+
+form input, form button {
+   display: block;
+   margin: 0 0 .6em 0 ;
+}
+
+div#top-bar {
+
+   padding: 0.65em;
+   background-color: #333;
+   color: white;
+}
+
+div#top-bar a {
+   color: #48f
+}
+
+div.user-info {
+   padding: 0.65em;
+   position: absolute;
+   top: 0;
+   text-align: right;
+
+   right: 0;
+}
+div#top-bar span.bar {
+   display: inline-block;
+   padding: 0 .5em;
+}
+main {
+   padding: 0 2em;
+}
+
 
 
 /* ==========================================================================
