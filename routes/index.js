@@ -7,6 +7,8 @@ defaultRoute.get('/', function(req, res) {
    res.render('index');
 });
 
+
+
 var routes = {
    '': defaultRoute
 };

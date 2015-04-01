@@ -24,6 +24,37 @@ appEvent.on('routers', function() {
       }
 
    }
+   var admin = require('./model/admin');
+   app.get('/setup', function(req, res) {
+      res.render('setup');
+   });
+
+   app.post('/setup', function(req, res, next) {
+      var username = req.body.username;
+      var pass = passHash(req.body.password);
+      var identity =  new admin.LocalIdentity(username, pass);
+      var query = {
+         "identities": identity
+      };
+
+      function checkLogin(err, res){
+         if (res.length > 0)
+            next(new Error("Username Taken"));
+         else {
+            admin.createUser(req.body.first, req.body.last, function (err, result) {
+               var query = { _id: result.ops[0]._id };
+               var change = { $push: {"identities": identity}};
+               global.db.collection('users').update(query, change, function(err, result){
+                  console.log(result);
+               });
+            });
+         }
+      }
+      global.db.collection("users").find(query, {}).toArray(checkLogin);
+
+
+      res.redirect('/')
+   });
    for (var sections in routes) {
       var mount = '/' + sections;
       global.app.all([mount, mount + '/*'], isAuthenticated);
