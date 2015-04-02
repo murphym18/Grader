@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>
+CSC 309 Specification Change Orders
+</title>
+<script type="plain/text" id="table-data">
+1apr15@@Base&nbsp;spec@<a href="http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/index.html">Node Team</a>@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/ui-overview-instructor.html#Figure Expanded command menus@2.1.1&nbsp;&sect;2@Chage the top menu bar to an analogous menu that is more acceptable in a browser@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/add-class.html@2.2.1@Add fields to the new class dialog for start date, end date, start time and end time. Require user authorization for the new class command.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/add-class.html@2.2.1@Add a dialog that resembles the new class dialog for the manage class command.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/grading-scheme.html@2.2.5@Replace Section <a href="http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/grading-scheme.html">2.2.5</a> in the base spec with Section <a href="http://users.csc.calpoly.edu/~gfisher/classes/309/specs/grader-f09-morning/requirements/gradingrange.html">2.4.7</a> from CSC 308 Morning Section, Fall 2009.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/late-policy.html@2.2.6@Remove the Late policy feature.@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/manage-students.html@2.3.1@Remove Mid-Term Roster Synchronization.@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/manage-graded-assignments.html@2.4@Managing graded items, needs to give users a way to access submitted files.@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/item-explorer.html@2.5.1@Remove Item Explorer@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/expand-collapse.html@2.5.3@Remove the quick access bar.@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/gradebooks.html@2.7.1@Replace the user interface for Accessing Gradebooks with one presented in a seperate screen. Move the "Manage Class" and "New Class" commands to this menu. Rename "Manage Class" to "Modify Class"@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/admin-details.html@2.8@Add a screen for admin users that lets them manage who can create new courses.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/admin-details.html@2.8@Add a screen to manage how differt types of users can access a course.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/admin-details.html@2.8@Add a way for students to associate login credentials with their user accout.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/admin-details.html@2.8.2@Add a login screen@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/submit-grades.html@2.8.4@Remove Submitting Grades to School's Registrar.@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/file.html#Clear@2.9.1@Move the File > "Publish Student View" command to the Student menu. Remove the File > Save command because it didn't do anything. Remove the File > "Commit Final Grades" command because it introduces too much complexity. Remove the File menu as the prior changes would empty it.@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/edit.html#Clear@2.9.2&nbsp;&sect;5@Remove Edit > Clear@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/edit.html#Delete@2.9.2&nbsp;&sect;3@Remove Edit > Delete. The user should be able to select a cell in the spreadsheet and delete the data like the way you delete stuff in excel.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/edit.html#Find@2.9.2&nbsp;&sect;4@Remove Edit > Find. The user can use the browser's built-in find command.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/edit.html#Clear@2.9.2&nbsp;&sect;5@Remove Edit > Clear@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/edit.html#Filter@2.9.2&nbsp;&sect;6@Remove Edit > Filter@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/edit.html#Preferences@2.9.2&nbsp;&sect;7@Remove Edit > Preferences@MB
+
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/error.html@2.9.3&nbsp;P2@Add error messages for page not found and general server error.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/error.html@2.9.3&nbsp;P2@Change Authentication error messages to a generic message for both invalid username and password. This is a security issue.@MB
+1apr15@http://users.csc.calpoly.edu/~gfisher/classes/309/specs/Node/requirements/error.html@2.9.3&nbsp;P2@Remove the phone number format validation. This format restricts users from entering international phone numbers.@MB
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+function tr(str) { return "<tr>" + str.toString() + ""; }
+function td(str) { return "<td valign=top>" + str.toString() + ""; }
+function link(to, show) { return "<a href=\""+to+"\">"+show+"</a>"; }
+</script>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>CSC 309 Specification Change Orders</strong>
+</font>
+</p>
+<br>
+<br>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>No.</strong>
+    <td valign=top><strong>Date</strong>
+    <td valign=top><strong>Spec&nbsp;Section</strong>
+    <td valign=top><strong>Description</strong>
+    <td valign=top><strong>Approvals</strong>
+    <td valign=top><strong>Updated?</strong>
+<script>
+$("#table-data").text().split('\n').map(function(e) {
+   return e.trim();
+}).filter(function(e) {
+   return e.trim() !== "";
+}).forEach(function(e, i) {
+   var row = [];
+   var cells = (function(arr) {
+      arr.unshift(++i)
+      return arr.slice(0, 2).concat(arr[2] ? link(arr[2], arr[3]) : arr[3], arr.slice(4));
+   })(e.split("@"));
+
+   if (cells.length < 5)
+      cells.push("MB");
+   if (cells.length < 6)
+      cells.push("NO");
+
+   var row = cells.map(td).join("");
+   document.write(tr(row));
+});
+</script>
+
+</table>
+<br>
+<br>
+<br>
+</body>
+</html>
