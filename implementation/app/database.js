@@ -6,12 +6,16 @@ var assert = require('assert');
 var EventEmitter = events.EventEmitter;
 module.exports = new EventEmitter();
 
-mongo.MongoClient.connect(config.db.url, function (err, database) {
-   assert.equal(null, err);
-   DatabaseHelpers.call(database);
-   global.db = database;
-   module.exports.emit('ready');
 
+mongo.MongoClient.connect(config.db.url, function (err, database) {
+   if (err !== null) {
+      global.db = require('./embedded-database.js');
+   }
+   else {
+      global.db = database;
+   }
+   DatabaseHelpers.call(global.db);
+   module.exports.emit('ready');
 });
 
 function DatabaseHelpers() {
@@ -29,10 +33,6 @@ function DatabaseHelpers() {
             cb(null, false);
       });
    };
-   this.collection('users', function(err, collection) {
-      console.log(collection);
-      _that.users = CollectionHelpers.call(collection);
-   });
 }
 
 function CollectionHelpers() {

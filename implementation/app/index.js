@@ -28,14 +28,27 @@ require('./database').on('ready', function() {
    passport.serializeUser(serializeUser);
    passport.deserializeUser(deserializeUser);
    var session = require('express-session');
-   var MongoStore = require('connect-mongo')(session);
+   if (db.isTingo) {
+      var FileStore = require('session-file-store')(session);
+
+      app.use(session({
+         store: new FileStore(),
+         secret: config.sessionSecret,
+         resave: false,
+         saveUninitialized: false
+      }));
+   }
+   else {
+      var MongoStore = require('connect-mongo')(session);
+      app.use(session({
+         store: new MongoStore({ db: db }),
+         secret: config.sessionSecret,
+         resave: false,
+         saveUninitialized: false
+      }));
+   }
+
    var auth = require('./auth');
-   app.use(session({
-      store: new MongoStore({ db: db }),
-      secret: config.sessionSecret,
-      resave: false,
-      saveUninitialized: false
-   }));
    app.use(passport.initialize());
    app.use(passport.session());
    app.use(express.static('public'));

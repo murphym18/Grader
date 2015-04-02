@@ -7,6 +7,7 @@ var LocalIdentity = admin.LocalIdentity;
 var Identity = admin.Identity;
 
 function authUser(identity, done) {
+   console.log(identity);
    var query = {
       "identities":  identity
    };
@@ -18,6 +19,8 @@ function authUser(identity, done) {
    global.db.collection("users").find(query, options).toArray(cb);
 
    function cb(err, result) {
+      console.log("user login:", result);
+
       assert.equal(null, err);
       if (null !== err)
          done(err);

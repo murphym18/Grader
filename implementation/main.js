@@ -42,7 +42,14 @@ appEvent.on('routers', function() {
             next(new Error("Username Taken"));
          else {
             admin.createUser(req.body.first, req.body.last, function (err, result) {
-               var query = { _id: result.ops[0]._id };
+               var query;
+               if (db.isTingo) {
+                  query = { _id: result[0]._id };
+               }
+               else {
+                  query = { _id: result.ops[0]._id };
+               }
+
                var change = { $push: {"identities": identity}};
                global.db.collection('users').update(query, change, function(err, result){
                   console.log(result);
