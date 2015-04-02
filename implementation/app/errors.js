@@ -27,6 +27,6 @@ function prodHandler(err, req, res, next) {
 }
 
 module.exports = {
-   "errorHandler": config.showVerboseErrors ? devHandler :  prodHandler,
-   "error404": handle404
+   "404": handle404,
+   "500": config.showVerboseErrors ? devHandler :  prodHandler
 };

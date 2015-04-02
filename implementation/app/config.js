@@ -1,18 +1,5 @@
-/**
- * DATABASE SETTINGS
- */
-var DB_NAME = "gtest";
-var DB_TYPE = "mongodb";
-var DB_HOST = "localhost";
-var DB_PORT = "27017";
-var DB_OPTS = {
-   //connectTimeoutMS:  2000,
-   //socketTimeoutMS: 1000,
-   //maxPoolSize: 5,
-   //authSource: null
-   ssl: false,
-   w:1
-}
+var path = require('path');
+var fs = require('fs');
 
 /**
  * HTTP SETTINGS
@@ -30,6 +17,28 @@ var SERVER_BASE_URL = "http://localhost";
  */
 var SHOW_VERBOSE_ERROR_PAGES = true;
 
+
+/* DATABASE SETTINGS */
+/**
+ * Use in memory database only.
+ * When this is true the DATABASE_DIR value is ignored.
+ */
+var DATABASE_IN_MEM_STORE = false;
+
+/**
+ * The directory where the database files will be stored. This path may be
+ * absolute or its assumed relative to the working directory.
+ */
+var DATABASE_DIR = "./data/documents";
+
+
+/* SESSION STORAGE SETTINGS */
+/**
+ * The directory where the session files will be stored. This path may be
+ * absolute or its assumed relative to the working directory.
+ */
+var SESSION_STORAGE_DIR = "./data/sessions";
+
 /**
  * The express-session uses this secret to sign the session ID cookie. When this
  * variable is null, this module exports a random string.
@@ -45,27 +54,29 @@ var SHOW_VERBOSE_ERROR_PAGES = true;
 var SESSION_SECRET = null;
 
 
+function resolvePath(place) {
+
+   return path.isAbsolute(place.toString()) ? place.toString() : path.relative(process.cwd(), place.toString());
+}
+
+function ensureDir(place, errMsg) {
+   if (!fs.existsSync(place)) {
+      try {
+         console.log(place);
+         fs.mkdirSync(place);
+      }
+      catch (e) {
+         var msg = errMsg || "ERROR: ";
+         throw msg + " " + place + "\n\t" + e;
+      }
+   }
+   return place;
+}
 
 module.exports = {
    db: {
-      name: DB_NAME,
-      host: DB_HOST,
-      port: DB_PORT,
-      options: DB_OPTS,
-      url: (function() {
-         var arr = [
-            DB_TYPE,
-            '://',
-            DB_HOST,
-            ':',
-            DB_PORT,
-            '/',
-            DB_NAME,
-            '?',
-            require("querystring").stringify(DB_OPTS)
-         ];
-         return arr.join("");
-      })()
+      path: ensureDir(resolvePath(DATABASE_DIR), "Error creating database directory"),
+      memStore: DATABASE_IN_MEM_STORE
    },
 
    http: {
@@ -81,15 +92,18 @@ module.exports = {
 
    showVerboseErrors: SHOW_VERBOSE_ERROR_PAGES,
 
-   "sessionSecret": (function(){
-      if (SESSION_SECRET !== null) {
-         return SESSION_SECRET;
-      }
-      var crypto = require('crypto');
-      var buf = crypto.randomBytes(256);
+   session: {
+      path: ensureDir(resolvePath(SESSION_STORAGE_DIR), "Error creating database directory"),
+      secret:(function(){
+         if (SESSION_SECRET !== null) {
+            return SESSION_SECRET;
+         }
+         var crypto = require('crypto');
+         var buf = crypto.randomBytes(256);
 
-      var hash = crypto.createHash('sha256');
-      hash.update(buf);
-      return hash.digest('base64');
-   })()
+         var hash = crypto.createHash('sha256');
+         hash.update(buf);
+         return hash.digest('base64');
+      })()
+   }
 };

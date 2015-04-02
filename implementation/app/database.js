@@ -1,21 +1,14 @@
 var events = require("events");
-var mongo = require('mongodb');
-var config = require('./config');
-var assert = require('assert');
+var config = require('./config').db;
 
 var EventEmitter = events.EventEmitter;
 module.exports = new EventEmitter();
 
-
-mongo.MongoClient.connect(config.db.url, function (err, database) {
-   if (err !== null) {
-      global.db = require('./embedded-database.js');
-   }
-   else {
-      global.db = database;
-   }
-   DatabaseHelpers.call(global.db);
-   module.exports.emit('ready');
+var baseSettings = {memStore: config.memStore, searchInArray: true};
+var Engine = require('tingodb')(baseSettings);
+var db = new Engine.Db(config.path, {});
+setImmediate(function() {
+   module.exports.emit('ready', db);
 });
 
 function DatabaseHelpers() {
