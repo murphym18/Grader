@@ -48,5 +48,4 @@ module.exports = (function () {
    Object.freeze(roles);
 
    return roles;
-
 })();

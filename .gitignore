@@ -78,7 +78,7 @@ crashlytics-build.properties
 implementation/bin/
 implementation/build/
 
-implementation/data/sessions/
-implementation/data/documents/
+data/sessions/
+data/documents/
 
 

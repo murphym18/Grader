@@ -1,47 +1,57 @@
-var path = require('path');
-var fs = require('fs');
+/**
+ * App configuration settings
+ */
+
+/* HTTP SETTINGS */
+exports.http = {};
 
 /**
- * HTTP SETTINGS
+ * Server port
  */
-var HTTP_PORT = 80;
+exports.http.port = 80;
 
 /**
- * CAS SETTINGS
+ * Creates missing subdirectories.
+ *
+ * The database and session modules need directories to store their files in.
+ * This option creates those directories plus and parent directories if they
+ * don't exist.
  */
-var SSO_BASE_URL =  "https://my.calpoly.edu/cas/";
-var SERVER_BASE_URL = "http://localhost";
+exports.createMissingDirectories = true;
 
 /**
  * DEBUG SETTINGS
  */
-var SHOW_VERBOSE_ERROR_PAGES = true;
+exports.showVerboseErrors = true;
 
 
 /* DATABASE SETTINGS */
+exports.db = {};
+
 /**
  * Use in memory database only.
  * When this is true the DATABASE_DIR value is ignored.
  */
-var DATABASE_IN_MEM_STORE = false;
+exports.db.memStore = false;
 
 /**
  * The directory where the database files will be stored. This path may be
  * absolute or its assumed relative to the working directory.
  */
-var DATABASE_DIR = "./data/documents";
+exports.db.path = "data/documents";
 
 
 /* SESSION STORAGE SETTINGS */
+exports.session = {};
 /**
  * The directory where the session files will be stored. This path may be
  * absolute or its assumed relative to the working directory.
  */
-var SESSION_STORAGE_DIR = "./data/sessions";
+exports.session.path = "data/sessions";
 
 /**
- * The express-session uses this secret to sign the session ID cookie. When this
- * variable is null, this module exports a random string.
+ * The server uses this string to sign the session ID cookie. When this
+ * variable is null, a random secret is generated.
  *
  * The express-session readme explains:
  *
@@ -51,59 +61,4 @@ var SESSION_STORAGE_DIR = "./data/sessions";
  * considered when verifying the signature in requests.
  *
  */
-var SESSION_SECRET = null;
-
-
-function resolvePath(place) {
-
-   return path.isAbsolute(place.toString()) ? place.toString() : path.relative(process.cwd(), place.toString());
-}
-
-function ensureDir(place, errMsg) {
-   if (!fs.existsSync(place)) {
-      try {
-         console.log(place);
-         fs.mkdirSync(place);
-      }
-      catch (e) {
-         var msg = errMsg || "ERROR: ";
-         throw msg + " " + place + "\n\t" + e;
-      }
-   }
-   return place;
-}
-
-module.exports = {
-   db: {
-      path: ensureDir(resolvePath(DATABASE_DIR), "Error creating database directory"),
-      memStore: DATABASE_IN_MEM_STORE
-   },
-
-   http: {
-      port: HTTP_PORT
-   },
-
-   cas: {
-      "version": 'CAS3.0',
-      "ssoBaseURL": SSO_BASE_URL, /* base url for cas server*/
-      "serverBaseURL": SERVER_BASE_URL, /* base url for grader app server*/
-      "validateURL": '/serviceValidate'
-   },
-
-   showVerboseErrors: SHOW_VERBOSE_ERROR_PAGES,
-
-   session: {
-      path: ensureDir(resolvePath(SESSION_STORAGE_DIR), "Error creating database directory"),
-      secret:(function(){
-         if (SESSION_SECRET !== null) {
-            return SESSION_SECRET;
-         }
-         var crypto = require('crypto');
-         var buf = crypto.randomBytes(256);
-
-         var hash = crypto.createHash('sha256');
-         hash.update(buf);
-         return hash.digest('base64');
-      })()
-   }
-};
+exports.session.secret = null;

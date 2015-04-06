@@ -1,53 +1,38 @@
-var events = require("events");
-var config = require('./config').db;
+console.time("Database ready");
 
-var EventEmitter = events.EventEmitter;
-module.exports = new EventEmitter();
+require('tungus');
+var mongoose = require('mongoose');
+var config = require('./config');
 
-var baseSettings = {memStore: config.memStore, searchInArray: true};
-var Engine = require('tingodb')(baseSettings);
-var db = new Engine.Db(config.path, {});
-setImmediate(function() {
-   module.exports.emit('ready', db);
+
+// Tungus uses this object to define the TingoDB configuration options.
+global.TUNGUS_DB_OPTIONS = {
+   memStore: config.db.memStore,
+   searchInArray: true,
+   nativeObjectID: false
+};
+
+var absPath = setupDatabaseDirectory();
+mongoose.connect('tingodb://'.concat(absPath));
+mongoose.connection.on('open', function() {
+   console.timeEnd("Database ready");
 });
 
-function DatabaseHelpers() {
-   var _that = this;
-   this.createId = function(hexStr) {
-      return mongo.ObjectID.createFromHexString(hexStr);
-   };
-   this.findById = function(type, mongoId, cb) {
-      global.db.collection(type).find({ "_id": mongoId }, {}).toArray(function(err, result){
-         if (err)
-            cb(err, null);
-         else if (result.length > 0)
-            cb(null, result[0]);
-         else
-            cb(null, false);
-      });
-   };
-}
+module.exports = mongoose;
 
-function CollectionHelpers() {
-   var _that = this;
-   this.findId = function(hexStr, cb) {
-      this.find({ "_id": mongo.ObjectID.createFromHexString(hexStr) }, {}).toArray(function(err, result){
-         if (err)
-            cb(err, null);
-         else if (result.length > 0)
-            cb(null, result[0]);
-         else
-            cb(null, false);
-      });
+/**
+ * If the database directory doesn't exist and the flag to create missing
+ * directories is on, then this function creates the database directory.
+ */
+function setupDatabaseDirectory() {
+   var fs = require('fs');
+   var path = require('path');
+   var util = require('./util');
+
+   var absPath = path.resolve(config.db.path);
+   if (config.createMissingDirectories && !fs.existsSync(absPath)) {
+      console.log("Creating directory for database files at " + absPath);
+      util.makeDirectoryPlusParents(absPath);
    }
-
-   this.findAll = function(){
-      this.find({}, {}).toArray(function(err, result){
-      if (err)
-         cb(err, null);
-      else if (result.length > 0)
-         cb(null, result);
-      else
-         cb(null, false);
-   })};
+   return absPath;
 }

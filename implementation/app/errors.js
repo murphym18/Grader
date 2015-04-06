@@ -10,12 +10,19 @@ function handle404(req, res, next){
 }
 
 function devHandler(err, req, res, next) {
-   res.status(err.status || 500);
-   res.render('error', {
+   var arr = err.stack.split('\n').map(function(e) {
+      return e.replace(process.cwd(), '').replace(/\(/g, '<span class="file">').replace(/\)/g, '</span>')
+   });
+   var viewData = {
       name: err.name,
       message: err.message,
-      error: err
-   });
+
+      stack: arr.join('\n')
+   }
+   res.status(err.status || 500);
+   res.render('error', viewData);
+
+   //throw err;
 }
 
 function prodHandler(err, req, res, next) {
