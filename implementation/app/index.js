@@ -30,7 +30,6 @@ var expressLayouts = require('express-ejs-layouts')
 var app = express();
 var server = false;
 app.set('trust proxy', 'loopback');
-app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use('/', express.static('public'));
