@@ -1,18 +1,15 @@
 var mongoose = require('mongoose');
-var sha = require.main.require('./app/util').hashPasswordString;
-var mongooseTypes = require("mongoose-types");
-mongooseTypes.loadTypes(mongoose);
+require("mongoose-types").loadTypes(mongoose);
 var Email = mongoose.SchemaTypes.Email;
+var sha = require.main.require('./app/util').hashPasswordString;
 
 var userSchema = mongoose.Schema({
    first: {
       type: String,
-      required: true,
       select: true
    },
    last: {
       type: String,
-      required: true,
       select: true
    },
    username: {
@@ -32,11 +29,7 @@ var userSchema = mongoose.Schema({
       select: false
    },
    email: {
-      type: Email,
-      default: function() {
-         return this.username.concat('@calpoly.edu');
-      },
-      require: true
+      type: Email
    },
    major: {
       type: String,
@@ -48,7 +41,6 @@ var userSchema = mongoose.Schema({
       unique: true
    }
 });
-
 userSchema.set('autoIndex', true);
 
 module.exports = mongoose.model('User', userSchema);

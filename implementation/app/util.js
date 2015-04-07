@@ -42,6 +42,7 @@ exports.makeDirectoryPlusParents = function makeDirectoryPlusParents(somePath) {
             throw {"rootMissing": parent};
          }
          fs.mkdirSync(dir);
+         console.log('made', dir);
       }
    }
 
