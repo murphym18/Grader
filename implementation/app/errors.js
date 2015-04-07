@@ -27,9 +27,11 @@ function devHandler(err, req, res, next) {
 
 function prodHandler(err, req, res, next) {
    res.status(err.status || 500);
-   res.render('error', {
-      name: err.name,
-      message: err.message
+   res.json({
+      error: {
+         name: err.name,
+         message: err.message
+      }
    });
 }
 

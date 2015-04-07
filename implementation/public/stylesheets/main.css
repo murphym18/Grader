@@ -94,11 +94,11 @@ div.error {
    color: #dd0000;
 }
 
-main.login {
+.login {
    padding: 0.5em;
 }
 
-form input, form button {
+.login input, .login button {
    display: block;
    margin: 0 0 .6em 0 ;
 }

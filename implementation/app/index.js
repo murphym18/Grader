@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(sessionLoader);
 app.use(passport.initialize(), passport.session());
 app.use(expressLayouts);
-app.use("/", auth.routes);
+app.use("/api/", auth.routes);
 
 app.ready = function() {
    if (!server) {

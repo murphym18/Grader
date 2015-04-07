@@ -26,7 +26,7 @@ var userSchema = mongoose.Schema({
       type: String,
       match: /[0-9a-f]{64}/,
       set: sha,
-      select: false
+      select: true
    },
    email: {
       type: Email
@@ -42,5 +42,9 @@ var userSchema = mongoose.Schema({
    }
 });
 userSchema.set('autoIndex', true);
+
+userSchema.statics.findLogin = function(user, pass) {
+   return this.findOne({username: user, password: sha(pass)});
+}
 
 module.exports = mongoose.model('User', userSchema);

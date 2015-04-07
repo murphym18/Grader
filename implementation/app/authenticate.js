@@ -11,7 +11,8 @@ function requireLogin(req, res, next) {
    else {
       res.sendStatus(401);
       res.json({
-         error: "nologin"
+         error: "nologin",
+         login: false
       });
    }
 }
@@ -42,7 +43,7 @@ router.post('/login', function(req, res, next) {
 
 router.get('/logout', function(req, res) {
    req.logout();
-   res.redirect('/login');
+   res.json({});
 });
 
 passport.serializeUser(function (user, done) {
@@ -64,15 +65,18 @@ passport.deserializeUser(function(user, done) {
 
 passport.use(new LoginStrategy(function(user, pass, done) {
    co(function *() {
-      var query = Users.findOne({username: user, password: pass});
+      var query = Users.findLogin(user, pass);
       try {
          var result = yield query.exec();
-         console.log(result);
          done(null, result);
       }
       catch (err) {
+         console.log(err)
+         console.log(err.stack)
          done(err);
       }
+   }).catch(function(e){
+      console.log(e);
    })
 }));
 
