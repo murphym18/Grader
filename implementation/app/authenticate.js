@@ -9,7 +9,10 @@ function requireLogin(req, res, next) {
       return next();
    }
    else {
-      res.json({error: "nologin"});
+      res.sendStatus(401);
+      res.json({
+         error: "nologin"
+      });
    }
 }
 
