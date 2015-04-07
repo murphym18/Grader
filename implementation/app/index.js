@@ -33,9 +33,9 @@ app.set('trust proxy', 'loopback');
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
+app.use('/', express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use('/public', express.static('public'));
 app.use(sessionLoader);
 app.use(passport.initialize(), passport.session());
 app.use(expressLayouts);
