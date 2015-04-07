@@ -1,7 +1,7 @@
 var app = require('./app');
-var q = require('q');
 var co = require('co');
 var Users = require('./model/admin/user');
+
 /* add an admin user */
 co(function *() {
    try {

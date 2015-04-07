@@ -37,7 +37,7 @@ var userSchema = mongoose.Schema({
    },
    emplId: {
       type: String,
-       match: /[0-9]{9}/,
+      match: /[0-9]{9}/,
       unique: true
    }
 });
