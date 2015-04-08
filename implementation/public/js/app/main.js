@@ -31,7 +31,23 @@ requirejs.config({
 });
 
 // Start the main app logic.
-requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/loginView.hbs', 'text!templates/home.hbs'],function($, _, Backbone, Handlebars, loginView, homeView) {
+requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/loginView.hbs', 'text!templates/home.hbs',
+
+    /* ADD YOUR STUFF BELOW */
+    'text!templates/addNewClassView.html'],
+    /* ADD YOUR STUFF ABOVE */
+
+    function($, _, Backbone, Handlebars, loginView, homeView,
+
+    /* ADD YOUR STUFF BELOW */
+    addNewClassView)
+    /* ADD YOUR STUFF ABOVE */
+
+    {
+
+   /*************************************************************************
+    * WRITE SOMETHING LINE THE BELOW
+    *************************************************************************/
 
    var LoginView = Backbone.View.extend({
 
@@ -85,6 +101,35 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/log
 
    });
 
+   /************************************************************************
+    * WRITE SOMETHING LIKE ABOVE
+    ************************************************************************/
+
+    /**
+     * @author Mike Ryu
+     */
+    //var AddNewClassView = Backbone.View.extend({
+    //
+    //   template: Handlebars.compile(addNewClassView),
+    //   errorMessage: '',
+    //
+    //   initialize: function() {
+    //      this.render();
+    //   },
+    //
+    //   events: {
+    //      "click button": "doAddClass"
+    //   },
+    //
+    //   doAddClass: function(e) {
+    //      e.preventDefault();
+    //      var self = this;
+    //
+    //      console.log("Add Class button pressed!");
+    //   }
+    //
+    //});
+
    var GraderAppRouter = Backbone.Router.extend({
 
       //todo add more routes...
@@ -116,6 +161,11 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/log
       console.log("hello!");
       router.navigate('login', {trigger: true, replace: true});
 
+      /*
+       * WRITE SOMETHING LIKE BELOW TO HAVE YOUR VIEW SHOW UP
+       * $('main').html(someText)
+       */
+       //$('main').html(AddNewClassView);
 
    })
 });
