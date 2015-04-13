@@ -1,4 +1,4 @@
-<!-- addStudentView.html -->
+<!-- modifyStudentView.html -->
 <!-- @author Grant Plaster -->
 <!-- @source http://www.hongkiat.com/blog/html5-dialog-window/ -->
 
@@ -7,7 +7,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Add New Student</title>
+    <title>Modify Student</title>
 
     <!-- <link rel="stylesheet" href="css/style.css"> -->
     <!-- Not using CSS Style at the moment ... -->
@@ -20,18 +20,24 @@
 <div class="demo-wrapper">
     <div class="html5-dialog">
         <dialog id="window">
-            <h3>Add a New Student</h3>
+            <!-- Drop down menu to choose students from list -->
+            <select><option>Select Student</option></select>
+
+            <!-- Search bar to search for student information -->
+            <input id="search" type="text" name="search" placeholder="Search..."><br>
+
+            <h3>Modify Student</h3>
             Student Name <input id="studentName" type="text" name="studentName" placeholder="i.e. John Doe"><br>
             EMPL ID <input id="studentID" type="text" name="studentID" placeholder="i.e. 00000001"><br>
             Nickname <input id="studentNickname" type="text" name="studentNickname" placeholder="i.e. Johnny"><br>
-            Group <input id="studentGroup" type="text" name="studentGroup" placeholder="i.e. '1' or 'Node' "><br>
+            Group <input id="studentGroup" type="text" name="studentGroup" placeholder="i.e. '1' or 'Node"><br>
             Email <input id="studentEmail" type="text" name="studentEmail" placeholder="i.e. jdoe@gmail.com"><br>
             Phone <input id="studentPhone" type="text" name="studentPhone" placeholder="i.e. 123-456-7890"><br>
-            <p>Clicking OK below will add the above student information to the gradebook.</p>
+            <p>Clicking OK below will save changes to the above student information.</p>
             <button id="ok">OK</button>
             <button id="cancel">Cancel</button>
         </dialog>
-        <button id="addclass">Add New Student</button>
+        <button id="addclass">Modify Student</button>
     </div>
 </div>
 
@@ -65,7 +71,7 @@
 
                 // Close the Modal dialog and show class name entered
                 dialog.close();
-                window.alert('The following student information was entered\n' +
+                window.alert('The following student information was modified\n' +
                 'Student: [' + studentName + ']');
             }
         };
