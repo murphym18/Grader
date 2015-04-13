@@ -1,0 +1,60 @@
+<!-- addNewClassView.html -->
+<!-- @author Mike Ryu -->
+<!-- @source http://www.hongkiat.com/blog/html5-dialog-window/ -->
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Delete Assignment</title>
+
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <!-- Not using CSS Style at the moment ... -->
+
+</head>
+
+<body>
+
+<!-- Actual page's layout including the dialog -->
+<div class="demo-wrapper">
+    <div class="html5-dialog">
+        <dialog id="window">
+            <h3>Delete Assignment</h3>
+            <h4>Are you sure you want to delete this assignment?</h4>
+            <h4>Deleting this assignment will also delete all associated scores.</h4>
+            <button id="ok">OK</button>
+            <button id="cancel">Cancel</button>
+        </dialog>
+        <button id="deleteassignment">Delete Assignment</button>
+    </div>
+</div>
+
+<!-- Script that handles the events -->
+<script type="text/javascript">
+    (function() {
+        // Get the page and dialog layout
+        var dialog = document.getElementById('window');
+
+        // Show the Modal dialog when the button is clicked
+        document.getElementById('deleteassignment').onclick = function() {
+            dialog.show();
+        };
+
+        // Event handler for the OK button on the dialog
+        document.getElementById('ok').onclick = function() {
+            console.log('OK Button Clicked!');
+            dialog.close();
+            window.alert("Assignment Succesfully Deleted!");
+            
+        };
+
+        // Event handler for the Cancel button
+        document.getElementById('cancel').onclick = function() {
+            dialog.close();
+        };
+    })();
+
+</script>
+</body>
+</html>

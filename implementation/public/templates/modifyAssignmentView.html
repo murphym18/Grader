@@ -1,0 +1,81 @@
+<!-- addNewClassView.html -->
+<!-- @author Mike Ryu -->
+<!-- @source http://www.hongkiat.com/blog/html5-dialog-window/ -->
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Modify Assignment</title>
+
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <!-- Not using CSS Style at the moment ... -->
+
+</head>
+
+<body>
+
+<!-- Actual page's layout including the dialog -->
+<div class="demo-wrapper">
+    <div class="html5-dialog">
+        <dialog id="window">
+            <h3>Modify an Assignment</h3>
+            <label>Assignment Name: <input id = "assignmentName" type="text" name="assignmentName"></label><br><br>
+            <label>Weight: <input id = "assignmentWeight" type="text" name="assignmentWeight"><br><br>
+            <label>Total Score: <input id = "assignmentTotalScore" type="text" name="assignmentTotalScore"><br><br>
+           <label>Category: <select name="category">
+              <option value="Tests">Tests</option>
+              <option value="Projects">Projects</option>
+              <option value="Homework">Homework</option>
+           </select></label><br><br>
+            <button id="ok">OK</button>
+            <button id="cancel">Cancel</button>
+        </dialog>
+        <button id="modifyassignment">Modify Assignment</button>
+    </div>
+</div>
+
+<!-- Script that handles the events -->
+<script type="text/javascript">
+    (function() {
+        // Get the page and dialog layout
+        var dialog = document.getElementById('window');
+
+        // Show the Modal dialog when the button is clicked
+        document.getElementById('modifyassignment').onclick = function() {
+            dialog.show();
+        };
+
+        // Event handler for the OK button on the dialog
+        document.getElementById('ok').onclick = function() {
+            console.log('OK Button Clicked!');
+
+
+            // Simple input validation (empty class code or number disallowed)
+            if (document.getElementById('assignmentName').value === '' &&
+                    document.getElementById('assignmentWeight').value === '' &&
+                    document.getElementById('assignmentTotalScore').value === '') {
+                window.alert('Please fill out all fields');
+            }
+            else {
+                // Clear the input fields
+                document.getElementById('assignmentTotalScore').value = '';
+                document.getElementById('assignmentWeight').value = '';
+                document.getElementById('assignmentName').value = '';
+
+                // Close the Modal dialog and show class name entered
+                dialog.close();
+                window.alert('The assignment was succesfully added!');
+            }
+        };
+
+        // Event handler for the Cancel button
+        document.getElementById('cancel').onclick = function() {
+            dialog.close();
+        };
+    })();
+
+</script>
+</body>
+</html>
