@@ -1,7 +1,77 @@
-<form class="addNewClassView">
-    <h1>Add a New Class</h1>
-    <input type="text" name="classcode" placeholder="Class Code (i.e. CPE)"><br>
-    <input type="text" name="classnumber" placeholder="Class Numeber (i.e. 101)"><br>
-    <button>Add Class</button>
-</form>
+<!-- addNewClassView.html -->
+<!-- @author Mike Ryu -->
+<!-- @source http://www.hongkiat.com/blog/html5-dialog-window/ -->
 
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Add New Class</title>
+
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <!-- Not using CSS Style at the moment ... -->
+
+</head>
+
+<body>
+
+<!-- Actual page's layout including the dialog -->
+<div class="demo-wrapper">
+    <div class="html5-dialog">
+        <dialog id="window">
+            <h3>Add a New Class</h3>
+            Class Code <input id="classcode" type="text" name="classcode" placeholder="i.e. CPE"><br>
+            Class Number <input id="classnumber" type="text" name="classnumber" placeholder="i.e. 101"><br>
+            <p>Clicking OK below will generate a new gradebook for the class entered above.</p>
+            <button id="ok">OK</button>
+            <button id="cancel">Cancel</button>
+        </dialog>
+        <button id="addclass">Add New Class</button>
+    </div>
+</div>
+
+<!-- Script that handles the events -->
+<script type="text/javascript">
+    (function() {
+        // Get the page and dialog layout
+        var dialog = document.getElementById('window');
+
+        // Show the Modal dialog when the button is clicked
+        document.getElementById('addclass').onclick = function() {
+            dialog.show();
+        };
+
+        // Event handler for the OK button on the dialog
+        document.getElementById('ok').onclick = function() {
+            console.log('OK Button Clicked!');
+
+            var className = document.getElementById('classcode').value
+                    + " " + document.getElementById('classnumber').value;
+
+            // Simple input validation (empty class code or number disallowed)
+            if (document.getElementById('classcode').value === '' &&
+                    document.getElementById('classnumber').value === '') {
+                window.alert('Please enter class code and number.');
+            }
+            else {
+                // Clear the input fields
+                document.getElementById('classcode').value = '';
+                document.getElementById('classnumber').value = '';
+
+                // Close the Modal dialog and show class name entered
+                dialog.close();
+                window.alert('The following class information was entered\n' +
+                'Class Name: [' + className + ']');
+            }
+        };
+
+        // Event handler for the Cancel button
+        document.getElementById('cancel').onclick = function() {
+            dialog.close();
+        };
+    })();
+
+</script>
+</body>
+</html>
