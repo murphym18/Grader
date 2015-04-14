@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 var crypto = require('crypto');
 var path = require('path');
 var fs = require('fs');

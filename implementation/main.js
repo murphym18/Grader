@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 var app = require('./app');
 var co = require('co');
 var Users = require('./model/admin/user');

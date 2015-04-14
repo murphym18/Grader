@@ -1,5 +1,6 @@
 /**
  * App configuration settings
+ * @author Michael Murphy
  */
 
 /* HTTP SETTINGS */

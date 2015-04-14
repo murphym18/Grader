@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 var model = require.main.require('./model');
 var admin = require('express')();
 

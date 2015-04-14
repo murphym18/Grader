@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 module.exports = function() {
    var router = require('express').Router();
    var passport = require('passport');

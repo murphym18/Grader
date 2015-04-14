@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 console.time("Database ready");
 
 require('tungus');

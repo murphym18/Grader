@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 var admin = require.main.require('./model/admin')(app.db);
 app.get('/setup', function(req, res) {
    res.render('admin/setup', {user: false});

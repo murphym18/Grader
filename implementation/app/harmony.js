@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 if (!process.execArgv.some(function(a){ return a === '--harmony'})) {
    var childArgs = process.argv;
    childArgs[0] = '--harmony';

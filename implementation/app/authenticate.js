@@ -1,3 +1,7 @@
+/**
+@author Michael Murphy
+*/
+
 var app = require('express')();
 var passport = require('passport');
 var LoginStrategy = require('passport-local').Strategy;
