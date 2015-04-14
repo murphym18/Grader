@@ -18,7 +18,7 @@
 
 <!-- Actual page's layout including the dialog -->
 <div class="demo-wrapper">
-    <form class="add-new-class-view">
+    <!--<form class="add-new-class-view">-->
         <div class="html5-dialog">
             <button id="addclass">Add New Class</button>
             <dialog id="popup-dialog">
@@ -30,7 +30,7 @@
                 <button id="cancel">Cancel</button>
             </dialog>
         </div>
-    </form>
+    <!--</form>-->
 </div>
 
 <!-- Script that handles the events -->
@@ -52,9 +52,9 @@
                     + " " + document.getElementById('classnumber').value;
 
             // Simple input validation (empty class code or number disallowed)
-            if (document.getElementById('classcode').value === '' &&
+            if (document.getElementById('classcode').value === '' ||
                     document.getElementById('classnumber').value === '') {
-                window.alert('Please enter class code and number.');
+                window.alert('Please enter class code AND number.');
             }
             else {
                 // Clear the input fields
