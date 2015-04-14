@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 var config = require("./config");
 
 function handle404(req, res, next){

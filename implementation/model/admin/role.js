@@ -1,4 +1,7 @@
 /**
+@author Michael Murphy
+*/
+/**
  * A Role is assigned to a User, and it authorizes that User to do stuff.
  */
 

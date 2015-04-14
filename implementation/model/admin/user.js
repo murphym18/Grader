@@ -1,3 +1,6 @@
+/**
+@author Michael Murphy
+*/
 var mongoose = require('mongoose');
 require("mongoose-types").loadTypes(mongoose);
 var Email = mongoose.SchemaTypes.Email;

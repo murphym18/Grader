@@ -1,4 +1,7 @@
 /**
+@author Michael Murphy
+*/
+/**
  * Initializes the application and exports an emitter. Users of this module can
  * listen on the following events:
  * <ul>
