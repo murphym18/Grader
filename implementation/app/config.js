@@ -9,7 +9,7 @@ exports.http = {};
 /**
  * Server port
  */
-exports.http.port = 80;
+exports.http.port = 8080;
 
 /**
  * Creates missing subdirectories.
