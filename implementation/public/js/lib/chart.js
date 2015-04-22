@@ -3476,30 +3476,194 @@
 
 }).call(this);
 
+// Colors
+
+var red1 =  "rgba(255,0,0,1)";
+var red2 =  "rgba(255,0,0,1)";
+var red3 =  "rgba(255,0,0,1)";
+var red4 =  "rgba(220,220,220,1)";
+
+var orange1 = "rgba(255, 165, 0, 0.5)";
+var orange2 = "rgba(255, 165, 0, 0.8)";
+var orange3 = "rgba(255, 165, 0, 0.75)";
+var orange4 = "rgba(255, 165, 0, 1)";
+
+var yellow1 =  "rgba(255, 255, 0,0.5)";
+var yellow2 =  "rgba(255, 255, 0,0.8)";
+var yellow3 =  "rgba(255, 255, 0,0.75)";
+var yellow4 =   "rgba(255, 255, 0,1)";
+
+var green1 = "rgba(0,255,0,0.5)";
+var green2 = "rgba(0,255,0,0.8)";
+var green3 = "rgba(0,255,0,0.75)";
+var green4 =  "rgba(0,255,0,1)";
+
+
 var ctx = document.getElementById("myChart").getContext("2d");
+var ctx2 = document.getElementById("myChart2").getContext("2d");
+//var data = {
+//    labels: ["January", "February", "March", "April", "May", "June", "July"],
+//    datasets: [
+//        {
+//            label: "My First dataset",
+//            fillColor: "rgba(220,220,220,0.5)",
+//            strokeColor: "rgba(220,220,220,0.8)",
+//            highlightFill: "rgba(220,220,220,0.75)",
+//            highlightStroke: "rgba(220,220,220,1)",
+//            data: [65, 59, 80, 81, 56, 55, 40]
+//        }
+//    ]
+//};
+
 var data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ["50", "55", "60", "65", "68", "70", "71",
+        "75", "78", "79", "80", "83", "88", "89", "90", "91", "94"],
     datasets: [
         {
             label: "My First dataset",
-            fillColor: "rgba(220,220,220,0.5)",
-            strokeColor: "rgba(220,220,220,0.8)",
-            highlightFill: "rgba(220,220,220,0.75)",
-            highlightStroke: "rgba(220,220,220,1)",
-            data: [65, 59, 80, 81, 56, 55, 40]
-        },
-        {
-            label: "My Second dataset",
-            fillColor: "rgba(151,187,205,0.5)",
-            strokeColor: "rgba(151,187,205,0.8)",
-            highlightFill: "rgba(151,187,205,0.75)",
-            highlightStroke: "rgba(151,187,205,1)",
-            data: [28, 48, 40, 19, 86, 27, 90]
+            fillColor: green1,
+            strokeColor: green2,
+            highlightFill: green3,
+            highlightStroke: green4,
+            data: [1, 2, 3, 1, 2, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4]
         }
     ]
 };
+
+var data2 = {
+    labels: ["50", "55", "60", "65", "68", "70", "71",
+        "75", "78", "79", "80", "83", "88", "89", "90", "91", "94"],
+    datasets: [
+        {
+            label: "My First dataset",
+            fillColor: "rgba(255,0,0,1)",
+            strokeColor: "rgba(255,0,0,1)",
+            highlightFill: "rgba(255,0,0,1)",
+            highlightStroke: "rgba(220,220,220,1)",
+            data: [1, 2, 3, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+            label: "My First dataset",
+            fillColor: "rgba(255, 255, 0,0.5)",
+            strokeColor: "rgba(255, 255, 0,0.8)",
+            highlightFill: "rgba(255, 255, 0,0.75)",
+            highlightStroke: "rgba(255, 255, 0,1)",
+            data: [0, 0, 0, 0, 0, 1, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+            label: "My First dataset",
+            fillColor: "rgba(0,0,255,0.5)",
+            strokeColor: "rgba(0,0,255,0.8)",
+            highlightFill: "rgba(0,0,255,0.75)",
+            highlightStroke: "rgba(0,0,255,1)",
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 0, 0, 0]
+        },
+        {
+            label: "My First dataset",
+            fillColor: "rgba(0,255,0,0.5)",
+            strokeColor: "rgba(0,255,0,0.8)",
+            highlightFill: "rgba(0,255,0,0.75)",
+            highlightStroke: "rgba(0,255,0,1)",
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4]
+        }
+    ]
+};
+
 console.log(Chart);
 var myBarChart = new Chart(ctx).Bar(data, null);
+
+// bar 1
+myBarChart.datasets[0].bars[0].fillColor =  red1;
+myBarChart.datasets[0].bars[0].strokeColor =  red2;
+myBarChart.datasets[0].bars[0].highlightFill = red3;
+myBarChart.datasets[0].bars[0].highlightStroke =  red4;
+
+//bar 2
+myBarChart.datasets[0].bars[1].fillColor =  red1;
+myBarChart.datasets[0].bars[1].strokeColor =  red2;
+myBarChart.datasets[0].bars[1].highlightFill = red3;
+myBarChart.datasets[0].bars[1].highlightStroke =  red4;
+
+//bar 3
+myBarChart.datasets[0].bars[2].fillColor =  red1;
+myBarChart.datasets[0].bars[2].strokeColor =  red2;
+myBarChart.datasets[0].bars[2].highlightFill = red3;
+myBarChart.datasets[0].bars[2].highlightStroke =  red4;
+
+//bar 4
+myBarChart.datasets[0].bars[3].fillColor =  red1;
+myBarChart.datasets[0].bars[3].strokeColor =  red2;
+myBarChart.datasets[0].bars[3].highlightFill = red3;
+myBarChart.datasets[0].bars[3].highlightStroke =  red4;
+
+// bar 5
+myBarChart.datasets[0].bars[4].fillColor =  red1;
+myBarChart.datasets[0].bars[4].strokeColor =  red2;
+myBarChart.datasets[0].bars[4].highlightFill = red3;
+myBarChart.datasets[0].bars[4].highlightStroke =  red4;
+
+//bar 6
+myBarChart.datasets[0].bars[5].fillColor =  orange1;
+myBarChart.datasets[0].bars[5].strokeColor =  orange2;
+myBarChart.datasets[0].bars[5].highlightFill = orange3;
+myBarChart.datasets[0].bars[5].highlightStroke =  orange4;
+
+//bar 7
+myBarChart.datasets[0].bars[6].fillColor =  orange1;
+myBarChart.datasets[0].bars[6].strokeColor =  orange2;
+myBarChart.datasets[0].bars[6].highlightFill = orange3;
+myBarChart.datasets[0].bars[6].highlightStroke =  orange4;
+
+//bar 8
+myBarChart.datasets[0].bars[7].fillColor =  orange1;
+myBarChart.datasets[0].bars[7].strokeColor =  orange2;
+myBarChart.datasets[0].bars[7].highlightFill = orange3;
+myBarChart.datasets[0].bars[7].highlightStroke =  orange4;
+
+//bar 9
+myBarChart.datasets[0].bars[8].fillColor =  orange1;
+myBarChart.datasets[0].bars[8].strokeColor =  orange2;
+myBarChart.datasets[0].bars[8].highlightFill = orange3;
+myBarChart.datasets[0].bars[8].highlightStroke =  orange4;
+
+//bar 10
+myBarChart.datasets[0].bars[9].fillColor =  orange1;
+myBarChart.datasets[0].bars[9].strokeColor =  orange2;
+myBarChart.datasets[0].bars[9].highlightFill = orange3;
+myBarChart.datasets[0].bars[9].highlightStroke =  orange4;
+
+//bar 11
+myBarChart.datasets[0].bars[10].fillColor =  yellow1;
+myBarChart.datasets[0].bars[10].strokeColor =  yellow2;
+myBarChart.datasets[0].bars[10].highlightFill = yellow3;
+myBarChart.datasets[0].bars[10].highlightStroke =  yellow4;
+
+//bar 12
+myBarChart.datasets[0].bars[11].fillColor =  yellow1;
+myBarChart.datasets[0].bars[11].strokeColor =  yellow2;
+myBarChart.datasets[0].bars[11].highlightFill = yellow3;
+myBarChart.datasets[0].bars[11].highlightStroke =  yellow4;
+
+//bar 13
+myBarChart.datasets[0].bars[12].fillColor =  yellow1;
+myBarChart.datasets[0].bars[12].strokeColor =  yellow2;
+myBarChart.datasets[0].bars[12].highlightFill = yellow3;
+myBarChart.datasets[0].bars[12].highlightStroke =  yellow4;
+
+//bar 14
+myBarChart.datasets[0].bars[13].fillColor =  yellow1;
+myBarChart.datasets[0].bars[13].strokeColor =  yellow2;
+myBarChart.datasets[0].bars[13].highlightFill = yellow3;
+myBarChart.datasets[0].bars[13].highlightStroke =  yellow4;
+
+myBarChart.update();
+
+var myBarChart2 = new Chart(ctx2).Bar(data2, null);
+myBarChart2.datasets[0].bars[0].fillColor =  "rgba(0,255,0,0.5)";
+myBarChart2.datasets[0].bars[0].strokeColor =  "rgba(0,255,0,0.8)";
+myBarChart2.datasets[0].bars[0].highlightFill = "rgba(0,255,0,0.75)";
+myBarChart2.datasets[0].bars[0].highlightStroke =  "rgba(0,255,0,1)";
+myBarChart2.update();
 console.log(ctx);
 
 var pieChart = document.getElementById("piChart").getContext("2d");
