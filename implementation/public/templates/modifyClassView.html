@@ -1,4 +1,4 @@
-<!-- addNewClassView.html -->
+<!-- modifyClassView.html -->
 <!-- @author Mike Ryu -->
 <!-- @source http://www.hongkiat.com/blog/html5-dialog-window/ -->
 
@@ -7,10 +7,20 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Add New Class</title>
+    <title>Modify Class Information</title>
 
     <!-- <link rel="stylesheet" href="css/style.css"> -->
     <!-- Not using CSS Style at the moment ... -->
+
+    <!-- Include jQuery library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+        // TODO: change from canned data to real data
+        $(document).ready(function () {
+            $("#classCode").val("CPE");
+            $("#classNumber").val("101");
+        });
+    </script>
 
 </head>
 
@@ -20,12 +30,12 @@
 <div class="demo-wrapper">
     <!--<form class="add-new-class-view">-->
         <div class="html5-dialog">
-            <button id="addclass">Add New Class</button>
+            <button id="addClass">Modify Class Information</button>
             <dialog id="popup-dialog">
-                <h3>Add a New Class</h3>
+                <h3>Modify Class Information</h3>
                 Class Code <input id="classCode" type="text" name="classCode" placeholder="i.e. CPE"><br>
                 Class Number <input id="classNumber" type="text" name="classNumber" placeholder="i.e. 101"><br>
-                <p>Clicking OK below will generate a new gradebook for the class entered above.</p>
+                <p>Clicking OK below will edit the class information.</p>
                 <button id="ok">OK</button>
                 <button id="cancel">Cancel</button>
             </dialog>
@@ -40,9 +50,10 @@
         var dialog = document.getElementById('popup-dialog');
 
         // Show the Modal dialog when the button is clicked
-        document.getElementById('addclass').onclick = function() {
+        document.getElementById('addClass').onclick = function() {
             dialog.show();
         };
+
 
         // Event handler for the OK button on the dialog
         document.getElementById('ok').onclick = function() {
@@ -57,14 +68,10 @@
                 window.alert('Please enter class code AND number.');
             }
             else {
-                // Clear the input fields
-                document.getElementById('classCode').value = '';
-                document.getElementById('classNumber').value = '';
-
                 // Close the Modal dialog and show class name entered
                 dialog.close();
-                window.alert('The following class information was entered\n' +
-                'Class Name: [' + className + ']');
+                window.alert('The following change has been made:\n' +
+                'Modified class Name: [' + className + ']');
             }
         };
 
