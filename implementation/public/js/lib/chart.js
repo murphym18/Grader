@@ -3500,7 +3500,7 @@ var green4 =  "rgba(0,255,0,1)";
 
 
 var ctx = document.getElementById("myChart").getContext("2d");
-var ctx2 = document.getElementById("myChart2").getContext("2d");
+//var ctx2 = document.getElementById("myChart2").getContext("2d");
 //var data = {
 //    labels: ["January", "February", "March", "April", "May", "June", "July"],
 //    datasets: [
@@ -3658,33 +3658,39 @@ myBarChart.datasets[0].bars[13].highlightStroke =  yellow4;
 
 myBarChart.update();
 
-var myBarChart2 = new Chart(ctx2).Bar(data2, null);
-myBarChart2.datasets[0].bars[0].fillColor =  "rgba(0,255,0,0.5)";
-myBarChart2.datasets[0].bars[0].strokeColor =  "rgba(0,255,0,0.8)";
-myBarChart2.datasets[0].bars[0].highlightFill = "rgba(0,255,0,0.75)";
-myBarChart2.datasets[0].bars[0].highlightStroke =  "rgba(0,255,0,1)";
-myBarChart2.update();
-console.log(ctx);
+//var myBarChart2 = new Chart(ctx2).Bar(data2, null);
+//myBarChart2.datasets[0].bars[0].fillColor =  "rgba(0,255,0,0.5)";
+//myBarChart2.datasets[0].bars[0].strokeColor =  "rgba(0,255,0,0.8)";
+//myBarChart2.datasets[0].bars[0].highlightFill = "rgba(0,255,0,0.75)";
+//myBarChart2.datasets[0].bars[0].highlightStroke =  "rgba(0,255,0,1)";
+//myBarChart2.update();
+//console.log(ctx);
 
 var pieChart = document.getElementById("piChart").getContext("2d");
 var pieData = [
     {
-        value: 300,
-        color:"#F7464A",
-        highlight: "#FF5A5E",
+        value: 9,
+        color:red1,
+        highlight: red2,
         label: "Red"
     },
     {
-        value: 50,
-        color: "#46BFBD",
-        highlight: "#5AD3D1",
-        label: "Green"
+        value: 11,
+        color: orange1,
+        highlight: orange2,
+        label: "Orange"
     },
     {
-        value: 100,
-        color: "#FDB45C",
-        highlight: "#FFC870",
+        value: 10,
+        color: yellow1,
+        highlight: yellow2,
         label: "Yellow"
+    },
+    {
+        value: 8,
+        color: green1,
+        highlight: green2,
+        label: "Green"
     }
 ]
 
