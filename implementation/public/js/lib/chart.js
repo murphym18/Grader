@@ -1,12 +1,4 @@
-/*!
- * Chart.js
- * http://chartjs.org/
- * Version: 1.0.2
- *
- * Copyright 2015 Nick Downie
- * Released under the MIT license
- * https://github.com/nnnick/Chart.js/blob/master/LICENSE.md
- */
+
 
 
 (function(){
@@ -3476,44 +3468,42 @@
 
 }).call(this);
 
+
+
+
+var changeBarColor = function(chartIn, barStart, barEnd, color) {
+    i = barStart;
+    for(; i <= barEnd; i++) {
+        chartIn.datasets[0].bars[i].fillColor =  color[0];
+        chartIn.datasets[0].bars[i].strokeColor =  color[1];
+        chartIn.datasets[0].bars[i].highlightFill = color[2];
+        chartIn.datasets[0].bars[i].highlightStroke =  color[3];
+    }
+    chartIn.update();
+};
+
+
+var changeSingleBarColor = function(chartIn, bar, color) {
+
+        chartIn.datasets[0].bars[bar].fillColor =  color[0];
+        chartIn.datasets[0].bars[bar].strokeColor =  color[1];
+        chartIn.datasets[0].bars[bar].highlightFill = color[2];
+        chartIn.datasets[0].bars[bar].highlightStroke =  color[3];
+
+    chartIn.update();
+};
+
+
 // Colors
 
-var red1 =  "rgba(255,0,0,1)";
-var red2 =  "rgba(255,0,0,1)";
-var red3 =  "rgba(255,0,0,1)";
-var red4 =  "rgba(220,220,220,1)";
-
-var orange1 = "rgba(255, 165, 0, 0.5)";
-var orange2 = "rgba(255, 165, 0, 0.8)";
-var orange3 = "rgba(255, 165, 0, 0.75)";
-var orange4 = "rgba(255, 165, 0, 1)";
-
-var yellow1 =  "rgba(255, 255, 0,0.5)";
-var yellow2 =  "rgba(255, 255, 0,0.8)";
-var yellow3 =  "rgba(255, 255, 0,0.75)";
-var yellow4 =   "rgba(255, 255, 0,1)";
-
-var green1 = "rgba(0,255,0,0.5)";
-var green2 = "rgba(0,255,0,0.8)";
-var green3 = "rgba(0,255,0,0.75)";
-var green4 =  "rgba(0,255,0,1)";
+var lightred =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
+var darkred =  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"];
+var orange = ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"];
+var yellow =  ["rgba(255, 255, 0,0.5)", "rgba(255, 255, 0,0.8)", "rgba(255, 255, 0,0.75)", "rgba(255, 255, 0,1)"];
+var green = ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rgba(0,255,0,1)"];
 
 
 var ctx = document.getElementById("myChart").getContext("2d");
-//var ctx2 = document.getElementById("myChart2").getContext("2d");
-//var data = {
-//    labels: ["January", "February", "March", "April", "May", "June", "July"],
-//    datasets: [
-//        {
-//            label: "My First dataset",
-//            fillColor: "rgba(220,220,220,0.5)",
-//            strokeColor: "rgba(220,220,220,0.8)",
-//            highlightFill: "rgba(220,220,220,0.75)",
-//            highlightStroke: "rgba(220,220,220,1)",
-//            data: [65, 59, 80, 81, 56, 55, 40]
-//        }
-//    ]
-//};
 
 var data = {
     labels: ["50", "55", "60", "65", "68", "70", "71",
@@ -3521,177 +3511,200 @@ var data = {
     datasets: [
         {
             label: "My First dataset",
-            fillColor: green1,
-            strokeColor: green2,
-            highlightFill: green3,
-            highlightStroke: green4,
+            fillColor: green[0],
+            strokeColor: green[1],
+            highlightFill: green[2],
+            highlightStroke: green[3],
             data: [1, 2, 3, 1, 2, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4]
         }
     ]
 };
 
-var data2 = {
-    labels: ["50", "55", "60", "65", "68", "70", "71",
-        "75", "78", "79", "80", "83", "88", "89", "90", "91", "94"],
-    datasets: [
-        {
-            label: "My First dataset",
-            fillColor: "rgba(255,0,0,1)",
-            strokeColor: "rgba(255,0,0,1)",
-            highlightFill: "rgba(255,0,0,1)",
-            highlightStroke: "rgba(220,220,220,1)",
-            data: [1, 2, 3, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        {
-            label: "My First dataset",
-            fillColor: "rgba(255, 255, 0,0.5)",
-            strokeColor: "rgba(255, 255, 0,0.8)",
-            highlightFill: "rgba(255, 255, 0,0.75)",
-            highlightStroke: "rgba(255, 255, 0,1)",
-            data: [0, 0, 0, 0, 0, 1, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0]
-        },
-        {
-            label: "My First dataset",
-            fillColor: "rgba(0,0,255,0.5)",
-            strokeColor: "rgba(0,0,255,0.8)",
-            highlightFill: "rgba(0,0,255,0.75)",
-            highlightStroke: "rgba(0,0,255,1)",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 0, 0, 0]
-        },
-        {
-            label: "My First dataset",
-            fillColor: "rgba(0,255,0,0.5)",
-            strokeColor: "rgba(0,255,0,0.8)",
-            highlightFill: "rgba(0,255,0,0.75)",
-            highlightStroke: "rgba(0,255,0,1)",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4]
+
+var myBarChart = new Chart(ctx).Bar(data, {
+    scaleShowGridLines : false,
+    barStrokeWidth: 1
+});
+
+// Change Bar Colors
+
+
+var grades = [50, 55, 60, 65, 68, 70, 71, 75, 78, 79, 80, 83, 88, 89, 90, 91, 94];
+//var
+
+var aMin = 90;
+var bMin = 80;
+var cMin = 70;
+var dMin = 60;
+var aColor = green;
+var bColor = yellow;
+var cColor = orange;
+var dColor = lightred;
+var fColor = darkred;
+
+console.log(grades.length);
+var checkBarChartColors = function (gradesArray){
+     for(x = 0; x < gradesArray.length; x++) {
+         switch (true) {
+             case(gradesArray[x] >= aMin):
+                 changeSingleBarColor(myBarChart, x, aColor);
+                 break;
+             case(gradesArray[x] >= bMin):
+                 changeSingleBarColor(myBarChart, x, bColor);
+                 break;
+             case(gradesArray[x] >= cMin):
+                 changeSingleBarColor(myBarChart, x, cColor);
+                 break;
+             case(gradesArray[x] >= dMin):
+                 changeSingleBarColor(myBarChart, x, dColor);
+                 break;
+             default:
+                 changeSingleBarColor(myBarChart, x, fColor);
+                 break;
+         }
+     }
+}
+checkBarChartColors(grades);
+
+
+var numGradeLetters  = 5;
+
+// function to get number of grades in grade range for pie chart
+var pieValueByGradeFunction = function(gradesArray) {
+    var initNum = 0;
+    var pieValues = new Array(5);
+
+    while(initNum < numGradeLetters)
+        pieValues[initNum++] = 0;
+
+    gradesArray.forEach(function(value) {
+
+        switch (true) {
+            case(value >= aMin):
+                console.log("a");
+                pieValues[0]++;
+                //changeSingleBarColor(myBarChart, x, aColor);
+                break;
+            case(value >= bMin):
+                //changeSingleBarColor(myBarChart, x, bColor);
+                pieValues[1]++;
+                break;
+            case(value >= cMin):
+                pieValues[2]++;
+                //changeSingleBarColor(myBarChart, x, cColor);
+                break;
+            case(value >= dMin):
+                pieValues[3]++;
+                //changeSingleBarColor(myBarChart, x, dColor);
+                break;
+            default:
+                console.log("default");
+                pieValues[4]++;
+                //changeSingleBarColor(myBarChart, x, fColor);
+                break;
         }
-    ]
-};
+    });
+    return pieValues;
+}
 
-console.log(Chart);
-var myBarChart = new Chart(ctx).Bar(data, null);
-
-// bar 1
-myBarChart.datasets[0].bars[0].fillColor =  red1;
-myBarChart.datasets[0].bars[0].strokeColor =  red2;
-myBarChart.datasets[0].bars[0].highlightFill = red3;
-myBarChart.datasets[0].bars[0].highlightStroke =  red4;
-
-//bar 2
-myBarChart.datasets[0].bars[1].fillColor =  red1;
-myBarChart.datasets[0].bars[1].strokeColor =  red2;
-myBarChart.datasets[0].bars[1].highlightFill = red3;
-myBarChart.datasets[0].bars[1].highlightStroke =  red4;
-
-//bar 3
-myBarChart.datasets[0].bars[2].fillColor =  red1;
-myBarChart.datasets[0].bars[2].strokeColor =  red2;
-myBarChart.datasets[0].bars[2].highlightFill = red3;
-myBarChart.datasets[0].bars[2].highlightStroke =  red4;
-
-//bar 4
-myBarChart.datasets[0].bars[3].fillColor =  red1;
-myBarChart.datasets[0].bars[3].strokeColor =  red2;
-myBarChart.datasets[0].bars[3].highlightFill = red3;
-myBarChart.datasets[0].bars[3].highlightStroke =  red4;
-
-// bar 5
-myBarChart.datasets[0].bars[4].fillColor =  red1;
-myBarChart.datasets[0].bars[4].strokeColor =  red2;
-myBarChart.datasets[0].bars[4].highlightFill = red3;
-myBarChart.datasets[0].bars[4].highlightStroke =  red4;
-
-//bar 6
-myBarChart.datasets[0].bars[5].fillColor =  orange1;
-myBarChart.datasets[0].bars[5].strokeColor =  orange2;
-myBarChart.datasets[0].bars[5].highlightFill = orange3;
-myBarChart.datasets[0].bars[5].highlightStroke =  orange4;
-
-//bar 7
-myBarChart.datasets[0].bars[6].fillColor =  orange1;
-myBarChart.datasets[0].bars[6].strokeColor =  orange2;
-myBarChart.datasets[0].bars[6].highlightFill = orange3;
-myBarChart.datasets[0].bars[6].highlightStroke =  orange4;
-
-//bar 8
-myBarChart.datasets[0].bars[7].fillColor =  orange1;
-myBarChart.datasets[0].bars[7].strokeColor =  orange2;
-myBarChart.datasets[0].bars[7].highlightFill = orange3;
-myBarChart.datasets[0].bars[7].highlightStroke =  orange4;
-
-//bar 9
-myBarChart.datasets[0].bars[8].fillColor =  orange1;
-myBarChart.datasets[0].bars[8].strokeColor =  orange2;
-myBarChart.datasets[0].bars[8].highlightFill = orange3;
-myBarChart.datasets[0].bars[8].highlightStroke =  orange4;
-
-//bar 10
-myBarChart.datasets[0].bars[9].fillColor =  orange1;
-myBarChart.datasets[0].bars[9].strokeColor =  orange2;
-myBarChart.datasets[0].bars[9].highlightFill = orange3;
-myBarChart.datasets[0].bars[9].highlightStroke =  orange4;
-
-//bar 11
-myBarChart.datasets[0].bars[10].fillColor =  yellow1;
-myBarChart.datasets[0].bars[10].strokeColor =  yellow2;
-myBarChart.datasets[0].bars[10].highlightFill = yellow3;
-myBarChart.datasets[0].bars[10].highlightStroke =  yellow4;
-
-//bar 12
-myBarChart.datasets[0].bars[11].fillColor =  yellow1;
-myBarChart.datasets[0].bars[11].strokeColor =  yellow2;
-myBarChart.datasets[0].bars[11].highlightFill = yellow3;
-myBarChart.datasets[0].bars[11].highlightStroke =  yellow4;
-
-//bar 13
-myBarChart.datasets[0].bars[12].fillColor =  yellow1;
-myBarChart.datasets[0].bars[12].strokeColor =  yellow2;
-myBarChart.datasets[0].bars[12].highlightFill = yellow3;
-myBarChart.datasets[0].bars[12].highlightStroke =  yellow4;
-
-//bar 14
-myBarChart.datasets[0].bars[13].fillColor =  yellow1;
-myBarChart.datasets[0].bars[13].strokeColor =  yellow2;
-myBarChart.datasets[0].bars[13].highlightFill = yellow3;
-myBarChart.datasets[0].bars[13].highlightStroke =  yellow4;
-
-myBarChart.update();
-
-//var myBarChart2 = new Chart(ctx2).Bar(data2, null);
-//myBarChart2.datasets[0].bars[0].fillColor =  "rgba(0,255,0,0.5)";
-//myBarChart2.datasets[0].bars[0].strokeColor =  "rgba(0,255,0,0.8)";
-//myBarChart2.datasets[0].bars[0].highlightFill = "rgba(0,255,0,0.75)";
-//myBarChart2.datasets[0].bars[0].highlightStroke =  "rgba(0,255,0,1)";
-//myBarChart2.update();
-//console.log(ctx);
+var pieValueByGrade = pieValueByGradeFunction(grades);
 
 var pieChart = document.getElementById("piChart").getContext("2d");
 var pieData = [
     {
-        value: 9,
-        color:red1,
-        highlight: red2,
-        label: "Red"
+        value: pieValueByGrade[0],
+        color: aColor[0],
+        highlight: aColor[1],
+        label: "A"
     },
     {
-        value: 11,
-        color: orange1,
-        highlight: orange2,
-        label: "Orange"
+        value: pieValueByGrade[1],
+        color: bColor[0],
+        highlight: bColor[1],
+        label: "B"
     },
     {
-        value: 10,
-        color: yellow1,
-        highlight: yellow2,
-        label: "Yellow"
+        value: pieValueByGrade[2],
+        color: cColor[0],
+        highlight: cColor[1],
+        label: "C"
     },
     {
-        value: 8,
-        color: green1,
-        highlight: green2,
-        label: "Green"
+        value: pieValueByGrade[3],
+        color:dColor[0],
+        highlight: dColor[1],
+        label: "D"
+    },
+    {
+        value: pieValueByGrade[4],
+        color: fColor[0],
+        highlight: fColor[1],
+        label: "F"
     }
+
 ]
 
+
 var myPieChart = new Chart(pieChart).Pie(pieData,null);
+
+function updatePieData() {
+    updatePieDataIncrement = 0;
+    pieValueByGrade = pieValueByGradeFunction(grades);
+    for(;updatePieDataIncrement < 5; updatePieDataIncrement++) {
+        myPieChart.segments[updatePieDataIncrement].value = pieValueByGrade[updatePieDataIncrement];
+    }
+    console.log(pieData);
+}
+
+
+
+function updatePieChart() {
+    pieValueByGrade = pieValueByGradeFunction(grades);
+    updatePieData();
+    console.log(pieValueByGrade);
+    myPieChart.update();
+    //myPieChart = new Chart(pieChart).Pie(pieData,null);
+}
+
+function updateBarChart() {
+    checkBarChartColors(grades);
+    myBarChart.update();
+}
+
+//function updateGradeMins (){
+//
+//};
+
+$(document).ready(function () {
+    // update minimum values at load
+    $('#aMinInput').val(aMin);
+    $('#bMinInput').val(bMin);
+    $('#cMinInput').val(cMin);
+    $('#dMinInput').val(dMin);
+
+    // set grade mins submit function
+    $('#setGradeMins').on('submit', function(e) {
+        //do not refresh page
+        e.preventDefault();
+
+        // update mins
+        aMin = $('#aMinInput').val();
+        bMin = $('#bMinInput').val();
+        cMin = $('#cMinInput').val();
+        dMin = $('#dMinInput').val();
+
+
+        $.ajax({
+            url : $(this).attr('action') || window.location.pathname,
+            type: "GET",
+            data: $(this).serialize(),
+            success: function (data) {
+                updatePieChart();
+                updateBarChart();
+            },
+            error: function (jXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    });
+});

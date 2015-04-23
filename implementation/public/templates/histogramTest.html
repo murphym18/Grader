@@ -1,16 +1,22 @@
-<!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
-    <script src="https://cdnjs.com/libraries/chart.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
 <h1>Chart</h1>
 <canvas id="myChart" width="400" height="400"></canvas>
 <canvas id="piChart" width="400" height="400"></canvas>
-<!--<canvas id="myChart2" width="400" height="400"></canvas>-->
+<p>
+    <form id="setGradeMins"  method="post" onsubmit="null">
+    Minimun A:<input type="text" name="aMinInput" id="aMinInput" value="90"><br>
+    Minimun B:<input type="text" name="bMinInput" id="bMinInput" value="80"><br>
+    Minimun C:<input type="text" name="cMinInput" id="cMinInput" value="70"><br>
+    Minimun D:<input type="text" name="dMinInput" id="dMinInput" value="60"><br>
+    <input type="submit" name="submit" class="button" id="submit_btn" value="Update">
+    </form>
+</p>
 <p>
     Data: 50, 55, 60, 65, 68, 70, 71, 75, 78, 79, 80, 83, 88, 89, 90, 91, 94
 </p>
