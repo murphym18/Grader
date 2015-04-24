@@ -1,7 +1,0 @@
-constructor takes an array of strings (representing permissions)
- the object is a middleware function that,
-(1) checks that the user is logged in.
-   if not it makes them login and redirects them after
-(2) checks that the user has proper access.
-   if not it redirects them to a permission denied page
-(3) 
