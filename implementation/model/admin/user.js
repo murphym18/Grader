@@ -6,7 +6,7 @@ require("mongoose-types").loadTypes(mongoose);
 var Email = mongoose.SchemaTypes.Email;
 var sha = require.main.require('./app/util').hashPasswordString;
 
-var userSchema = mongoose.Schema({
+var schema = mongoose.Schema({
    first: {
       type: String,
       select: true
@@ -44,10 +44,10 @@ var userSchema = mongoose.Schema({
       unique: true
    }
 });
-userSchema.set('autoIndex', true);
+schema.set('autoIndex', true);
 
-userSchema.statics.findLogin = function(user, pass) {
+schema.statics.findLogin = function(user, pass) {
    return this.findOne({username: user, password: sha(pass)});
 }
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', schema);

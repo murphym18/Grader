@@ -2,7 +2,6 @@
 @author Michael Murphy
 */
 
-var app = require('express')();
 var passport = require('passport');
 var LoginStrategy = require('passport-local').Strategy;
 var Users = require.main.require('./model/admin/user');
@@ -21,9 +20,7 @@ function requireLogin(req, res, next) {
    }
 }
 
-var router = require('express').Router();
-
-router.post('/login', function(req, res, next) {
+function loginHttpHandler(req, res, next) {
    passport.authenticate('local', function(err, user) {
       if (err)
          return next(err);
@@ -43,12 +40,12 @@ router.post('/login', function(req, res, next) {
          });
       });
    })(req, res, next);
-});
+}
 
-router.get('/logout', function(req, res) {
+function logoutHttpHandler(req, res) {
    req.logout();
    res.json({});
-});
+}
 
 passport.serializeUser(function (user, done) {
    done(null, user.username);
@@ -84,6 +81,7 @@ passport.use(new LoginStrategy(function(user, pass, done) {
    })
 }));
 
-exports.routes = router;
+exports.loginHttpHandler = loginHttpHandler;
+exports.logoutHttpHandler = logoutHttpHandler;
 exports.requireLogin = requireLogin;
 

@@ -34,7 +34,7 @@ function setupDatabaseDirectory() {
 
    var absPath = path.resolve(config.db.path);
    if (config.createMissingDirectories && !fs.existsSync(absPath)) {
-      console.log("Creating directory for database files at " + absPath);
+      console.log("Creating directory for database files: \"" + absPath + "\"");
       util.makeDirectoryPlusParents(absPath);
    }
    return absPath;

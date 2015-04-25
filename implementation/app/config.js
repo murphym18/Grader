@@ -12,26 +12,34 @@ exports.http = {};
 exports.http.port = 8080;
 
 /**
- * Creates missing subdirectories.
+ * Creates missing directories.
  *
  * The database and session modules need directories to store their files in.
- * This option creates those directories plus and parent directories if they
- * don't exist.
+ * Set this option to true to have the app create these directories plus any
+ * parent directories if they don't exist.
  */
 exports.createMissingDirectories = true;
 
+/* DEBUG SETTINGS */
 /**
- * DEBUG SETTINGS
+ * If <code>true</code> then errors caused during an HTTP request result in a
+ * detailed error response. If false then a generic HTTP error response is used.
  */
 exports.showVerboseErrors = true;
 
+/**
+ * If true then the <code>verboseLog</code> function in app/util.js is bound to
+ * <code>console.log</code>. If false then <code>verboseLog</code> is bound to
+ * a function that does nothing.
+ */
+exports.verboseLog = false;
 
 /* DATABASE SETTINGS */
 exports.db = {};
 
 /**
  * Use in memory database only.
- * When this is true the DATABASE_DIR value is ignored.
+ * When this is true the <code>exports.db.path</code> value is ignored.
  */
 exports.db.memStore = false;
 
