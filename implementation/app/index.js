@@ -1,6 +1,4 @@
-/**
-@author Michael Murphy
-*/
+/** @author Michael Murphy */
 /**
  * Initializes the application and exports an emitter. Users of this module can
  * listen on the following events:
@@ -27,7 +25,7 @@ var passport = require('passport');
 var error = require('./errors');
 var events = require('events');
 var config = require('./config');
-var auth = require('./authenticate');
+var headers = require('./http-headers');
 var expressLayouts = require('express-ejs-layouts')
 
 var app = express();
@@ -35,6 +33,7 @@ var server = false;
 app.set('trust proxy', 'loopback');
 
 app.use(logger('dev'));
+app.use(headers);
 app.use('/', express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
