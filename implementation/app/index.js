@@ -14,7 +14,6 @@
  */
 console.time("Application ready");
 console.time("Routes ready");
-require('./harmony');
 require('./database');
 var http = require('http');
 var express = require('express');
