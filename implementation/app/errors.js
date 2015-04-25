@@ -16,16 +16,14 @@ function devHandler(err, req, res, next) {
    var arr = err.stack.split('\n').map(function(e) {
       return e.replace(process.cwd(), '').replace(/\(/g, '<span class="file">').replace(/\)/g, '</span>')
    });
-   var viewData = {
+   var errData = {
       name: err.name,
       message: err.message,
 
       stack: arr.join('\n')
    }
    res.status(err.status || 500);
-   res.render('error', viewData);
-
-   //throw err;
+   res.json(errData);
 }
 
 function prodHandler(err, req, res, next) {

@@ -29,18 +29,22 @@ requirejs.config({
       backbone: {
          deps: ["underscore", "jquery"],
          exports: "Backbone"
+      },
+      angoose: {
+         deps: ['jquery'],
+         exports: "angoose"
       }
    }
 });
 
 // Start the main app logic.
-requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/loginView.hbs', 'text!templates/home.hbs',
+requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'text!templates/loginView.hbs', 'text!templates/home.hbs',
 
     /* ADD YOUR STUFF BELOW */
     'text!templates/addNewClassView.html'],
     /* ADD YOUR STUFF ABOVE */
 
-    function($, _, Backbone, Handlebars, loginView, homeView,
+    function($, _, Backbone, Handlebars, angoose, loginView, homeView,
 
     /* ADD YOUR STUFF BELOW */
     addNewClassView)
@@ -160,8 +164,6 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/log
    Backbone.history.start('home', {trigger: true, replace: true});
 
    $(function() {
-
-      console.log("hello!");
       router.navigate('login', {trigger: true, replace: true});
 
       /*

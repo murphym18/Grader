@@ -19,7 +19,7 @@ function generateSecret(){
 
 var absPath = path.resolve(config.session.path);
 if (config.createMissingDirectories && !fs.existsSync(absPath)) {
-   console.log("Creating directory for session files: \"" + absPath + "\"");
+   console.warn("Creating directory for session files: \"" + absPath + "\"");
    util.makeDirectoryPlusParents(absPath);
 }
 

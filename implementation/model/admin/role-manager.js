@@ -1,5 +1,6 @@
 /** @author Michael Murphy */
 var _ = require('underscore');
+var mongoose = require('mongoose');
 var MissingRoleException =  Error.bind(null, "No such role exception.");
 
 function _findUserRoles(roles, user) {
@@ -26,7 +27,7 @@ function _getRole(roles, roleName) {
 var roleSchema = mongoose.Schema({
    name: String,
    permissions: [String],
-   users: [{'type': Schema.Types.ObjectId, 'ref': 'User'}]
+   users: [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'User'}]
 }, { _id: false });
 
 var roleManagerSchema = mongoose.Schema({

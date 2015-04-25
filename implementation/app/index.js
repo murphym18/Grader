@@ -14,6 +14,7 @@
  */
 console.time("Application ready");
 console.time("Routes ready");
+console.time("Angoose ready");
 require('./database');
 var http = require('http');
 var express = require('express');
@@ -25,7 +26,8 @@ var error = require('./errors');
 var events = require('events');
 var config = require('./config');
 var headers = require('./http-headers');
-var expressLayouts = require('express-ejs-layouts')
+var expressLayouts = require('express-ejs-layouts');
+var path = require('path');
 
 var app = express();
 var server = false;
@@ -53,4 +55,11 @@ app.ready = function() {
    }
 }
 
+app.angooseOptions = {
+   'module-dirs':'./model',
+   'urlPrefix': '/api',
+   'logging': 'WARN',
+   'mongo-opts': 'tingodb://'.concat(path.resolve(config.db.path)),
+   'client-file': path.resolve('./public/js/lib/angoose.js')
+};
 module.exports = app;
