@@ -1,25 +1,23 @@
-/**
-@author Michael Murphy
-*/
+/** @author Michael Murphy */
+
 var co = require('co');
 var fs = require('fs');
 var app = require('./app');
-var config = require('./app/config');
 var verboseLog = require('./app/util').verboseLog;
 var Users = require('./model/admin/user');
 var routes = require('./routes');
 
+/* mount login REST endpoints */
 app.use('/api/', routes.login);
 
-/* Angoose bootstraping */
+/* Bootstrap Angoose  */
 setImmediate(function(){
    require("angoose").init(app, app.angooseOptions);
-});
-
-/* Angoose cleanup on exit */
-process.on('SIGINT', function() {
-   fs.unlinkSync(app.angooseOptions['client-file']);
-   process.exit(0);
+   /* Cleanup Angoose */
+   process.on('SIGINT', function() {
+      fs.unlinkSync(app.angooseOptions['client-file']);
+      process.exit(0);
+   });
 });
 
 /* add an admin user */
