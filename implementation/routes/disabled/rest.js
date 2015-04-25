@@ -23,7 +23,7 @@ function sendOne(db, type, id, res) {
 
 function addRestHeaders(req, res) {
    res.setHeader('content-type', 'text/javascript');
-   res.setHeader('X-Powered-By', 'Team Node');
+
 }
 var x = [
    {

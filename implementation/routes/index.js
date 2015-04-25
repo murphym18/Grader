@@ -16,10 +16,6 @@ fs.readdirSync(__dirname).filter(function(file) {
    routes[file] = subRoute;
 });
 
-exports.routes = routes;
-
-function setup(app) {
-   app.use("/api/", auth.routes);
-}
+module.exports = routes;
 
 

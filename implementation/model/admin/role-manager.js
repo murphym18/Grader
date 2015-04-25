@@ -1,93 +1,118 @@
 /** @author Michael Murphy */
-var utils = require.main.require('./app/util');
-var roles = utils.toRichArray(require('./role'));
-utils.toRichArray(Array.prototype);
+var _ = require('underscore');
+var MissingRoleException =  Error.bind(null, "No such role exception.");
 
-function _isSuperUserRole(role) {
-   return role === "ADMIN" || role === "INSTRUCTOR";
-}
-
-function _findRoles(self, user) {
+function _findUserRoles(roles, user) {
+   var userId = user.id;
    function isMember(role) {
-      function isUser(other) {
-         return String(other) === user.id;
-      }
-      return role === "NONE" || self[role].users.some(isUser);
+      return _.contains(role.users.map(String), userId);
    }
    return roles.filter(isMember);
 }
 
-function _findPerms(self, roles) {
+function _findPermissionSet(roles) {
    function toPerms(role) {
-      return self[role].permissions;
+      return role.permissions;
    }
-   return roles.flatMap(toPerms).uniq();
+   return _.union.apply(_, roles.map(toPerms));
 }
 
-function _SchemaProps(roles) {
-   var self = this;
-   roles.forEach(function(role){
-      self[role] = {
-         permissions: [String],
-         users: [{'type': Schema.Types.ObjectId, 'ref': 'User'}]
-      };
+function _getRole(roles, roleName) {
+   return _.find(roles, function(role) {
+      return role.name === roleName;
    });
 }
 
-var schema = mongoose.Schema(new _SchemaProps(roles));
+var roleSchema = mongoose.Schema({
+   name: String,
+   permissions: [String],
+   users: [{'type': Schema.Types.ObjectId, 'ref': 'User'}]
+}, { _id: false });
 
-schema.method('findAllUsers', function() {
-   var self = this;
+var roleManagerSchema = mongoose.Schema({
+   roles: [roleSchema]
+}, { _id: false });
+
+roleManagerSchema.method('findAllUserIds', function() {
    function toUsers(role) {
-      return self[role].users;
+      return role.users;
    }
-   return roles.flatMap(toUsers).uniq();
+   return _.union.apply(_, this.roles.map(toUsers));
 });
 
-schema.method('findUsers', function(role) {
-   return this[role].users;
-});
-
-schema.method('findRoles', function(user) {
-   return _findRoles(this, user).sort();
-});
-
-schema.method('findUserPermissions', function(user) {
-   var userRoles = _findRoles(this, user);
-   return _findPerms(this, userRoles);
-});
-
-schema.method('findRolePermissions', function(role) {
-   return _findPerms(this, [role]);
-});
-
-schema.method('isUserPermitted', function(user, perm) {
-   var userRoles = _findRoles(this, user);
-   if (userRoles.some(_isSuperUserRole)) {
-      return true;
+roleManagerSchema.method('findUserIds', function(roleName) {
+   var role = _getRole(this.roles, roleName);
+   if (role) {
+      return role.users;
    }
-   return _findPerms(this, userRoles).indexOf(perm) !== -1;
+   return null;
 });
 
-schema.method('grantPermission', function(role, perm) {
-   var permissions = this[role].permissions;
-   permissions.addToSet(perm);
-   permissions.sort(utils.strcmpIgnoreCase);
+roleManagerSchema.method('findUserRoles', function(user) {
+   return _findUserRoles(this.roles, user).sort();
+});
+
+roleManagerSchema.method('findUserPermissions', function(user) {
+   return _findPermissionSet(_findUserRoles(this.roles, user));
+});
+
+roleManagerSchema.method('findRolePermissions', function(roleName) {
+   var role = _getRole(this.roles, roleName);
+   if (role) {
+      return role.permissions;
+   }
+   return null;
+});
+
+roleManagerSchema.method('isUserPermitted', function(user, perm) {
+   var userRoles = _findUserRoles(this.roles, user);
+   return _.contains(_findPermissionSet(userRoles), perm);
+});
+
+roleManagerSchema.method('grantRolePermission', function(roleName, perm) {
+   var role = _getRole(this.roles, roleName);
+   if (role) {
+      role.permissions.addToSet(perm);
+      return this;
+   }
+   throw new MissingRoleException();
+});
+
+roleManagerSchema.method('revokeRolePermission', function(roleName, perm) {
+   var role = _getRole(this.roles, roleName);
+   if (role) {
+      role.permissions.remove(perm);
+      return this;
+   }
+   throw new MissingRoleException();
+});
+
+roleManagerSchema.method('assignRole', function(roleName, user) {
+   var role = _getRole(this.roles, roleName);
+   if (role) {
+      role.users.addToSet(user);
+      return this;
+   }
+   throw new MissingRoleException();
+});
+
+roleManagerSchema.method('revokeRole', function(roleName, user) {
+   var role = _getRole(this.roles, roleName);
+   if (role) {
+      role.users.remove(user.id);
+      return this;
+   }
+   throw new MissingRoleException();
+});
+
+roleManagerSchema.method('addRole', function(roleName) {
+   this.roles.addToSet({name: roleName});
    return this;
 });
 
-schema.method('revokePermission', function(role, perm) {
-   this[role].permissions.removeFirstOccurrence(perm);
+roleManagerSchema.method('removeRole', function(roleName) {
+   this.roles.remove({name: roleName});
    return this;
 });
 
-schema.method('assignRole', function(role, user) {
-   this[role].users.addToSet(user);
-   this[role].users.sort();
-   return this;
-});
-
-schema.method('revokeRole', function(role, user) {
-   this[role].users.removeFirstOccurrence(user);
-   return this;
-});
+module.exports = roleManagerSchema;
