@@ -1,3 +1,3 @@
-/**
- * Created by Michael on 4/25/2015.
- */
+/** @author Michael Murphy */
+
+var mongoose = require('mongoose');

@@ -9,6 +9,7 @@ var util = require('./util');
 
 var session = require('express-session');
 var SessionStore = require('session-file-store')(session);
+var min = 60 * 1000;
 
 function generateSecret(){
    var buf = crypto.randomBytes(256);
@@ -32,7 +33,8 @@ module.exports = session({
    store: new SessionStore({path: absPath}),
    secret: secret,
    resave: false,
-   saveUninitialized: false
+   saveUninitialized: false,
+   name: 'sid'
 });
 
 

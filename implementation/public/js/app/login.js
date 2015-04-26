@@ -1,9 +1,9 @@
 /**  @author Michael Murphy */
-define(['jquery', 'underscore', 'backbone', 'app/session', 'text!templates/login.html', 'domReady!'], function($, _, Backbone, session, html) {
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'app/session', 'text!templates/login.hbs', 'domReady!'], function($, _, Backbone, Handlebars, session, loginTemplate) {
    return Backbone.View.extend({
       tagName: "form",
       className: "login",
-      template: html,
+      template: Handlebars.compile(loginTemplate),
       events: {
          "click button": "doLogin",
          "change input.username": "updateUser",
@@ -26,7 +26,7 @@ define(['jquery', 'underscore', 'backbone', 'app/session', 'text!templates/login
          this.model.set({"password": input});
       },
       render: function() {
-         this.$el.html(this.template);
+         this.$el.html(this.template(this.model.attributes));
          this.username = this.$("input.username");
          this.password = this.$("input.password");
          this.errorMessage = this.$("div.error");

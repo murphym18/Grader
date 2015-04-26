@@ -13,4 +13,4 @@ var HeadingView = Backbone.View.extend({
    render: renderLoginScreen,
    resetInputs: resetInputs,
    focus: takeFocus
-});
+});});

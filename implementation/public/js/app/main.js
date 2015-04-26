@@ -43,9 +43,11 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/ses
       var context = JSON.parse(res.responseText);
       $('body').html(Handlebars.compile(errorTemplate)(context));
    }
+
    $.ajaxSetup({
       error: withRes
    });
+
    console.log()
    var AppRouter = Backbone.Router.extend({
       errorPage: Handlebars.compile(errorTemplate),
@@ -58,10 +60,14 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/ses
          "*any": "error404"
       },
       login: function() {
+         //if (session.isAuthenticated()) {
+         //   router.navigate(this.afterLoginPath || '/', {trigger: true, replace: false});
+         //   return;
+         //}
          var loginScreen = new LoginScreen({model: session, el: $('main')});
          loginScreen.focus();
          session.once('login', function(user){
-            router.navigate(this.afterLoginPath || '/', {trigger: true, replace: true});
+            router.navigate(this.afterLoginPath || '/', {trigger: true, replace: false});
          });
       },
       courses: function() {
@@ -93,13 +99,11 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/ses
             success: withRes
          });
       }
-
    });
 
    // Initiate the router
    var router = new AppRouter();
-   Backbone.history.start({pushState: true})//'home', {trigger: true, replace: true});
-
+   Backbone.history.start({pushState: true});
    router.navigate(window.location.pathname.substr(1), {trigger: true, replace: true});
 });
 

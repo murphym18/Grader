@@ -48,7 +48,9 @@ function loginHttpHandler(req, res, next) {
 
 function logoutHttpHandler(req, res) {
    req.logout();
-   res.json({logout: true, login: false, message: '', user: null});
+   req.session.destroy(function(err) {
+      res.json({logout: true, login: false, message: '', user: null});
+   })
 }
 
 passport.serializeUser(function (user, done) {

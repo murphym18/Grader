@@ -1,15 +1,19 @@
 define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
+   var SESSION_STORE_KEY = 'session';
    function loginAjaxSuccess(res, status, jqXHR) {
-      this.set(res);
+
       if (res.login) {
+//         var user = _.omit(res.user, 'password');
+         delete res.user.password;
+         this.set(res);
          this.afterLogin();
       }
       else {
-         this.set({'username': ''});
+         this.fetch();
+         this.set(res);
       }
    }
    function logoutAjaxSuccess(res, status, jqXHR) {
-      this.set(res);
       if (res.logout) {
          this.afterLogout();
       }
@@ -24,6 +28,9 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
          user: null,
          username: '',
          password: ''
+      },
+      initialize: function() {
+         this.fetch();
       },
       login: function() {
          var self = this;
@@ -40,6 +47,7 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
          this.set({password:'', message: ''});
       },
       logout: function() {
+         var self = this;
          $.ajax({
             url: '/api/logout',
             method: 'GET',
@@ -47,13 +55,40 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
          });
       },
       afterLogin: function () {
+         this.save();
          this.trigger('login');
       },
       afterLogout: function () {
+         this.reset();
          this.trigger('logout');
       },
       isAuthenticated: function() {
          return this.get('login');
+      },
+      reset: function() {
+         sessionStorage.removeItem(SESSION_STORE_KEY);
+         this.clear();
+         this.set(this.defaults);
+      },
+      save: function(attr, ops) {
+         var data = _.clone(this.attributes);
+         if (_.isObject(attr)) {
+            _.extend(data, attr);
+            if (ops && !ops.wait) {
+               this.set(attr);
+            }
+         }
+         data = JSON.stringify(data);
+         if (ops && ops.wait) {
+            sessionStorage.setItem(SESSION_STORE_KEY, data);
+            this.set(attr);
+         }
+         else {
+            sessionStorage.setItem(SESSION_STORE_KEY, data);
+         }
+      },
+      fetch: function() {
+         this.set(JSON.parse(sessionStorage.getItem(SESSION_STORE_KEY)));
       }
    });
 
