@@ -58,10 +58,10 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/ses
          "*any": "error404"
       },
       login: function() {
-         this.currentScreen = new LoginScreen({model: session, el: $('main')});
-         this.currentScreen.focus();
+         var loginScreen = new LoginScreen({model: session, el: $('main')});
+         loginScreen.focus();
          session.once('login', function(user){
-            router.navigate(this.afterLoginPath || '/', {trigger: true, replace: false});
+            router.navigate(this.afterLoginPath || '/', {trigger: true, replace: true});
          });
       },
       courses: function() {

@@ -10,6 +10,10 @@ var routes = require('./routes');
 /* Mount login REST endpoints */
 app.use('/api/', routes.login);
 
+/**
+ * This is a hack so that if connects from an external site to path managed by
+ * the client side history API the page still works.
+ */
 app.use('/', function(req, res, next){
    var sub = req.url.toString().substr(0, 5);
    if (sub !== '/api/' && req.accepts(['html', 'application/json']) === 'html')
@@ -18,7 +22,6 @@ app.use('/', function(req, res, next){
       next();
    }
 });
-
 
 /* Bootstrap Angoose */
 setImmediate(function(){
