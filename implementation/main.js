@@ -7,10 +7,10 @@ var verboseLog = require('./app/util').verboseLog;
 var Users = require('./model/admin/user');
 var routes = require('./routes');
 
-/* mount login REST endpoints */
+/* Mount login REST endpoints */
 app.use('/api/', routes.login);
 
-/* Bootstrap Angoose  */
+/* Bootstrap Angoose */
 setImmediate(function(){
    require("angoose").init(app, app.angooseOptions);
    /* Cleanup Angoose */
@@ -48,8 +48,3 @@ co(function *() {
 
    app.ready();
 });
-
-
-
-
-

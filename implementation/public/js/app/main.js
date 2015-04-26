@@ -38,75 +38,25 @@ requirejs.config({
 });
 
 // Start the main app logic.
-requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'text!templates/loginView.hbs', 'text!templates/home.hbs',
+requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/login', 'text!templates/home.hbs',
 
     /* ADD YOUR STUFF BELOW */
     'text!templates/addNewClassView.html'],
     /* ADD YOUR STUFF ABOVE */
 
-    function($, _, Backbone, Handlebars, angoose, loginView, homeView,
+    function($, _, Backbone, Handlebars, angoose, LoginScreen, homeView,
 
     /* ADD YOUR STUFF BELOW */
     addNewClassView)
     /* ADD YOUR STUFF ABOVE */
 
     {
-
+       console.log(LoginScreen)
    /*************************************************************************
     * WRITE SOMETHING LINE THE BELOW
     *************************************************************************/
 
-   var LoginView = Backbone.View.extend({
 
-      template: Handlebars.compile(loginView),
-      errorMessage: '',
-
-      initialize: function(){
-         this.render();
-      },
-
-      events: {
-         "click button": "doLogin"
-      },
-
-      doLogin: function(e) {
-         e.preventDefault();
-         var self = this;
-         var payload = {
-            username: this.$("input[name='username']").val(),
-            password: this.$("input[name='password']").val()
-         };
-         $.ajax({
-            url: '/api/login',
-            data: payload,
-            method: 'POST',
-            success: function(res, status, jqXHR) {
-               if (res.message) {
-                  self.errorMessage = res.message;
-               }
-               else {
-                  self.errorMessage = '';
-               }
-               if (res.login) {
-                  // successful user login
-                  alert('Login success!');
-                  afterLogin();
-               }
-               console.log(res);
-            },
-            complete: self.render.bind(self)
-         });
-         self.errorMessage = '';
-         self.render();
-
-      },
-
-      render: function(){
-         var self = this;
-         this.$el.html(this.template({'errorMessage': self.errorMessage}))
-      }
-
-   });
 
    /************************************************************************
     * WRITE SOMETHING LIKE ABOVE
@@ -147,8 +97,12 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'text!te
       currentScreen: null,
 
       login: function() {
-         $('main').html('');
-         this.currentScreen = new LoginView({ el: $('main')});
+         $('main').empty();
+         this.currentScreen = new LoginScreen({ el: $('main')});
+         this.currentScreen.on('login', function(user){
+            alert('Login success!');
+            console.dir(user);
+         });
       }
 
    });

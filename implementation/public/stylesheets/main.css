@@ -95,12 +95,31 @@ div.error {
 }
 
 .login {
-   padding: 0.5em;
+   padding: 1em;
+   display: block;
+   margin: 7em auto;
+   width: 300px;
+   text-align: center;
+   border: 1px solid;
+   border-radius: 4px;
+   box-shadow: 1px 1px 5px #888888;
 }
 
 .login input, .login button {
    display: block;
    margin: 0 0 .6em 0 ;
+   box-sizing: border-box;
+}
+.login input {
+   width: 90%;
+   margin: .5em auto;
+}
+.login button {
+   margin: 15px auto 0;
+}
+
+.login h1 {
+   margin: 0 0 .5em 0;
 }
 
 div#top-bar {
