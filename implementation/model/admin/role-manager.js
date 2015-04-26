@@ -32,7 +32,7 @@ var roleSchema = mongoose.Schema({
 
 var roleManagerSchema = mongoose.Schema({
    roles: [roleSchema]
-}, { _id: false });
+});
 
 roleManagerSchema.method('findAllUserIds', function() {
    function toUsers(role) {

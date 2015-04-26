@@ -25,7 +25,7 @@ app.use('/', function(req, res, next){
 
 /* Bootstrap Angoose */
 setImmediate(function(){
-   require("angoose").init(app, app.angooseOptions);
+   require("./angoose").init(app, app.angooseOptions);
    /* Cleanup Angoose */
    process.on('SIGINT', function() {
       fs.unlinkSync(app.angooseOptions['client-file']);

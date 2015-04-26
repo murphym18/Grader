@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/heading.hbs'], function($, _, Backbone, Handlebars, template) {
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/header.hbs'], function($, _, Backbone, Handlebars, template) {
 var HeadingView = Backbone.View.extend({
    template: Handlebars.compile(template),
    initialize: function(user){
