@@ -12,11 +12,21 @@
     <!-- Include jQuery library -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
+        var fillIn = function (student) {
+            $("#studentName").val(student.studentName);
+            $("#studentID").val(student.studentID);
+            $("#studentEmail").val(student.studentEmail);
+            $("#studentPhone").val(student.studentPhone);
+        }
+
         $(document).ready(function () {
-            $("#studentName").val("Arya Stark");
-            $("#studentID").val("10101010");
-            $("#studentEmail").val("vmorghulis@gmail.com");
-            $("#studentPhone").val("255-687-8343");
+            var exampleStudent = {};
+            exampleStudent.studentName = "Arya Stark";
+            exampleStudent.studentID = "10101010";
+            exampleStudent.studentEmail = "vmorghulis@gmail.com";
+            exampleStudent.studentPhone = "255-687-8343";
+
+            fillIn(exampleStudent);
         });
     </script>
 
