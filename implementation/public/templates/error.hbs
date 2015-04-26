@@ -1,0 +1,96 @@
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <title>{{{name}}}</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <style>
+      * {
+         line-height: 1.2;
+         margin: 0;
+      }
+      html {
+         color: #888;
+         /* display: table; */
+         font-family: sans-serif;
+         height: 100%;
+
+         width: 100%;
+      }
+      body {
+         /* display: table-cell; */
+         vertical-align: middle;
+         margin: 2em auto;
+         background-color: white;
+      }
+      h1 {
+         text-align: center;
+         color: #555;
+         font-size: 2em;
+         font-weight: 400;
+         padding: 0.5em;
+      }
+      p {
+         text-align: center;
+         margin: 0 auto;
+      }
+
+      div.stack {
+         width: 100%;
+         position: absolute;
+         bottom: 0;
+         max-height: 50%;
+         overflow-y: scroll;
+      }
+      div.stack h1 {
+         text-align: center;
+         color: #fff;
+         font-size: 1.2em;
+         background-color: #c00;
+         padding: 0.5em;
+         padding: 0.5em;
+         text-align: left;
+         position: absolute;
+         top: 0px;
+         right: 0px;
+         letter-spacing: normal;
+         font-family: monospace;
+
+      }
+      pre {
+
+         color: #fff;
+         display: block;
+         margin: 0 auto;
+         background-color: #333;
+         padding: 1em;
+         font-size: 1.15em;
+         line-height: 150%;
+
+
+         left: 0;
+      }
+
+      pre span.file {
+         color: #f55;
+      }
+      @media only screen and (max-width: 280px) {
+         body, p {
+            width: 95%;
+         }
+         h1 {
+            font-size: 1.5em;
+            margin: 0 0 0.3em;
+         }
+      }
+   </style>
+</head>
+<body>
+<h1>{{{name}}}</h1>
+<p>{{{message}}}</p>
+<div class="stack">
+   <h1>Stack</h1>
+  <pre>{{{stack}}}
+</pre>
+</div>
+
+</body>

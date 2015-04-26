@@ -3,7 +3,7 @@
 */
 requirejs.config({
    // By default load any module IDs from js/lib
-   baseUrl: 'js/lib',
+   baseUrl: '/js/lib',
    // except, if the module ID starts with "app",
    // load it from the js/app directory. paths
    // config is relative to the baseUrl, and
@@ -38,93 +38,93 @@ requirejs.config({
 });
 
 // Start the main app logic.
-requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/login', 'text!templates/home.hbs',
-
-    /* ADD YOUR STUFF BELOW */
-    'text!templates/addNewClassView.html'],
-    /* ADD YOUR STUFF ABOVE */
-
-    function($, _, Backbone, Handlebars, angoose, LoginScreen, homeView,
-
-    /* ADD YOUR STUFF BELOW */
-    addNewClassView)
-    /* ADD YOUR STUFF ABOVE */
-
-    {
-       console.log(LoginScreen)
-   /*************************************************************************
-    * WRITE SOMETHING LINE THE BELOW
-    *************************************************************************/
-
-
-
-   /************************************************************************
-    * WRITE SOMETHING LIKE ABOVE
-    ************************************************************************/
-
-    /**
-     * @author Mike Ryu
-     */
-    //var AddNewClassView = Backbone.View.extend({
-    //
-    //   template: Handlebars.compile(addNewClassView),
-    //   errorMessage: '',
-    //
-    //   initialize: function() {
-    //      this.render();
-    //   },
-    //
-    //   events: {
-    //      "click button": "doAddClass"
-    //   },
-    //
-    //   doAddClass: function(e) {
-    //      e.preventDefault();
-    //      var self = this;
-    //
-    //      console.log("Add Class button pressed!");
-    //   }
-    //
-    //});
-
-   var GraderAppRouter = Backbone.Router.extend({
-
+requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/session', 'app/login', 'text!templates/error.hbs'], function($, _, Backbone, Handlebars, angoose, session, LoginScreen, errorTemplate) {
+   function withRes(res) {
+      var context = JSON.parse(res.responseText);
+      $('body').html(Handlebars.compile(errorTemplate)(context));
+   }
+   $.ajaxSetup({
+      error: withRes
+   });
+   console.log()
+   var AppRouter = Backbone.Router.extend({
+      errorPage: Handlebars.compile(errorTemplate),
+      currentScreen: null,
       //todo add more routes...
       routes: {
-         "login": "login"
+         "login(/)": "login",
+         "courses(/)": "courses",
+         "(/)": "home",
+         "*any": "error404"
       },
-
-      currentScreen: null,
-
       login: function() {
+         this.currentScreen = new LoginScreen({model: session, el: $('main')});
+         this.currentScreen.focus();
+         session.once('login', function(user){
+            router.navigate(this.afterLoginPath || '/', {trigger: true, replace: false});
+         });
+      },
+      courses: function() {
+         //if (!session.isAuthenticated()) {
+         //   this.navigate('login', {trigger: true, replace: true});
+         //   this.login();
+         //}
          $('main').empty();
-         this.currentScreen = new LoginScreen({ el: $('main')});
-         this.currentScreen.on('login', function(user){
-            alert('Login success!');
-            console.dir(user);
+         $('main').append("courses");
+         console.log('hi')
+      },
+      home: function(){
+         $('main').empty().append("home");
+         if (!session.isAuthenticated()) {
+            //router.navigate('login');
+            //this.login();
+            //this.navigate('login', {trigger: true, replace: true});
+         }
+         else {
+         }
+      },
+      error404: function(){
+         $.ajax({
+            url: window.location.href,
+            method: 'GET',
+            headers: {
+               Accept : "application/json; q=1"
+            },
+            success: withRes
          });
       }
 
    });
 
    // Initiate the router
-   var router = new GraderAppRouter();
+   var router = new AppRouter();
+   Backbone.history.start({pushState: true})//'home', {trigger: true, replace: true});
 
-   function afterLogin() {
-      router.navigate('home', {trigger: true, replace: true});
-   }
-
-   // Start Backbone history a necessary step for bookmarkable URL's
-   Backbone.history.start('home', {trigger: true, replace: true});
-
-   $(function() {
-      router.navigate('login', {trigger: true, replace: true});
-
-      /*
-       * WRITE SOMETHING LIKE BELOW TO HAVE YOUR VIEW SHOW UP
-       * $('main').html(someText)
-       */
-       //$('main').html(AddNewClassView);
-
-   })
+   router.navigate(window.location.pathname.substr(1), {trigger: true, replace: true});
 });
+
+/**
+ * @author Mike Ryu
+ */
+// 'text!templates/addNewClassView.html' addNewClassView
+//var AddNewClassView = Backbone.View.extend({
+//
+//   template: Handlebars.compile(addNewClassView),
+//   errorMessage: '',
+//
+//   initialize: function() {
+//      this.render();
+//   },
+//
+//   events: {
+//      "click button": "doAddClass"
+//   },
+//
+//   doAddClass: function(e) {
+//      e.preventDefault();
+//      var self = this;
+//
+//      console.log("Add Class button pressed!");
+//   }
+//
+//});

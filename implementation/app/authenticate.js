@@ -26,8 +26,10 @@ function loginHttpHandler(req, res, next) {
          return next(err);
       if (!user) {
          return res.json({
+            logout: true,
             login: false,
-            message: "Invalid Username or Password."
+            message: "Invalid Username or Password.",
+            user: null
          });
       }
       req.logIn(user, function(err) {
@@ -35,7 +37,9 @@ function loginHttpHandler(req, res, next) {
             return next(err);
          }
          return res.json({
+            logout: false,
             login: true,
+            message: '',
             user: user
          });
       });
@@ -44,7 +48,7 @@ function loginHttpHandler(req, res, next) {
 
 function logoutHttpHandler(req, res) {
    req.logout();
-   res.json({});
+   res.json({logout: true, login: false, message: '', user: null});
 }
 
 passport.serializeUser(function (user, done) {

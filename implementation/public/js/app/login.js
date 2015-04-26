@@ -1,76 +1,51 @@
-/**
- * Created by Michael on 4/25/2015.
- */
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/login.hbs'], function($, _, Backbone, Handlebars, template) {
-   function doLogin(e) {
-      e.preventDefault();
-      var self = this;
-      var payload = {
-         username: self.$("input[name='username']").val(),
-         password: self.$("input[name='password']").val()
-      };
-      $.ajax({
-         url: '/api/login',
-         data: payload,
-         method: 'POST',
-         success: function() {ajaxSuccess.apply(self, _.toArray(arguments));}
-      });
-      this.$('.error').text('');
-   }
-
-   function ajaxSuccess(res, status, jqXHR) {
-      if (res.message) {
-         this.$('.error').text(res.message);
-         this.resetInputs();
-      }
-      if (res.login) {
-         this.afterLogin(res.user);
-      }
-   }
-
-   function renderLoginScreen(){
-      var html = this.template(this);
-      this.$el.html(html)
-      this.focus();
-   }
-
-   function afterLogin(user) {
-      var self = this;
-      this.$el.empty();
-      this.username = user.username;
-      this.trigger('login', user);
-      setTimeout(function(){self.render()}, 1500);
-   }
-
-   function resetInputs() {
-      this.$("input[name='username']").val(this.username);
-      this.$("input[name='password']").val('');
-   }
-
-   function takeFocus() {
-      if (this.username) {
-         this.$("input[name='password']").focus();
-      }
-      else {
-         this.$("input[name='username']").focus();
-      }
-   }
-   var LoginScreen = Backbone.View.extend({
-      template: Handlebars.compile(template),
-      username: '',
-      initialize: function(){
-         this.render();
-      },
+/**  @author Michael Murphy */
+define(['jquery', 'underscore', 'backbone', 'app/session', 'text!templates/login.html', 'domReady!'], function($, _, Backbone, session, html) {
+   return Backbone.View.extend({
+      tagName: "form",
+      className: "login",
+      template: html,
       events: {
-         "click button": "doLogin"
+         "click button": "doLogin",
+         "change input.username": "updateUser",
+         "change input.password": "updatePass"
       },
-      doLogin: doLogin,
-      afterLogin: afterLogin,
-      render: renderLoginScreen,
-      resetInputs: resetInputs,
-      focus: takeFocus
+      initialize: function() {
+         this.render();
+         this.listenTo(this.model, 'change', this.onChange);
+      },
+      doLogin: function(domEvent) {
+         domEvent.preventDefault();
+         this.model.login();
+      },
+      updateUser: function() {
+         var input = this.username.val();
+         this.model.set({"username": input});
+      },
+      updatePass: function() {
+         var input = this.password.val();
+         this.model.set({"password": input});
+      },
+      render: function() {
+         this.$el.html(this.template);
+         this.username = this.$("input.username");
+         this.password = this.$("input.password");
+         this.errorMessage = this.$("div.error");
+         this.onChange();
+      },
+      onChange: function() {
+         this.username.val(this.model.get('username'));
+         this.password.val(this.model.get('password'));
+         this.errorMessage.text(this.model.get('message'));
+         this.focus()
+      },
+      focus: function() {
+         if (!this.model.get('username')) {
+            this.username.focus();
+         }
+         else {
+            this.password.focus();
+         }
+      }
    });
-
-   return LoginScreen;
 });
 

@@ -10,6 +10,16 @@ var routes = require('./routes');
 /* Mount login REST endpoints */
 app.use('/api/', routes.login);
 
+app.use('/', function(req, res, next){
+   var sub = req.url.toString().substr(0, 5);
+   if (sub !== '/api/' && req.accepts(['html', 'application/json']) === 'html')
+      res.sendFile(__dirname + '/public/index.html');
+   else{
+      next();
+   }
+});
+
+
 /* Bootstrap Angoose */
 setImmediate(function(){
    require("angoose").init(app, app.angooseOptions);
