@@ -9,6 +9,25 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Modify Assignment</title>
 
+    <!-- Include jQuery library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+        var fillIn = function (assignment) {
+            $("#assignmentName").val(assignment.aName);
+            $("#assignmentWeight").val(assignment.aWeight);
+            $("#assignmentTotalScore").val(assignment.aTotalScore);
+        }
+
+        $(document).ready(function () {
+            var exampleAssignment = {};
+            exampleAssignment.aName = "Smitty Werbenjagermanjensen";
+            exampleAssignment.aWeight = "100";
+            exampleAssignment.aTotalScore = "1";
+
+            fillIn(exampleAssignment);
+        });
+    </script>
+
     <!-- <link rel="stylesheet" href="css/style.css"> -->
     <!-- Not using CSS Style at the moment ... -->
 
