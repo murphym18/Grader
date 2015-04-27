@@ -1,3 +1,4 @@
+/** @author Michael Murphy */
 define(['jquery', 'underscore', 'backbone', 'app/app'], function($, _, Backbone) {
 
    var SESSION_STORE_KEY = 'session';

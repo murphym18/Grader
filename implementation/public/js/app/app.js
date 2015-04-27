@@ -1,3 +1,4 @@
+/** @author Michael Murphy */
 define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/rootLayoutView.hbs', 'backbone.marionette', 'radio.shim', 'backbone.radio'], function($, _, Backbone, Handlebars, rootLayoutTemplate, Marionette) {
    Backbone.Marionette.Renderer.render = function(template, data){
       return template(data);
