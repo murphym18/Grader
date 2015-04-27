@@ -96,13 +96,10 @@ html {
    /* display: table; */
    font-family: sans-serif;
    height: 100%;
-
    width: 100%;
 }
 body {
    /* display: table-cell; */
-   vertical-align: middle;
-   margin: 2em auto;
    background-color: white;
 }
 h1 {

@@ -3,8 +3,6 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/rootLa
       return template(data);
    };
 
-
-
    var RootView = Marionette.LayoutView.extend({
       template: Handlebars.compile(rootLayoutTemplate),
       regions: function(options) {
@@ -21,6 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/rootLa
 
       }
    });
+
    var app = window.app = new Marionette.Application({
       routesChannel: Backbone.Radio.channel('routes'),
       initialize: function() {
@@ -28,7 +27,6 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/rootLa
          this.rootView.render();
       }
    });
-
 
    app.on("start", function(){
       Backbone.history.start({pushState: true});

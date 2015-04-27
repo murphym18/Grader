@@ -33,31 +33,8 @@ requirejs.config({
 });
 
 // Start the main app logic.
-requirejs(['handlebars', 'app/app', 'app/login', 'app/home', 'domReady!'], function(Handlebars, app) {
-
-
-
-   console.log()
-   //var AppRouter = Backbone.Router.extend({
-   //   currentScreen: null,
-   //   //todo add more routes...
-   //   routes: {
-   //      "courses(/)": "courses"
-   //
-   //   },
-   //   courses: function() {
-   //      $('main').empty();
-   //      $('main').append("courses");
-   //      console.log('hi')
-   //   }
-   //});
-
-   // Initiate the router
-   //var router = new AppRouter();
-
+requirejs(['app/app', 'app/login', 'app/home', 'domReady!'], function(app) {
    app.start({});
-
-
 });
 
 /**
