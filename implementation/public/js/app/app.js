@@ -1,36 +1,9 @@
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/rootLayoutView.hbs', 'text!templates/error.hbs', 'backbone.marionette', 'radio.shim', 'backbone.radio', 'app/home'], function($, _, Backbone, Handlebars, rootLayoutTemplate, errorTemplate, Marionette) {
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/rootLayoutView.hbs', 'backbone.marionette', 'radio.shim', 'backbone.radio'], function($, _, Backbone, Handlebars, rootLayoutTemplate, Marionette) {
    Backbone.Marionette.Renderer.render = function(template, data){
       return template(data);
    };
-   var ErrorView = Marionette.ItemView.extend({
-      template: Handlebars.compile(errorTemplate),
-      initialize: function() {
-      }
-   });
 
-   var ErrorRouter = Marionette.AppRouter.extend({
-      withAjaxResults: function (res) {
-         var data = JSON.parse(res.responseText);
-         var view = new ErrorView({model: new Backbone.Model(data)});
-         app.rootView.getRegion('main').show(view);
-      },
-      routes: {
-         "*any": "displayErrorPage"
-      },
-      displayErrorPage: function(){
-         var self = this;
-         $.ajax({
-            url: window.location.href,
-            method: 'GET',
-            headers: {
-               Accept : "application/json; q=1"
-            },
-            success: self.withAjaxResults,
-            error: self.withAjaxResults
-         });
-      }
-   });
-   var errorRouter = new ErrorRouter();
+
 
    var RootView = Marionette.LayoutView.extend({
       template: Handlebars.compile(rootLayoutTemplate),
@@ -49,14 +22,10 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/rootLa
       }
    });
    var app = window.app = new Marionette.Application({
+      routesChannel: Backbone.Radio.channel('routes'),
       initialize: function() {
          this.rootView = new RootView({destroyImmediate: true, el: $("body")});
          this.rootView.render();
-      },
-      navigate: function(path) {
-         if (Backbone.History.started) {
-            Backbone.history.navigate(path, {trigger: true, replace: false});
-         }
       }
    });
 

@@ -65,8 +65,7 @@ define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'a
       }
    }
 
-   var routesChannel = Backbone.Radio.channel('routes');
-   routesChannel.comply('/login', function() {
+   app.routesChannel.comply('/login', function() {
       loginPageBuilder.displayLoginPageThenNav();
    });
 

@@ -1,6 +1,12 @@
 /** @author Michael Murphy */
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'backbone.marionette', 'app/app', 'app/session', 'text!templates/topMenu.hbs', 'text!templates/home.hbs'], function($, _, Backbone, Handlebars, Marionette, app, session, topMenuTemplate, homeTemplate) {
-   TopMenuView = Marionette.ItemView.extend({
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'backbone.marionette', 'app/app', 'app/session', 'text!templates/topMenu.hbs', 'text!templates/home.hbs', 'text!templates/error.hbs'], function($, _, Backbone, Handlebars, Marionette, app, session, topMenuTemplate, homeTemplate, errorTemplate) {
+   var ErrorView = Marionette.ItemView.extend({
+      template: Handlebars.compile(errorTemplate),
+      initialize: function() {
+      }
+   });
+
+   var TopView = Marionette.ItemView.extend({
       tagName: 'nav',
       template: Handlebars.compile(topMenuTemplate),
       events: {
@@ -11,52 +17,51 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'backbone.marionette',
       }
    });
 
-   MainHomeView = Marionette.ItemView.extend({
+   var MainView = Marionette.ItemView.extend({
       template: Handlebars.compile(homeTemplate)
    });
 
-   var homePageBuilder = {
+   var homePageController = {
       displayHomePage: function() {
-         app.rootView.initialize();
-         app.rootView.getRegion('main').show(new MainHomeView({}));
-         app.rootView.getRegion('header').show(new TopMenuView({}));
-         app.rootView.render();
-         console.log('sjkdsfhkshfd')
+         app.rootView.getRegion('main').show(new MainView({model: new Backbone.Model()}));
+         app.rootView.getRegion('header').show(new TopView({model: new Backbone.Model()}));
       },
       displayHomePageThenNav: function() {
          this.displayHomePage();
          Backbone.history.navigate('/', {trigger: false, replace: false});
+      },
+      displayErrorPage: function(){
+         function withAjaxResults(res) {
+            var data = JSON.parse(res.responseText);
+            var view = new ErrorView({model: new Backbone.Model(data)});
+            app.rootView.getRegion('main').show(view);
+         }
+
+         $.ajax({
+            url: window.location.href,
+            method: 'GET',
+            headers: {
+               Accept : "application/json; q=1"
+            },
+
+            error: withAjaxResults
+         });
       }
    };
-   var routesChannel = Backbone.Radio.channel('routes');
-   routesChannel.comply('/', function() {
-      homePageBuilder.displayHomePageThenNav();
-      console.log('test');
+
+   app.routesChannel.comply('/', function() {
+      homePageController.displayHomePageThenNav();
+
    });
 
    app.on('before:start', function() {
-      var HomeRouter = Marionette.AppRouter.extend({
+      app.homeRouter = new Marionette.AppRouter({
+         controller: homePageController,
          appRoutes: {
-            "/": "displayHomePage"
-         },
-         controller: homePageBuilder
+            "(/)": "displayHomePage"
+         }
       });
    });
-   app.on('before:start', function() {
-      app.LoginRouter = new Marionette.AppRouter({
-         appRoutes: {
-            "login": "displayLoginPage"
-         },
-         controller: loginPageBuilder
-      });
-   });
-   var routesChannel = Backbone.Radio.channel('routes');
-   routesChannel.comply('/', function() {
-       homePageBuilder
-       });
-   app.on('start')
-   if(session.isAuthenticated() && window.location.pathname !== '/login') {
-      showTopMenu();
-   }
-   return TopMenuView;
+
+   return TopView;
 });

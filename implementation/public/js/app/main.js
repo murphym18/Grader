@@ -33,43 +33,31 @@ requirejs.config({
 });
 
 // Start the main app logic.
-requirejs(['jquery', 'underscore', 'backbone', 'app/app', 'app/login', 'handlebars', 'app/session', 'app/top-menu', 'domReady!'], function($, _, Backbone, app, login, Handlebars, session) {
+requirejs(['handlebars', 'app/app', 'app/login', 'app/home', 'domReady!'], function(Handlebars, app) {
 
 
 
    console.log()
-   var AppRouter = Backbone.Router.extend({
-      currentScreen: null,
-      //todo add more routes...
-      routes: {
-         //"login(/)": "login",
-         "courses(/)": "courses"
-
-      },
-      courses: function() {
-         //if (!session.isAuthenticated()) {
-         //   this.navigate('login', {trigger: true, replace: true});
-         //   this.login();
-         //}
-         $('main').empty();
-         $('main').append("courses");
-         console.log('hi')
-      },
-      home: function() {
-         //$('main').empty().append("home");
-         if (!session.isAuthenticated()) {
-            //router.navigate('login');
-            //this.login();
-            //this.navigate('login', {trigger: true, replace: true});
-         }
-         else {
-         }
-      }
-   });
+   //var AppRouter = Backbone.Router.extend({
+   //   currentScreen: null,
+   //   //todo add more routes...
+   //   routes: {
+   //      "courses(/)": "courses"
+   //
+   //   },
+   //   courses: function() {
+   //      $('main').empty();
+   //      $('main').append("courses");
+   //      console.log('hi')
+   //   }
+   //});
 
    // Initiate the router
-   var router = new AppRouter();
+   //var router = new AppRouter();
+
    app.start({});
+
+
 });
 
 /**
