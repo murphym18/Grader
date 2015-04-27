@@ -8,8 +8,10 @@ schema.add({
    classNumber: {
       type: String,
       match: /\d{3}/
-   }
-})
+   },
+   start: Date,
+   end: Date
+});
 
 schema.set('autoIndex', false);;
 

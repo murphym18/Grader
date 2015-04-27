@@ -118,11 +118,12 @@ p {
 }
 
 div.stack {
-   width: 100%;
    position: absolute;
    bottom: 0;
    max-height: 50%;
    overflow-y: scroll;
+   left: 0;
+   right: 0;
 }
 div.stack h1 {
    text-align: center;

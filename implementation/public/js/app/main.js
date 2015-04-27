@@ -1,6 +1,4 @@
-/**
-@author Michael Murphy
-*/
+/** @author Michael Murphy */
 requirejs.config({
    // By default load any module IDs from js/lib
    baseUrl: '/js/lib',
@@ -30,45 +28,23 @@ requirejs.config({
          deps: ["underscore", "jquery"],
          exports: "Backbone"
       },
-      angoose: {
-         deps: ['jquery'],
-         exports: "angoose"
-      }
+      enforceDefine: true
    }
 });
 
 // Start the main app logic.
-requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/session', 'app/login', 'text!templates/error.hbs'], function($, _, Backbone, Handlebars, angoose, session, LoginScreen, errorTemplate) {
-   function withRes(res) {
-      var context = JSON.parse(res.responseText);
-      $('body').html(Handlebars.compile(errorTemplate)(context));
-   }
+requirejs(['jquery', 'underscore', 'backbone', 'app/app', 'app/login', 'handlebars', 'app/session', 'app/top-menu', 'domReady!'], function($, _, Backbone, app, login, Handlebars, session) {
 
-   $.ajaxSetup({
-      error: withRes
-   });
+
 
    console.log()
    var AppRouter = Backbone.Router.extend({
-      errorPage: Handlebars.compile(errorTemplate),
       currentScreen: null,
       //todo add more routes...
       routes: {
-         "login(/)": "login",
-         "courses(/)": "courses",
-         "(/)": "home",
-         "*any": "error404"
-      },
-      login: function() {
-         //if (session.isAuthenticated()) {
-         //   router.navigate(this.afterLoginPath || '/', {trigger: true, replace: false});
-         //   return;
-         //}
-         var loginScreen = new LoginScreen({model: session, el: $('main')});
-         loginScreen.focus();
-         session.once('login', function(user){
-            router.navigate(this.afterLoginPath || '/', {trigger: true, replace: false});
-         });
+         //"login(/)": "login",
+         "courses(/)": "courses"
+
       },
       courses: function() {
          //if (!session.isAuthenticated()) {
@@ -79,8 +55,8 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/ses
          $('main').append("courses");
          console.log('hi')
       },
-      home: function(){
-         $('main').empty().append("home");
+      home: function() {
+         //$('main').empty().append("home");
          if (!session.isAuthenticated()) {
             //router.navigate('login');
             //this.login();
@@ -88,23 +64,12 @@ requirejs(['jquery', 'underscore', 'backbone', 'handlebars', 'angoose', 'app/ses
          }
          else {
          }
-      },
-      error404: function(){
-         $.ajax({
-            url: window.location.href,
-            method: 'GET',
-            headers: {
-               Accept : "application/json; q=1"
-            },
-            success: withRes
-         });
       }
    });
 
    // Initiate the router
    var router = new AppRouter();
-   Backbone.history.start({pushState: true});
-   router.navigate(window.location.pathname.substr(1), {trigger: true, replace: true});
+   app.start({});
 });
 
 /**

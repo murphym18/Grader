@@ -1,4 +1,5 @@
-define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
+define(['jquery', 'underscore', 'backbone', 'app/app'], function($, _, Backbone) {
+
    var SESSION_STORE_KEY = 'session';
    function loginAjaxSuccess(res, status, jqXHR) {
 
@@ -55,12 +56,16 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
          });
       },
       afterLogin: function () {
+         var routesChannel = Backbone.Radio.channel('routes');
          this.save();
          this.trigger('login');
+         routesChannel.command('/');
       },
       afterLogout: function () {
+         var routesChannel = Backbone.Radio.channel('routes');
          this.reset();
          this.trigger('logout');
+         routesChannel.command('/login');
       },
       isAuthenticated: function() {
          return this.get('login');
