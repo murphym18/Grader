@@ -1,0 +1,95 @@
+<!-- addCategoryView.html -->
+<!-- @author Matt Bleifer -->
+<!-- @source http://www.hongkiat.com/blog/html5-dialog-window/ -->
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Edit Category</title>
+
+    <!-- Include jQuery library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+        var fillIn = function (category) {
+            $("#categoryName").val(category.categoryName);
+            $("#categoryWeight").val(category.categoryWeight);
+        }
+
+        $(document).ready(function () {
+            var exampleCategory = {};
+            exampleCategory.categoryName = "Midterm 1";
+            exampleCategory.categoryWeight = "40";
+
+            fillIn(exampleCategory);
+        });
+    </script>
+
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <!-- Not using CSS Style at the moment ... -->
+
+</head>
+
+<body>
+
+<!-- Actual page's layout including the dialog -->
+<div class="demo-wrapper">
+    <div class="html5-dialog">
+        <dialog id="window">
+            <h3>Edit Category</h3>
+            <label>Category Name: <input id = "categoryName" type="text" name="categoryName"></label><br><br>
+            <label>Weight: <input id = "categoryWeight" type="text" name="categoryWeight"><br><br>
+           <label>Parent Category: <select name="category">
+              <option value="Tests">Tests</option>
+              <option value="Projects">Projects</option>
+              <option value="Homework">Homework</option>
+           </select></label><br><br>
+            <button id="ok">OK</button>
+            <button id="cancel">Cancel</button>
+        </dialog>
+        <button id="editCategory">Edit Category</button>
+    </div>
+</div>
+
+<!-- Script that handles the events -->
+<script type="text/javascript">
+    (function() {
+        // Get the page and dialog layout
+        var dialog = document.getElementById('window');
+
+        // Show the Modal dialog when the button is clicked
+        document.getElementById('editCategory').onclick = function() {
+            dialog.show();
+        };
+
+        // Event handler for the OK button on the dialog
+        document.getElementById('ok').onclick = function() {
+            console.log('OK button clicked!');
+
+
+            // Simple input validation (empty class code or number disallowed)
+            if (document.getElementById('categoryName').value === '' &&
+                    document.getElementById('categoryWeight').value === '') {
+                window.alert('Please fill out all fields');
+            }
+            else {
+                // Clear the input fields;
+                document.getElementById('categoryWeight').value = '';
+                document.getElementById('categoryName').value = '';
+
+                // Close the Modal dialog and show class name entered
+                dialog.close();
+                window.alert('The category was succesfully modified!');
+            }
+        };
+
+        // Event handler for the Cancel button
+        document.getElementById('cancel').onclick = function() {
+            dialog.close();
+        };
+    })();
+
+</script>
+</body>
+</html>

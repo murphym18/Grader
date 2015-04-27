@@ -1,0 +1,59 @@
+<!-- deleteCategoryView.html -->
+<!-- @author Matt Bleifer -->
+<!-- @source http://www.hongkiat.com/blog/html5-dialog-window/ -->
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Delete Category</title>
+
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <!-- Not using CSS Style at the moment ... -->
+
+</head>
+
+<body>
+
+<!-- Actual page's layout including the dialog -->
+<div class="demo-wrapper">
+    <div class="html5-dialog">
+        <dialog id="window">
+            <h3>Delete a Category</h3>
+            <h4>Are you sure you want to delete this category?</h4>
+            <h4>Deleting this category will also delete all subcategories, assignments, and scores.</h4>
+            <button id="yes">Yes</button>
+            <button id="no">No</button>
+        </dialog>
+        <button id="deleteCategory">Delete Category</button>
+    </div>
+</div>
+
+<!-- Script that handles the events -->
+<script type="text/javascript">
+    (function() {
+        // Get the page and dialog layout
+        var dialog = document.getElementById('window');
+
+        // Show the Modal dialog when the button is clicked
+        document.getElementById('deleteCategory').onclick = function() {
+            dialog.show();
+        };
+
+        // Event handler for the OK button on the dialog
+        document.getElementById('yes').onclick = function() {
+            console.log('Yes button clicked!');
+            dialog.close();
+            window.alert('The category was succesfully deleted!');
+        };
+
+        // Event handler for the Cancel button
+        document.getElementById('no').onclick = function() {
+            dialog.close();
+        };
+    })();
+
+</script>
+</body>
+</html>
