@@ -1,8 +1,8 @@
 /**  @author Michael Murphy */
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'app/session', 'text!templates/login.hbs', 'domReady!'], function($, _, Backbone, Handlebars, session, loginTemplate) {
-   return Backbone.View.extend({
-      tagName: "form",
-      className: "login",
+define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'app/session', 'text!templates/login.hbs'], function($, Backbone, Marionette, app, Handlebars, session, loginTemplate) {
+   var LoginView = Marionette.View.extend({
+      tagName: 'form',
+      className: 'login',
       template: Handlebars.compile(loginTemplate),
       events: {
          "click button": "doLogin",
@@ -12,6 +12,10 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'app/session', 'text!t
       initialize: function() {
          this.render();
          this.listenTo(this.model, 'change', this.onChange);
+         this.on('show', function() {
+            this.render();
+            this.focus();
+         });
       },
       doLogin: function(domEvent) {
          domEvent.preventDefault();
@@ -47,5 +51,32 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'app/session', 'text!t
          }
       }
    });
+
+   var loginPageBuilder = {
+      displayLoginPage: function() {
+         var loginView = new LoginView({model: session});
+         app.initialize();
+         app.rootView.getRegion('main').show(loginView);
+         loginView.focus();
+      },
+      displayLoginPageThenNav: function() {
+         this.displayLoginPage();
+         Backbone.history.navigate('/login', {trigger: false, replace: false});
+      }
+   }
+
+   app.routesChannel.comply('/login', function() {
+      loginPageBuilder.displayLoginPageThenNav();
+   });
+
+   app.on('before:start', function() {
+      app.LoginRouter = new Marionette.AppRouter({
+         appRoutes: {
+            "login": "displayLoginPage"
+         },
+         controller: loginPageBuilder
+      });
+   });
+
 });
 

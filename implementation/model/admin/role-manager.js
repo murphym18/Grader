@@ -115,5 +115,5 @@ roleManagerSchema.method('removeRole', function(roleName) {
    this.roles.remove({name: roleName});
    return this;
 });
-
+console.dir(roleManagerSchema)
 module.exports = roleManagerSchema;

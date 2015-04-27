@@ -16,9 +16,15 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
         // TODO: change from canned data to real data
+        var fillIn = function (graderClass) {
+            $("#classCode").val(graderClass.classCode);
+            $("#classNumber").val(graderClass.classNumber);
+        };
+
         $(document).ready(function () {
-            $("#classCode").val("CPE");
-            $("#classNumber").val("101");
+            var exampleClass = {};
+            exampleClass.classCode = "CPE";
+            exampleClass.classNumber = "101";
         });
     </script>
 
