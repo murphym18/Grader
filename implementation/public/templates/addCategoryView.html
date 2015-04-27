@@ -23,7 +23,7 @@
             <h3>Add a New Category</h3>
             <label>Category Name: <input id = "categoryName" type="text" name="categoryName"></label><br><br>
             <label>Weight: <input id = "categoryWeight" type="text" name="categoryWeight"><br><br>
-           <label>Parent Category: <select name="category">
+           <label>Parent Category: <select name="category" id = "parentCategory">
               <option value="Tests">Tests</option>
               <option value="Projects">Projects</option>
               <option value="Homework">Homework</option>
@@ -48,8 +48,6 @@
 
         // Event handler for the OK button on the dialog
         document.getElementById('ok').onclick = function() {
-            console.log('OK button clicked!');
-
 
             // Simple input validation (empty class code or number disallowed)
             if (document.getElementById('categoryName').value === '' &&
@@ -57,13 +55,16 @@
                 window.alert('Please fill out all fields');
             }
             else {
-                // Clear the input fields;
-                document.getElementById('categoryWeight').value = '';
-                document.getElementById('categoryName').value = '';
-
                 // Close the Modal dialog and show class name entered
                 dialog.close();
-                window.alert('The category was succesfully added!');
+                console.log('Category Name: ' + document.getElementById('categoryName').value);
+                console.log('Category Weight: ' + document.getElementById('categoryWeight').value);
+                console.log('Parent Category: ' + document.getElementById('parentCategory').value);
+
+                window.alert('The ' + document.getElementById('categoryName').value + ' category was succesfully added!');
+
+                document.getElementById('categoryWeight').value = '';
+                document.getElementById('categoryName').value = '';
             }
         };
 
