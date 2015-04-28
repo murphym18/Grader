@@ -3,24 +3,41 @@
 */
 console.time("Database ready");
 var _ = require('underscore');
-require('tungus');
-var mongoose = require('mongoose');
 var config = require('./config');
+var util = require('./util');
+var verboseLog = util.verboseLog;
+var isEmbedded = process.argv.indexOf("--mongo") == -1;
+if (isEmbedded) {
+   verboseLog("Using an embedded database.");
+   require('tungus');
+   // Tungus uses this object to define the TingoDB configuration options.
+   global.TUNGUS_DB_OPTIONS = {
+      memStore: config.db.memStore,
+      searchInArray: true,
+      nativeObjectID: false
+   };
+}
+var mongoose = require('mongoose');
 var fs = require('fs');
 
-// Tungus uses this object to define the TingoDB configuration options.
-global.TUNGUS_DB_OPTIONS = {
-   memStore: config.db.memStore,
-   searchInArray: true,
-   nativeObjectID: false
-};
+try {
+   if (!isEmbedded) {
+      verboseLog("Using MongoDB for database.");
+      mongoose.connect(config.db.mongoUrl);
+   }
+   else {
+      var absPath = setupDatabaseDirectory();
+      mongoose.connect('tingodb://'.concat(absPath));
+   }
 
-var absPath = setupDatabaseDirectory();
-mongoose.connect('tingodb://'.concat(absPath));
-mongoose.connection.once('open', function() {
-   console.timeEnd("Database ready");
-});
-
+   mongoose.connection.on('error', onError);
+   mongoose.connection.once('open', function() {
+      console.timeEnd("Database ready");
+   });
+}
+catch(e) {
+   onError(e);
+}
 
 
 module.exports = mongoose;
@@ -35,9 +52,19 @@ function setupDatabaseDirectory() {
    var util = require('./util');
 
    var absPath = path.resolve(config.db.path);
-   if (config.createMissingDirectories && !fs.existsSync(absPath)) {
-      console.warn("Creating directory for database files: \"" + absPath + "\"");
-      util.makeDirectoryPlusParents(absPath);
+   if (!config.db.memStore && !fs.existsSync(absPath)) {
+      if (config.createMissingDirectories) {
+         console.warn("Creating directory for database files: \"" + absPath + "\"");
+         util.makeDirectoryPlusParents(absPath);
+      }
+      else {
+         throw absPath;
+      }
    }
+
    return absPath;
+}
+
+function onError(absPath) {
+   throw new Error("Could not setup " + (isEmbedded ? "an embedded database in directory " + absPath : "a MongoDB connection to " + config.db.mongoUrl));
 }

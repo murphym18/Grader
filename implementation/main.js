@@ -35,7 +35,7 @@ co(function *() {
       var admin = yield Users.findOne({username: 'admin'}).exec();
       if (!admin) {
          console.warn('Creating admin user');
-         yield Users.create({username: 'admin', password: 'admin'})
+         yield Users.create({username: 'admin', password: 'admin'});
       }
       admin = yield Users.findOne({username: 'admin'}).exec();
       var num = yield Course.count().exec();
