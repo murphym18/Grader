@@ -3469,7 +3469,15 @@
 }).call(this);
 
 
+var grades = [50, 55, 60, 65, 68, 70, 71, 75, 78, 79, 80, 83, 88, 89, 90, 91, 94];
+var numGrades = [1, 2, 3, 1, 2, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4];
+var gradeArray = [[50, 55, 60, 65, 68, 70, 71, 75, 78, 79, 80, 83, 88, 89, 90, 91, 94], [1, 2, 3, 1, 2, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4]];
+//var grades = [50, 55, 60]
 
+var aMin = 90;
+var bMin = 80;
+var cMin = 70;
+var dMin = 60;
 
 var changeBarColor = function(chartIn, barStart, barEnd, color) {
     i = barStart;
@@ -3505,9 +3513,41 @@ var green = ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rg
 
 var ctx = document.getElementById("myChart").getContext("2d");
 
+var histogramValueByGradeFunction = function() {
+    var initNum = 0, i = 0;
+    var histogramValues = new Array(5);
+
+    while(initNum < 5)
+        histogramValues[initNum++] = 0;
+
+    grades.forEach(function(value) {
+
+        switch (true) {
+            case(value >= aMin):
+                histogramValues[0] += gradeArray[1][i];
+                break;
+            case(value >= bMin):
+                histogramValues[1] += gradeArray[1][i];
+                break;
+            case(value >= cMin):
+                histogramValues[2] += gradeArray[1][i];
+                break;
+            case(value >= dMin):
+                histogramValues[3] += gradeArray[1][i];
+                break;
+            default:
+                histogramValues[4] += gradeArray[1][i];
+                break;
+        }
+        i++;
+    });
+    return histogramValues;
+}
+
+var histogramValueByGrade = histogramValueByGradeFunction();
+
 var data = {
-    labels: ["50", "55", "60", "65", "68", "70", "71",
-        "75", "78", "79", "80", "83", "88", "89", "90", "91", "94"],
+    labels: gradeArray[0],
     datasets: [
         {
             label: "My First dataset",
@@ -3515,7 +3555,7 @@ var data = {
             strokeColor: green[1],
             highlightFill: green[2],
             highlightStroke: green[3],
-            data: [1, 2, 3, 1, 2, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4]
+            data: gradeArray[1]
         }
     ]
 };
@@ -3529,20 +3569,15 @@ var myBarChart = new Chart(ctx).Bar(data, {
 // Change Bar Colors
 
 
-var grades = [50, 55, 60, 65, 68, 70, 71, 75, 78, 79, 80, 83, 88, 89, 90, 91, 94];
-//var
 
-var aMin = 90;
-var bMin = 80;
-var cMin = 70;
-var dMin = 60;
+
+
 var aColor = green;
 var bColor = yellow;
 var cColor = orange;
 var dColor = lightred;
 var fColor = darkred;
 
-console.log(grades.length);
 var checkBarChartColors = function (gradesArray){
      for(x = 0; x < gradesArray.length; x++) {
          switch (true) {
@@ -3571,7 +3606,7 @@ var numGradeLetters  = 5;
 
 // function to get number of grades in grade range for pie chart
 var pieValueByGradeFunction = function(gradesArray) {
-    var initNum = 0;
+    var initNum = 0, i = 0;
     var pieValues = new Array(5);
 
     while(initNum < numGradeLetters)
@@ -3581,28 +3616,22 @@ var pieValueByGradeFunction = function(gradesArray) {
 
         switch (true) {
             case(value >= aMin):
-                console.log("a");
-                pieValues[0]++;
-                //changeSingleBarColor(myBarChart, x, aColor);
+                pieValues[0] += gradeArray[1][i];
                 break;
             case(value >= bMin):
-                //changeSingleBarColor(myBarChart, x, bColor);
-                pieValues[1]++;
+                pieValues[1] += gradeArray[1][i];
                 break;
             case(value >= cMin):
-                pieValues[2]++;
-                //changeSingleBarColor(myBarChart, x, cColor);
+                pieValues[2] += gradeArray[1][i];
                 break;
             case(value >= dMin):
-                pieValues[3]++;
-                //changeSingleBarColor(myBarChart, x, dColor);
+                pieValues[3] += gradeArray[1][i];
                 break;
             default:
-                console.log("default");
-                pieValues[4]++;
-                //changeSingleBarColor(myBarChart, x, fColor);
+                pieValues[4] += gradeArray[1][i];
                 break;
         }
+        i++;
     });
     return pieValues;
 }
@@ -3653,7 +3682,6 @@ function updatePieData() {
     for(;updatePieDataIncrement < 5; updatePieDataIncrement++) {
         myPieChart.segments[updatePieDataIncrement].value = pieValueByGrade[updatePieDataIncrement];
     }
-    console.log(pieData);
 }
 
 
@@ -3661,7 +3689,6 @@ function updatePieData() {
 function updatePieChart() {
     pieValueByGrade = pieValueByGradeFunction(grades);
     updatePieData();
-    console.log(pieValueByGrade);
     myPieChart.update();
     //myPieChart = new Chart(pieChart).Pie(pieData,null);
 }
@@ -3671,16 +3698,34 @@ function updateBarChart() {
     myBarChart.update();
 }
 
-//function updateGradeMins (){
-//
-//};
+function updateTotalGrades() {
+    $('#aOutTotal').html(myPieChart.segments[0].value);
+    $('#bOutTotal').html(myPieChart.segments[1].value);
+    $('#cOutTotal').html(myPieChart.segments[2].value);
+    $('#dOutTotal').html(myPieChart.segments[3].value);
+    $('#fOutTotal').html(myPieChart.segments[4].value);
+    //$('#bOutTotal').html(histogramValueByGrade[1]);
+    //$('#cOutTotal').html(histogramValueByGrade[2]);
+    //$('#dOutTotal').html(histogramValueByGrade[3]);
+    //$('#fOutTotal').html(histogramValueByGrade[4]);
 
-$(document).ready(function () {
-    // update minimum values at load
+
+}
+
+function updateGradeMins(){
     $('#aMinInput').val(aMin);
     $('#bMinInput').val(bMin);
     $('#cMinInput').val(cMin);
     $('#dMinInput').val(dMin);
+}
+
+$(document).ready(function () {
+    // update minimum values at load
+    updateGradeMins();
+    updateTotalGrades();
+    $('#dataArrayValues').append(gradeArray[0].join(","));
+    $('#dataArrayQuantity').append(gradeArray[1].join(","));
+
 
     // set grade mins submit function
     $('#setGradeMins').on('submit', function(e) {
@@ -3692,6 +3737,7 @@ $(document).ready(function () {
         bMin = $('#bMinInput').val();
         cMin = $('#cMinInput').val();
         dMin = $('#dMinInput').val();
+        updateGradeMins();
 
 
         $.ajax({
@@ -3701,6 +3747,7 @@ $(document).ready(function () {
             success: function (data) {
                 updatePieChart();
                 updateBarChart();
+                updateTotalGrades();
             },
             error: function (jXHR, textStatus, errorThrown) {
                 alert(errorThrown);
