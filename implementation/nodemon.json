@@ -1,0 +1,11 @@
+{
+   "restartable": "rs",
+   "stdin": true,
+   "verbose": true,
+   "stdout": true,
+   "watch": [".*.", "package.json"],
+   "exitcrash": true,
+   "events": {
+      "restart": "npm install"
+   }
+}
