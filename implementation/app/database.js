@@ -3,20 +3,32 @@
 */
 console.time("Database ready");
 var _ = require('underscore');
-require('tungus');
-var mongoose = require('mongoose');
 var config = require('./config');
+var util = require('./util');
+var verboseLog = util.verboseLog;
+if (process.argv.indexOf("--mongo") == -1) {
+   verboseLog("Using an embedded database.");
+   require('tungus');
+   // Tungus uses this object to define the TingoDB configuration options.
+   global.TUNGUS_DB_OPTIONS = {
+      memStore: config.db.memStore,
+      searchInArray: true,
+      nativeObjectID: false
+   };
+}
+var mongoose = require('mongoose');
 var fs = require('fs');
 
-// Tungus uses this object to define the TingoDB configuration options.
-global.TUNGUS_DB_OPTIONS = {
-   memStore: config.db.memStore,
-   searchInArray: true,
-   nativeObjectID: false
-};
 
-var absPath = setupDatabaseDirectory();
-mongoose.connect('tingodb://'.concat(absPath));
+
+if (process.argv.indexOf("--mongo") != -1) {
+   verboseLog("Using MongoDB for database.");
+   mongoose.connect(config.db.mongoUrl);
+}
+else {
+   var absPath = setupDatabaseDirectory();
+   mongoose.connect('tingodb://'.concat(absPath));
+}
 mongoose.connection.once('open', function() {
    console.timeEnd("Database ready");
 });

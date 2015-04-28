@@ -7,7 +7,7 @@
 exports.http = {};
 
 /**
- * Server port
+ * The server port to listen on.
  */
 exports.http.port = 8080;
 
@@ -37,6 +37,7 @@ exports.verboseLog = false;
 /* DATABASE SETTINGS */
 exports.db = {};
 
+/* if embedded database then these settings */
 /**
  * Use in memory database only.
  * When this is true the <code>exports.db.path</code> value is ignored.
@@ -49,14 +50,33 @@ exports.db.memStore = false;
  */
 exports.db.path = "data/documents";
 
+/* if mongo database then these settings */
+exports.db.mongoUrl = 'mongodb://127.0.0.1/grader'
 
 /* SESSION STORAGE SETTINGS */
 exports.session = {};
+/* if session data is saved in files */
 /**
  * The directory where the session files will be stored. This path may be
  * absolute or its assumed relative to the working directory.
  */
 exports.session.path = "data/sessions";
+
+/* if session data is saved in mongo database */
+exports.session.mongoSettings = {}
+/**
+ * connect-mongo will create a connection to this mongo database.
+ * @type {string}
+ */
+exports.session.mongoSettings.url = exports.db.mongoUrl;
+
+/**
+ * When the session cookie has an expiration date, connect-mongo will use it.
+ * Otherwise, it will create a new one, using ttl option.
+ * The default value is 14 days.
+ * @type {number}
+ */
+exports.session.mongoSettings.ttl = 3 * 24 * 60 * 60; // = 3 days.
 
 /**
  * The server uses this string to sign the session ID cookie. When this

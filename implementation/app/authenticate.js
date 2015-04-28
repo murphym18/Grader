@@ -5,6 +5,7 @@
 var passport = require('passport');
 var LoginStrategy = require('passport-local').Strategy;
 var Users = require.main.require('./model/admin/user');
+var verboseLog = require('./util').verboseLog;
 var co = require('co');
 
 function requireLogin(req, res, next) {
@@ -60,8 +61,9 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function(user, done) {
    co(function *() {
       try {
+         verboseLog("Checking database for passport session");
          var result = yield Users.findOne({username: user}).exec();
-         console.log(result);
+         verboseLog("Found passport session: " + result);
          done(null, result);
       }
       catch (err) {
