@@ -1,18 +1,12 @@
 /** @author Michael Murphy */
-define(['app/app', 'app/top-menu', 'text!templates/home.hbs'], function(App, TopMenuView, homeTemplate) {
-   var MainView = App.Marionette.ItemView.extend({
-      template: App.Handlebars.compile(homeTemplate)
-   });
-
-   var homePageController = {
-      displayHomePage: function() {
-         var homeLayout = App.show(new App.StandardLayoutView());
-         homeLayout.getRegion('main').show(new MainView({model: new Backbone.Model()}));
-         homeLayout.getRegion('header').show(new TopMenuView());
-      }
-   };
-
-   App.Router.processAppRoutes(homePageController,  {
-      "(/)": "displayHomePage"
+define(['app/app', 'app/top-menu', 'text!templates/home.hbs'], function(App, TopNavView, homeTemplate) {
+   /* */
+   App.Router.route("(/)", "home", function() {
+      var layout = App.show(new App.StandardLayoutView());
+      var mainView = new App.Marionette.ItemView({
+         template: App.Handlebars.compile(homeTemplate)
+      });
+      layout.getRegion('main').show(mainView);
+      layout.getRegion('header').show(new TopNavView);
    });
 });

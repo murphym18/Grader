@@ -34,6 +34,9 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
       },
       onBeforeEmpty: function() {
          $.magnificPopup.close();
+      },
+      close: function() {
+         this.empty();
       }
    });
 
@@ -53,7 +56,6 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
          overflowY: "auto",
          removalDelay: 0
       }
-
    });
 
    var StandardLayoutView = Marionette.LayoutView.extend({
@@ -68,7 +70,7 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
       destroyImmediate: true
    });
 
-   function go(path, options) {
+   function navigateToPage(path, options) {
       var options = _.extend({
          trigger: true,
          replace: false
@@ -90,8 +92,6 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
       Q: Q,
       Radio: Backbone.Radio,
       Router: new Marionette.AppRouter({
-         controller: {},
-         appRoutes: {},
          routes : {}
       }),
       RootRegion: new RootRegion(),
@@ -99,25 +99,7 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
       initialize: function() {
 
       },
-      login: function() {
-         var deferred = Q.defer();
-         var self = this;
-         if (this.session.isAuthenticated()) {
-            deferred.resolve(this.session.get('user'));
-         }
-         else {
-            this.session.once('login', function(user) {
-               self.PopupRegion.empty();
-               deferred.resolve(user);
-            });
-            this.displayLogin();
-         }
-         return deferred.promise;
-      },
-      go: go,
-      view: function(path, options) {
-         go.call(this, path, _.extend({replace: true}, options));
-      },
+      go: navigateToPage,
       show: function(view) {
          this.RootRegion.show(view);
          return view;

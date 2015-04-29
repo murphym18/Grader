@@ -51,9 +51,23 @@ define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'a
 
    App.LoginFormView = LoginFormView;
 
-   App.displayLogin = function displayLogin() {
-      var loginView = new LoginFormView({model: session});
-      App.PopupRegion.show(loginView);
+   App.login = function() {
+      var deferred = App.Q.defer();
+      if (session.isAuthenticated()) {
+         deferred.resolve(session.get('user'));
+      }
+      else {
+         session.once('login', function(user) {
+            App.PopupRegion.close();
+            deferred.resolve(user);
+         });
+         App.PopupRegion.show(new LoginFormView({model: session}));
+      }
+      return deferred.promise;
+   };
+   function displayLogin() {
+
+
       //loginView.focus();
    }
 });
