@@ -1,82 +1,60 @@
 /**  @author Michael Murphy */
-define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'app/session', 'text!templates/login.hbs'], function($, Backbone, Marionette, app, Handlebars, session, loginTemplate) {
-   var LoginView = Marionette.View.extend({
+define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'app/session', 'text!templates/login.hbs'], function($, Backbone, Marionette, App, Handlebars, session, loginTemplate) {
+   var LoginFormView = App.PopupView.extend({
       tagName: 'form',
       className: 'login',
       template: Handlebars.compile(loginTemplate),
-      events: {
-         "click button": "doLogin",
-         "change input.username": "updateUser",
-         "change input.password": "updatePass"
+      ui: {
+         username: "input.username",
+         password: "input.password",
+         error: "div.error"
       },
-      initialize: function() {
-         this.render();
-         this.listenTo(this.model, 'change', this.onChange);
-         this.on('show', function() {
-            this.render();
-            this.focus();
-         });
+      events: {
+         "click .submit": "doLogin",
+         "change @ui.username": "updateUser",
+         "change @ui.password": "updatePass"
+      },
+      modelEvents: {
+         "change": "onShow" // equivalent to view.listenTo(view.model, "change:name", view.nameChanged, view)
+      },
+      popup: {
+         modal: false,
+         focus: "input.username"
       },
       doLogin: function(domEvent) {
          domEvent.preventDefault();
          this.model.login();
       },
       updateUser: function() {
-         var input = this.username.val();
+         var input = this.ui.username.val();
          this.model.set({"username": input});
       },
       updatePass: function() {
-         var input = this.password.val();
+         var input = this.ui.password.val();
          this.model.set({"password": input});
       },
-      render: function() {
-         this.$el.html(this.template(this.model.attributes));
-         this.username = this.$("input.username");
-         this.password = this.$("input.password");
-         this.errorMessage = this.$("div.error");
-         this.onChange();
-      },
-      onChange: function() {
-         this.username.val(this.model.get('username'));
-         this.password.val(this.model.get('password'));
-         this.errorMessage.text(this.model.get('message'));
-         this.focus()
+      onShow: function() {
+         this.ui.username.val(this.model.get('username'));
+         this.ui.password.val(this.model.get('password'));
+         this.ui.error.text(this.model.get('message'));
       },
       focus: function() {
-         if (!this.model.get('username')) {
-            this.username.focus();
+         console.dir(this.ui);
+         if (!this.ui.username.val()) {
+            this.ui.username.focus();
          }
          else {
-            this.password.focus();
+            this.ui.password.focus();
          }
       }
    });
 
-   var loginPageBuilder = {
-      displayLoginPage: function() {
-         var loginView = new LoginView({model: session});
-         app.initialize();
-         app.rootView.getRegion('main').show(loginView);
-         loginView.focus();
-      },
-      displayLoginPageThenNav: function() {
-         this.displayLoginPage();
-         Backbone.history.navigate('/login', {trigger: false, replace: false});
-      }
+   App.LoginFormView = LoginFormView;
+
+   App.displayLogin = function displayLogin() {
+      var loginView = new LoginFormView({model: session});
+      App.PopupRegion.show(loginView);
+      //loginView.focus();
    }
-
-   app.routesChannel.comply('/login', function() {
-      loginPageBuilder.displayLoginPageThenNav();
-   });
-
-   app.on('before:start', function() {
-      app.LoginRouter = new Marionette.AppRouter({
-         appRoutes: {
-            "login": "displayLoginPage"
-         },
-         controller: loginPageBuilder
-      });
-   });
-
 });
 

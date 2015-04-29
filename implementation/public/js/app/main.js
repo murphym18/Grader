@@ -28,7 +28,8 @@ requirejs.config({
          deps: ["underscore", "jquery"],
          exports: "Backbone"
       },
-      enforceDefine: true
+      'jquery-ui': ['jquery'],
+      "jquery.magnific-popup" : ['jquery', 'jquery-ui']
    }
 });
 

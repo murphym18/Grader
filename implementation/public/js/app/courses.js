@@ -1,5 +1,5 @@
 /**  @author Michael Murphy */
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'text!templates/courses.hbs', 'app/app'], function($, _, Backbone, Handlebars, template, app) {
+define(['jquery', 'underscore', 'backbone', 'backbone.marionette', 'handlebars', 'app/app'], function($, _, Backbone, Marionette, Handlebars, app, template, app) {
    var Course = Backbone.Model.extend({
       idAttribute: "_id"
    });

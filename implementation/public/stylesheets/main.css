@@ -168,18 +168,23 @@ div.error {
    padding: 0.4em;
    color: #dd0000;
 }
-
+/*
 .login {
    padding: 1em;
    display: block;
    margin: 7em auto;
-   width: 300px;
+
    text-align: center;
    border: 1px solid #fff;
    border-radius: 4px;
    box-shadow: 1px 1px 5px #888888;
 }
+*/
 
+.login{
+   display: inline-block;
+   width: 300px;
+}
 .login input, .login button {
    display: block;
    margin: 0 0 .6em 0 ;
@@ -195,6 +200,29 @@ div.error {
 
 .login h1 {
    margin: 0 0 .5em 0;
+}
+
+div.login div.error {
+   display: block;
+   text-align: center;
+   margin: 15px auto 0;
+   box-sizing: border-box;
+}
+
+.session {
+   position: absolute;
+   right: 1em;
+   top: 1em;
+}
+
+.mfp-close-btn-in .mfp-close {
+   margin:0;
+}
+
+header.root {
+   position: relative;
+   padding: 1em;
+   display: block;
 }
 
 div#top-bar {
@@ -224,6 +252,31 @@ main {
    padding: 0 2em;
 }
 
+.mfp-bg {
+   background-color: #444;
+}
+.popup {
+   position: relative;
+   background: #FFF;
+   padding: 20px;
+
+
+}
+.popup:first-child {
+
+}
+/*
+.popup {
+   padding: 1em;
+   display: block;
+   margin: 7em auto;
+   width: 300px;
+   text-align: center;
+   border: 1px solid #fff;
+   border-radius: 4px;
+   box-shadow: 1px 1px 5px #888888;
+}
+*/
 
 
 /* ==========================================================================

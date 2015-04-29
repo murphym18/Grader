@@ -1,5 +1,5 @@
 /** @author Michael Murphy */
-define(['jquery', 'underscore', 'backbone', 'app/app'], function($, _, Backbone) {
+define(['jquery', 'underscore', 'backbone', 'app/app'], function($, _, Backbone, App) {
 
    var SESSION_STORE_KEY = 'session';
    function loginAjaxSuccess(res, status, jqXHR) {
@@ -37,36 +37,37 @@ define(['jquery', 'underscore', 'backbone', 'app/app'], function($, _, Backbone)
       login: function() {
          var self = this;
          var payload = {username: self.get('username'), password: self.get('password')};
-         $.ajax({
+
+         this.set({password:'', message: ''});
+         return $.when($.ajax({
             url: '/api/login',
             data: payload,
             method: 'POST',
             headers: {
                Accept : "application/json; q=1"
             },
-            success: function() {loginAjaxSuccess.apply(self, _.toArray(arguments));}
-         });
-         this.set({password:'', message: ''});
+            success: loginAjaxSuccess.bind(self)
+         }));
       },
-      logout: function() {
+      logout: function(credentials) {
          var self = this;
-         $.ajax({
+         credentials = credentials || {};
+         this.set(credentials);
+         return $.when($.ajax({
             url: '/api/logout',
             method: 'GET',
-            success: function() {logoutAjaxSuccess.apply(self, _.toArray(arguments));}
-         });
+            success: logoutAjaxSuccess.bind(self)//function() {;}
+         }));
       },
       afterLogin: function () {
          var routesChannel = Backbone.Radio.channel('routes');
          this.save();
-         this.trigger('login');
-         routesChannel.command('/');
+         this.trigger('login', this.get('user'));
       },
       afterLogout: function () {
          var routesChannel = Backbone.Radio.channel('routes');
          this.reset();
          this.trigger('logout');
-         routesChannel.command('/login');
       },
       isAuthenticated: function() {
          return this.get('login');
@@ -98,5 +99,6 @@ define(['jquery', 'underscore', 'backbone', 'app/app'], function($, _, Backbone)
       }
    });
 
-   return new Session({});
+   App.session = new Session({});
+   return App.session;
 });
