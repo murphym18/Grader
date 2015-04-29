@@ -59,3 +59,5 @@ requirejs(['app/app', 'app/login', 'app/home', 'domReady!'], function(app) {
    app.start({});
 });
 ```
+
+This causes your module to load when you navigate to your page.
