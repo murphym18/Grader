@@ -58,6 +58,11 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
       }
    });
 
+   /**
+    * A LayoutView with 3 regions: `header`, `main`, and `footer`
+    * @author Michael Murphy
+    *
+    */
    var StandardLayoutView = Marionette.LayoutView.extend({
       template: Handlebars.compile(rootLayoutTemplate),
       regions: function(options) {

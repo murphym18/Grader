@@ -15,7 +15,7 @@ define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'a
          "change @ui.password": "updatePass"
       },
       modelEvents: {
-         "change": "onShow" // equivalent to view.listenTo(view.model, "change:name", view.nameChanged, view)
+         "change": "onShow"
       },
       popup: {
          modal: false,

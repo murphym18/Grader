@@ -51,3 +51,11 @@ and provides different regions where
 [`Marionette.View`](http://marionettejs.com/docs/v2.4.1/marionette.view.html)
 objects may be shown. Note: [`Marionette.ItemView`](http://marionettejs.com/docs/v2.4.1/marionette.itemview.html)
 extends `Marionette.View` extends [`Backbone.View`](http://backbonejs.org/#View)
+
+Finally, add your script as a dependency to `main.js`:
+```javascript
+// Start the main app logic.
+requirejs(['app/app', 'app/login', 'app/home', 'domReady!'], function(app) {
+   app.start({});
+});
+```
