@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var schema = require('../admin/role-manager');
 var _ = require('underscore')
+var COURSE_ABBREVIATION = require('./abbreviations');
 
 schema.add({
    classNumber: {
@@ -11,7 +12,7 @@ schema.add({
    },
    classCode: {
       type: String,
-      enum: ["AERO","AGB","AEPS","AGC","AGED","AG","ASCI","ANT","ARCE","ARCH","ART","ASTR","BIO","BMED","BRAE","BOT","BUS","CHEM","CD","CHIN","CRP","CE","COMS","CPE","CSC","CM","DSCI","DANC","DATA","DMHS","ESE","ESM","ERSC","ECON","EDUC","EE","ENGR","ENGL","EDES","ENVE","ES","FPE","FSN","FR","GEOG","GEOL","GER","GS","GSA","GSB","GSE","GRC","HIST","HNRC","HNRS","IME","IT","ISLA","IS","ITAL","JPNS","JOUR","KINE","LA","LAES","LS","MSCI","MATE","MATH","ME","MCRO","MSL","MLL","MU","NR","PHIL","PEM","PEW","PSC","PHYS","POLS","PSY","RPTA","RELS","SCM","SOCS","SOC","SS","SPAN","STAT","SIE","TH","UNIV","WVIT","WGS","ZOO"]
+      enum: COURSE_ABBREVIATION
    },
    section: {
       type: String,
@@ -68,7 +69,7 @@ function generateRandomCourse(admin) {
       {name: "STUDENT", permissions: [], users: [admin]},
       {name: "NONE", permissions: [], users: [admin]}
    ];
-   var codes = ["AERO","AGB","AEPS","AGC","AGED","AG","ASCI","ANT","ARCE","ARCH","ART","ASTR","BIO","BMED","BRAE","BOT","BUS","CHEM","CD","CHIN","CRP","CE","COMS","CPE","CSC","CM","DSCI","DANC","DATA","DMHS","ESE","ESM","ERSC","ECON","EDUC","EE","ENGR","ENGL","EDES","ENVE","ES","FPE","FSN","FR","GEOG","GEOL","GER","GS","GSA","GSB","GSE","GRC","HIST","HNRC","HNRS","IME","IT","ISLA","IS","ITAL","JPNS","JOUR","KINE","LA","LAES","LS","MSCI","MATE","MATH","ME","MCRO","MSL","MLL","MU","NR","PHIL","PEM","PEW","PSC","PHYS","POLS","PSY","RPTA","RELS","SCM","SOCS","SOC","SS","SPAN","STAT","SIE","TH","UNIV","WVIT","WGS","ZOO"];
+
    function genStr(all, len) {
       var result = "";
       for (var i = 0; i < len; ++i) {
@@ -77,7 +78,7 @@ function generateRandomCourse(admin) {
       return result;
    }
    function COURSE_CODE_GENERATOR() {
-      return codes[Math.floor(Math.random() * codes.length)];
+      return COURSE_ABBREVIATION[Math.floor(Math.random() * COURSE_ABBREVIATION.length)];
    }
    function COURSE_NUMBER_GENERATOR() {
       return genStr('12345',1) + genStr('1234567890', 2);
