@@ -58,7 +58,7 @@ schema.statics.makeRandomCourse = generateRandomCourse;
 module.exports = mongoose.model('Course', schema);
 
 function getRestOptions() {
-   return {idProperty: "coursePath"};
+   return {idProperty: "url"};
 }
 
 function getTermByMonth(month) {
@@ -79,9 +79,9 @@ function getTermByMonth(month) {
 
 function generateRandomCourse(admin) {
    var defaultRoles = [
-      {name: "INSTRUCTOR", permissions: [], users: [admin]},
-      {name: "TEACHER_ASSISTANT", permissions: [], users: [admin]},
-      {name: "STUDENT", permissions: [], users: [admin]},
+      {name: "INSTRUCTOR", permissions: [], users: []},
+      {name: "TEACHER_ASSISTANT", permissions: [], users: []},
+      {name: "STUDENT", permissions: [], users: []},
       {name: "NONE", permissions: [], users: [admin]}
    ];
 
@@ -121,7 +121,7 @@ function generateRandomCourse(admin) {
       section: COURSE_SECTION_GENERATOR(),
       roles: defaultRoles,
       term: TERMS[Math.floor(Math.random() * TERMS.length)],
-      year: 2015 + Math.ceil(Math.random() * 9)
+      year: 2014 + Math.ceil(Math.random() * 3)
    };
    _.extend(result, genDates(result.term, Number(result.year)));
    result.url =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
