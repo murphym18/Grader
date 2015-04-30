@@ -34,7 +34,7 @@ requirejs.config({
 });
 
 // Start the main app logic.
-requirejs(['app/app', 'app/login', 'app/home', 'domReady!'], function(app) {
+requirejs(['app/app', 'app/login', 'app/home', 'app/histogram', 'domReady!'], function(app) {
    app.start({});
 });
 
