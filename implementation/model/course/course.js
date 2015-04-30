@@ -2,8 +2,10 @@
 
 var mongoose = require('mongoose');
 var schema = require('../admin/role-manager');
-var _ = require('underscore')
+var _ = require('underscore');
+var grades = require('./grade-schema');
 var COURSE_ABBREVIATION = require('./abbreviations');
+var TERMS = ['Winter', 'Spring', 'Summer', 'Fall'];
 
 schema.add({
    classNumber: {
@@ -30,11 +32,11 @@ schema.add({
    },
    term: {
       type: String,
-      enum: ['Winter', 'Spring', 'Summer', 'Fall'],
+      enum: TERMS,
       required: true,
       "default": getTermByMonth
    },
-   coursePath: {
+   url: {
       type: String,
       index: {
          unique: true
@@ -44,9 +46,20 @@ schema.add({
       match: /[A-Z][-A-Z0-9]*/
    }
 });
+schema.add(grades.letterGrade);
+schema.add(grades.creditNoCredit);
 schema.index({ coursePath: 1, term: 1, year: -1});
 schema.set('autoIndex', false);
+schema.pre('save', grades.preSave);
+schema.statics.getTermByMonth = getTermByMonth;
+schema.statics.getRestOptions = getRestOptions;
+schema.statics.makeRandomCourse = generateRandomCourse;
 
+module.exports = mongoose.model('Course', schema);
+
+function getRestOptions() {
+   return {idProperty: "coursePath"};
+}
 
 function getTermByMonth(month) {
    var legend = [
@@ -57,9 +70,11 @@ function getTermByMonth(month) {
    ];
    var m = month || (new Date()).getMonth() + 1;
    var result = legend.filter(function(e){
-      return e[_.keys(e)[0]].indexOf(m) != -1;
+      return _.values(e)[0].indexOf(m) != -1;
+   }).map(function(val){
+      return _.keys(val)[0];
    });
-   return _.keys(result[0])[_.keys(result)[0]].toString();
+   return result[0].toString();
 }
 
 function generateRandomCourse(admin) {
@@ -99,23 +114,16 @@ function generateRandomCourse(admin) {
          'Fall': date(8, 22, 11, 12)
       }[term];
    }
+
    var result = {
       classCode: COURSE_CODE_GENERATOR(),
       classNumber: COURSE_NUMBER_GENERATOR(),
       section: COURSE_SECTION_GENERATOR(),
       roles: defaultRoles,
-      term: getTermByMonth(Math.ceil(Math.random() * 12)),
+      term: TERMS[Math.floor(Math.random() * TERMS.length)],
       year: 2015 + Math.ceil(Math.random() * 9)
    };
    _.extend(result, genDates(result.term, Number(result.year)));
-   result.coursePath =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
+   result.url =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
    return result;
 }
-
-schema.statics.getTermByMonth = getTermByMonth;
-schema.statics.getRestOptions = function() {
-   return {idProperty: "coursePath"};
-}
-schema.statics.makeRandomCourse = generateRandomCourse;
-
-module.exports = mongoose.model('Course', schema);
