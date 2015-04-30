@@ -47,10 +47,7 @@ co(function *() {
          _.map(_.range(25), function() {
             return Course.makeRandomCourse(admin);
          }).forEach(function(c){
-            console.dir(c);
-            Course.create(c, function(err, c) {
-               console.dir(err)
-            })
+            Course.create(c, function(err, c) { if (err) throw err; });
          });
       }
    } catch (err) {
