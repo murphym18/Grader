@@ -36,7 +36,7 @@ schema.add({
       required: true,
       "default": getTermByMonth
    },
-   url: {
+   colloquialUrl: {
       type: String,
       index: {
          unique: true
@@ -58,7 +58,7 @@ schema.statics.makeRandomCourse = generateRandomCourse;
 module.exports = mongoose.model('Course', schema);
 
 function getRestOptions() {
-   return {idProperty: "url"};
+   return {idProperty: "colloquialUrl"};
 }
 
 function getTermByMonth(month) {
@@ -124,6 +124,6 @@ function generateRandomCourse(admin) {
       year: 2014 + Math.ceil(Math.random() * 3)
    };
    _.extend(result, genDates(result.term, Number(result.year)));
-   result.url =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
+   result.colloquialUrl =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
    return result;
 }
