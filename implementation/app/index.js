@@ -55,11 +55,4 @@ app.ready = function() {
    }
 }
 
-app.angooseOptions = {
-   'module-dirs':'./model',
-   'urlPrefix': '/api',
-   'logging': 'WARN',
-   'mongo-opts': 'tingodb://'.concat(path.resolve(config.db.path)),
-   'client-file': path.resolve('./public/js/lib/angoose.js')
-};
 module.exports = app;
