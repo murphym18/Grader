@@ -9,7 +9,7 @@ function handle404(req, res, next){
    err.name = "Not Found";
    err.message = "We couldn't find the page you requested.";
    res.status(404);
-   next(err);
+   next(err, req, res, next);
 }
 
 function devHandler(err, req, res, next) {

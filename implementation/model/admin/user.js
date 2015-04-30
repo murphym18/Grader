@@ -48,4 +48,8 @@ schema.statics.findLogin = function(user, pass) {
    return this.findOne({username: user, password: sha(pass)});
 }
 
+schema.statics.getRestOptions = function() {
+   return {idProperty: "username"};
+}
+
 module.exports = mongoose.model('User', schema);

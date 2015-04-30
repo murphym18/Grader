@@ -31,6 +31,8 @@ app.use('/', function(req, res, next){
    }
 });
 
+//console.log(mkCourse());
+
 co(function *() {
    try {
       var admin = yield Users.findOne({username: 'admin'}).exec();
@@ -39,12 +41,17 @@ co(function *() {
          yield Users.create({username: 'admin', password: 'admin'});
       }
       admin = yield Users.findOne({username: 'admin'}).exec();
+      yield Course.remove().exec();
       var num = yield Course.count().exec();
       if (num < 1) {
-         var courses = _.map(_.range(10), function() {
-            return mkCourse(admin);
+         _.map(_.range(25), function() {
+            return Course.makeRandomCourse(admin);
+         }).forEach(function(c){
+            console.dir(c);
+            Course.create(c, function(err, c) {
+               console.dir(err)
+            })
          });
-         yield Course.create(courses);
       }
    } catch (err) {
       console.err(err);
@@ -53,37 +60,7 @@ co(function *() {
    app.ready();
 });
 
-function mkCourse(admin) {
-   var defaultRoles = [
-      {name: "INSTRUCTOR", permissions: [], users: [admin]},
-      {name: "TEACHER_ASSISTANT", permissions: [], users: [admin]},
-      {name: "STUDENT", permissions: [], users: [admin]},
-      {name: "NONE", permissions: [], users: [admin]}
-   ];
-   function COURSE_CODE_GENERATOR() {
-      var all = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      var result = "";
-      for (var i = 0; i < 3; ++i) {
-         result += all.charAt(Math.floor(Math.random() * all.length));
-      }
-      return result;
-   }
-   function COURSE_NUMBER_GENERATOR() {
-      var all = '0123456789';
-      var result = all.charAt(Math.floor(Math.random() * (all.length-1))+1);
-      for (var i = 0; i < 2; ++i) {
-         result += all.charAt(Math.floor(Math.random() * all.length));
-      }
-      return result;
-   }
-   return {
-      classCode: COURSE_CODE_GENERATOR(),
-      classNumber: COURSE_NUMBER_GENERATOR(),
-      start: new Date(2015, 3, 30),
-      end: new Date(2015, 6, 14),
-      roles: defaultRoles
-   };
-}
+
 function mountModel(){
    function scanModelFiles(dirs){
       var dirs = _.isArray(dirs)? dirs: [dirs];
@@ -124,12 +101,13 @@ function mountModel(){
    });
    verboseLog("Adding all mongoose models");
    _.each(mongoose.modelNames(), function(modelName){
-      var options = {
+      var model = mongoose.models[modelName];
+      var options = _.extend({
          version: ''
-      }
+      }, model.getRestOptions ? model.getRestOptions(): {});
       if (modelName === "User") {
-         options.idProperty = "username";
+
       }
-      restify.serve(app, mongoose.models[modelName], options);
+      restify.serve(app, model, options);
    });
 };
