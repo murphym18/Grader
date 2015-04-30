@@ -41,12 +41,36 @@ co(function *() {
          yield Users.create({username: 'admin', password: 'admin'});
       }
       admin = yield Users.findOne({username: 'admin'}).exec();
+
+      var numUsers = yield Users.count().exec();
+      if (numUsers < 2) {
+         genUsers().forEach(function(u){
+            Users.create(u, function(err) { if (err) console.warn(err); console.dir(u); });
+         });
+      }
       yield Course.remove().exec();
+      var allUsers = yield Users.find().exec();
+      allUsers = _.shuffle(allUsers);
+      var i = 0;
       var num = yield Course.count().exec();
       if (num < 1) {
-         _.map(_.range(25), function() {
+         _.map(_.range(50), function() {
             return Course.makeRandomCourse(admin);
          }).forEach(function(c){
+            c.roles[0].users.push(allUsers[i++ % allUsers.length]);
+
+            c.roles[1].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[1].users.push(allUsers[i++ % allUsers.length]);
+
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.roles[2].users.push(allUsers[i++ % allUsers.length]);
             Course.create(c, function(err, c) { if (err) throw err; });
          });
       }
@@ -108,3 +132,33 @@ function mountModel(){
       restify.serve(app, model, options);
    });
 };
+var majors = require('./model/course/abbreviations');
+function genUsers() {
+   var names = ["Aidan Gillen","Alfie Allen","Amrita Acharia","Art Parkinson","Arya Stark","Ben Crompton","Ben Hawkey","Bran Stark","Catelyn Stark","Cersei Lannister","Charles Dance","Ciarán Hinds","Conleth Hill","Daario Naharis","Daenerys Targaryen","Daniel Portman","Davos Seaworth","Dean-Charles Chapman","Diana Rigg","Dominic Carter","Donald Sumpter","Eddard Stark","Ellaria Sand","Emilia Clarke","Esme Bianco","Eugene Simon","Finn Jones","Gwendoline Christie","Hannah Murray","Harry Lloyd","Iain Glen","Ian Beattie","Ian McElhinney","Indira Varma","Isaac Hempstead-Wright","Iwan Rheon","Jack Gleeson","Jacob Anderson","Jaime Lannister","James Cosmo","Jaqen H'ghar","Jason Momoa","Jeor Mormont","Jerome Flynn","Joe Dempsie","Joffrey Baratheon","John Bradley","Jon Snow","Jonathan Pryce","Jorah Mormont","Josef Altin","Julian Glover","Khal Drogo","Kit Harington","Kristian Nairn","Kristofer Hivju","Lena Headey","Liam Cunningham","Maisie Williams","Margaery Tyrell","Mark Addy","Michael McElhatton","Michelle Fairley","Michiel Huisman","Natalia Tena","Natalie Dormer","Nathalie Emmanuel","Nikolaj Coster-Waldau","Olenna Tyrell","Oona Chaplin","Owen Teale","Pedro Pascal","Peter Dinklage","Petyr Baelish","Ramsay Bolton","Richard Madden","Robb Stark","Robert Baratheon","Ron Donachie","Roose Bolton","Rory McCann","Rose Leslie","Roxanne McKee","Roy Dotrice","Samwell Tarly","Sandor Clegane","Sansa Stark","Sean Bean","Sibel Kekilli","Sophie Turner","Stannis Baratheon","Stephen Dillane","Talisa Stark","Theon Greyjoy","Thomas Brodie-Sangster","Tom Wlaschiha","Tommen Baratheon","Tormund Giantsbane","Tyrion Lannister","Tywin Lannister","Viserys Targaryen"];
+   function genStr(all, len) {
+      var result = "";
+      for (var i = 0; i < len; ++i) {
+         result += all.charAt(Math.floor(Math.random() * all.length));
+      }
+      return result;
+   }
+   var lastUsername = null;
+   return names.map(function(e){
+      var tmp = e.split(' ')
+      return {first: tmp[0], last: tmp[1]}
+   }).map(function(e) {
+      e.username = (e.first.charAt(0)+e.last).toLowerCase();
+      if (e.username == lastUsername) {
+         e.username = (e.first.substr(0,2)+e.last).toLowerCase().substr(0, 3 + Math.floor(Math.random()*5));
+      }
+      else {
+         lastUsername = e.username;
+      }
+
+      e.password = "password";
+      e.major = majors[Math.floor(Math.random() * majors.length)];
+      e.email = (e.username+'@hbo.com').replace('\'', '');
+      e.emplId = genStr('0123456789', 9);
+      return e;
+   })
+}
