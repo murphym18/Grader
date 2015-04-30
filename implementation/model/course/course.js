@@ -61,7 +61,7 @@ function getTermByMonth(month) {
    return _.keys(result[0])[_.keys(result)[0]].toString();
 }
 
-function mkCourse(admin) {
+function generateRandomCourse(admin) {
    var defaultRoles = [
       {name: "INSTRUCTOR", permissions: [], users: [admin]},
       {name: "TEACHER_ASSISTANT", permissions: [], users: [admin]},
@@ -81,17 +81,22 @@ function mkCourse(admin) {
    }
    function COURSE_NUMBER_GENERATOR() {
       return genStr('12345',1) + genStr('1234567890', 2);
-      //var all = '0123456789';
-      //var result = all.charAt(Math.floor(Math.random() * (all.length-1))+1);
-      //for (var i = 0; i < 2; ++i) {
-      //   result += all.charAt(Math.floor(Math.random() * all.length));
-      //}
-      //return result;
    }
    function COURSE_SECTION_GENERATOR() {
       var all = '0123456789';
       var result = all.charAt(Math.floor(Math.random() * (all.length-1))+1);
       return result;
+   }
+   function genDates(term, year) {
+      function date(m1, d1, m2, d2) {
+         return {start: new Date(year, m1, d1), end: new Date(year, m2, d2)}
+      }
+      return {
+         'Winter': date(0, 5, 2, 20),
+         'Spring': date(2, 30, 5, 12),
+         'Summer': date(5, 19, 7, 29),
+         'Fall': date(8, 22, 11, 12)
+      }[term];
    }
    var result = {
       classCode: COURSE_CODE_GENERATOR(),
@@ -103,6 +108,7 @@ function mkCourse(admin) {
       term: getTermByMonth(Math.ceil(Math.random() * 12)),
       year: 2015 + Math.ceil(Math.random() * 9)
    };
+   _.extend(result, genDates(result.term, Number(result.year)));
    result.coursePath =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
    return result;
 }
@@ -111,6 +117,6 @@ schema.statics.getTermByMonth = getTermByMonth;
 schema.statics.getRestOptions = function() {
    return {idProperty: "coursePath"};
 }
-schema.statics.makeRandomCourse = mkCourse;
+schema.statics.makeRandomCourse = generateRandomCourse;
 
 module.exports = mongoose.model('Course', schema);
