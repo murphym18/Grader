@@ -14,6 +14,7 @@ var restify = require('express-restify-mongoose');
 
 /* Mount login REST endpoints */
 app.use('/api/', routes.login);
+app.use('/api/', routes["user"]);
 
 mountModel();
 
@@ -123,6 +124,12 @@ function mountModel(){
    });
    verboseLog("Adding all mongoose models");
    _.each(mongoose.modelNames(), function(modelName){
-      restify.serve(app, mongoose.models[modelName], {version: ''});
+      var options = {
+         version: ''
+      }
+      if (modelName === "User") {
+         options.idProperty = "username";
+      }
+      restify.serve(app, mongoose.models[modelName], options);
    });
 };

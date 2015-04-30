@@ -4,6 +4,9 @@ var mongoose = require('mongoose');
 var MissingRoleException =  Error.bind(null, "No such role exception.");
 
 function _findUserRoles(roles, user) {
+   console.log('in _find user roles')
+   console.dir(roles);
+   throw new Error();
    var userId = user.id;
    function isMember(role) {
       return _.contains(role.users.map(String), userId);
@@ -24,21 +27,28 @@ function _getRole(roles, roleName) {
    });
 }
 
-var roleSchema = mongoose.Schema({
-   name: String,
-   permissions: [String],
-   users: [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'User'}]
-}, { _id: false });
-
+//var roleSchema = mongoose.Schema({
+//   name: String,
+//   permissions: [String],
+//   users: [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'User'}]
+//}, { _id: false });
+//
+//var roleManagerSchema = mongoose.Schema({
+//   roles: [roleSchema]
+//});
 var roleManagerSchema = mongoose.Schema({
-   roles: [roleSchema]
+   roles: [{
+      name: String,
+      permissions: [String],
+      users: [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'User'}]
+   }]
 });
 
 roleManagerSchema.method('findAllUserIds', function() {
    function toUsers(role) {
       return role.users;
    }
-   return _.union.apply(_, this.roles.map(toUsers));
+   return _.uniq(_.flatten(this.roles.map(toUsers)).map(String), false);
 });
 
 roleManagerSchema.method('findUserIds', function(roleName) {
