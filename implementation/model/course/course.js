@@ -102,8 +102,6 @@ function generateRandomCourse(admin) {
       classCode: COURSE_CODE_GENERATOR(),
       classNumber: COURSE_NUMBER_GENERATOR(),
       section: COURSE_SECTION_GENERATOR(),
-      //start: new Date(2015, 3, 30),
-      //end: new Date(2015, 6, 14),
       roles: defaultRoles,
       term: getTermByMonth(Math.ceil(Math.random() * 12)),
       year: 2015 + Math.ceil(Math.random() * 9)
