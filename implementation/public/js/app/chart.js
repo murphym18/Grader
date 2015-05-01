@@ -38,7 +38,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             this.barChart = new Chart(this.barCtx).Bar(gradeData, NULL);
         },
         onAttach : function (){
-            this.barCtx = this.$el('.barChart')[0].getContext('2d');
+            this.barCtx = this.$('.barChart')[0].getContext('2d');
         }
     });
 
