@@ -20,7 +20,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             if (!this.barCtx) {
                 return
             }
-            var gradeArray = this.model.findGraphArray();
+            var gradeArray = this.model.get('findGraphArray')();
             var gradeData = {
                 labels : gradeArray[0],
                 datasets: [
