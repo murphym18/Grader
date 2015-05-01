@@ -1,3 +1,9 @@
+var lightRed =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
+var darkRed =  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"];
+var orange = ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"];
+var yellow =  ["rgba(255, 255, 0,0.5)", "rgba(255, 255, 0,0.8)", "rgba(255, 255, 0,0.75)", "rgba(255, 255, 0,1)"];
+var green = ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rgba(0,255,0,1)"];
+
 module.exports = {
    creditNoCredit: {
       minCredit: {
@@ -7,6 +13,14 @@ module.exports = {
          default: 60,
          select: true,
          required: true
+      },
+      colorCredit: {
+         type: String,
+         match: /rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+      },
+      colorNoCredit: {
+         type: String,
+         match: /rgba\(\d+,\d+,\d+,\d+\)|rgba\(\d?\.?\d*,\d?\.?\d*,\d?\.?\d*,[01]?\.?\d*\)/
       }
    },
    letterGrade: {
@@ -41,9 +55,45 @@ module.exports = {
          default: 60,
          required: true,
          select: true
-      }
+      },
+      aColor: [{
+         type: String,
+         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+      }],
+      bColor: [{
+         type: String,
+         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+      }],
+      cColor: [{
+         type: String,
+         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+      }],
+      dColor: [{
+         type: String,
+         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+      }],
+      fColor: [{
+         type: String,
+         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+      }]
    },
    preSave: function (next) {
+      if (this.aColor.length == 0){
+         this.aColor = green;
+      }
+      if (this.bColor.length == 0) {
+         this.bColor = yellow;
+      }
+      if (this.cColor.length == 0) {
+         this.cColor = orange;
+      }
+      if (this.dColor.length == 0) {
+         this.dColor = lightRed;
+      }
+      if (this.fColor.length == 0) {
+         this.fColor = darkRed;
+      }
+
       if (this.minB > this.minA) {
          next('Invalid minimum score for B. The score must not be larger than A.');
       }

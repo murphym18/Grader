@@ -1,6 +1,8 @@
 /** @author Michael Murphy */
-var _ = require('underscore');
+
 var mongoose = require('mongoose');
+var _ = require('underscore');
+
 var MissingRoleException =  Error.bind(null, "No such role exception.");
 
 function _findUserRoles(roles, user) {

@@ -93,3 +93,9 @@ exports.session.mongoSettings.ttl = 3 * 24 * 60 * 60; // = 3 days.
  *
  */
 exports.session.secret = null;
+
+/**
+ * The maximum number of bytes to allow for all file submissions.
+ * @type {number}
+ */
+exports.maxAllowedFileSubmissionData = 256*Math.pow(2,20); // 256 MB

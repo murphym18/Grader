@@ -76,12 +76,17 @@ co(function *() {
             c.roles[2].users.push(allUsers[i++ % allUsers.length]);
             c.roles[2].users.push(allUsers[i++ % allUsers.length]);
             c.roles[2].users.push(allUsers[i++ % allUsers.length]);
+            c.students = [];
+            c.roles[2].users.forEach(function(student){
+               c.students.push({user:student});
+            });
             Course.create(c, function(err) { if (err) console.warn(err); });
          });
       }
    } catch (err) {
       console.err(err);
       console.err(err.stack);
+      throw err
    }
    app.ready();
 });
