@@ -1,5 +1,5 @@
 
-define(['app/app', 'text!templates/charts.hbs', 'text!templates/histogram.hbs', 'chart'], function(App, template1, template2, chart) {
+define(['app/app', 'text!templates/letterGradeGraphics.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'chart'], function(App, chartTemplate, template1, template2, chart) {
     var GradeSchema = App.Backbone.Model;//.extend({
     //defaults: {
     //    aMin: 90,
@@ -11,26 +11,61 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/histogram.hbs', 
     //var GraphArray = findGraphArray();
     var LetterGradeGraphView = App.Mn.ItemView.extend({
         model : App.Course,
-        template : App.Handlebars.compile(template),
+        template : App.Handlebars.compile(template1),
         modelEvents : {
             "change" : "onShow"
         },
+        //graphTitle: "A",
         onShow : function () {
+            if (!this.barCtx) {
+                return
+            }
             var gradeArray = this.model.findGraphArray();
+            var gradeData = {
+                labels : gradeArray[0],
+                datasets: [
+                    {
+                        label : "A",
+                        fillColor: this.model.get('aColor')[0],
+                        strokeColor: this.model.get('aColor')[1],
+                        highlightFill: this.model.get('aColor')[2],
+                        highlightStroke: this.model.get('aColor')[3],
+                        data: gradeArray[1]
 
-            //console.log(this.model.get("aColor"));
+                    }
+                ]
+            }
+            this.barChart = new Chart(this.barCtx).Bar(gradeData, NULL);
+        },
+        onAttach : function (){
+            this.barCtx = this.$el('.barChart')[0].getContext('2d');
         }
     });
+
+    //var data = {
+    //    labels: gradeArray[0],
+    //    datasets: [
+    //        {
+    //            label: "My First dataset",
+    //            fillColor: green[0],
+    //            strokeColor: green[1],
+    //            highlightFill: green[2],
+    //            highlightStroke: green[3],
+    //            data: gradeArray[1]
+    //        }
+    //    ]
+    //};
+
 
     var model = new App.Backbone.Model({
         findGraphArray : function() {
             return [[50, 55, 60, 65, 68, 70, 71, 75, 78, 79, 80, 83, 88, 89, 90, 91, 94], [1, 2, 3, 1, 2, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4]];
         },
-        lightred :  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"],
-        darkred :  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"],
-        orange : ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"],
-        yellow :  ["rgba(255, 255, 0,0.5)", "rgba(255, 255, 0,0.8)", "rgba(255, 255, 0,0.75)", "rgba(255, 255, 0,1)"],
-        green : ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rgba(0,255,0,1)"],
+        dColor :  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"],
+        fColor :  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"],
+        cColor : ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"],
+        bColor :  ["rgba(255, 255, 0,0.5)", "rgba(255, 255, 0,0.8)", "rgba(255, 255, 0,0.75)", "rgba(255, 255, 0,1)"],
+        aColor : ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rgba(0,255,0,1)"],
         aMin: 90,
         bMin: 80,
         cMin: 70,
@@ -40,16 +75,16 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/histogram.hbs', 
     //})
     var GradeSchemaView = App.Mn.ItemView.extend({
         model: GradeSchema,
-        template : App.Handlebars.compile(template),
+        template : App.Handlebars.compile(template2),
         ui: {
-            "aMin" : '#aMinInput',
-            "bMin" : '#bMinInput',
-            "cMin" : '#cMinInput',
-            "dMin" : '#dMinInput',
-            "aOut" : '#aMinOutput',
-            "bOut" : '#bMinOutput',
-            "cOut" : '#cMinOutput',
-            "dOut" : '#dMinOutput'
+            "aMin" : '.aMinInput',
+            "bMin" : '.bMinInput',
+            "cMin" : '.cMinInput',
+            "dMin" : '.dMinInput',
+            "aOut" : '.aMinOutput',
+            "bOut" : '.bMinOutput',
+            "cOut" : '.cMinOutput',
+            "dOut" : '.dMinOutput'
 
         },
         modelEvents: {
@@ -86,14 +121,28 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/histogram.hbs', 
     });
 
 
-
+    var GraphView = App.Mn.LayoutView.extend({
+        template : chartTemplate,
+        regions : {
+            graph : ".chartGraphics",
+            schema : ".scheme"
+        }
+    });
 
     App.Router.route(("charts"), "histogram", function() {
         //var layout = App.show(new App.StandardLayoutView());
-
-        App.show(new GradeSchemaView({
+        var graphView = new GraphView();
+        graphView.getRegion("graph").show(new GradeSchemaView({
             model : model
         }));
+        graphView.getRegion("schema").show(new GradeSchemaView({
+            model : model
+        }));
+
+
+        //App.show(new GradeSchemaView({
+        //    model : model
+        //}));
         //layout.getRegion('main').show(new App.Marionette.ItemView({
         //    template: template,
         //    updatePieChart: function() {
