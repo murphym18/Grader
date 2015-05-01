@@ -122,7 +122,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
 
 
     var GraphView = App.Mn.LayoutView.extend({
-        template : chartTemplate,
+        template : App.Handlebars.compile(chartTemplate),
         regions : {
             graph : ".chartGraphics",
             schema : ".scheme"
