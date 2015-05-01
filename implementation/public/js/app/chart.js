@@ -132,6 +132,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
     App.Router.route(("charts"), "chart", function() {
         //var layout = App.show(new App.StandardLayoutView());
         var graphView = new GraphView();
+        App.show(graphView);
         graphView.getRegion("graph").show(new GradeSchemaView({
             model : model
         }));
