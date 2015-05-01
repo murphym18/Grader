@@ -133,7 +133,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
         //var layout = App.show(new App.StandardLayoutView());
         var graphView = new GraphView();
         App.show(graphView);
-        graphView.getRegion("graph").show(new GradeSchemaView({
+        graphView.getRegion("graph").show(new LetterGradeGraphView({
             model : model
         }));
         graphView.getRegion("schema").show(new GradeSchemaView({
