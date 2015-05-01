@@ -12,7 +12,9 @@ schema.statics.findLogin = function findLogin(user, pass) {
 };
 
 schema.statics.getRestOptions = function getRestOptions() {
-   return {idProperty: "username"};
+   return {
+      idProperty: "username"
+   };
 };
 
 var majors = require('./majors');

@@ -7,7 +7,7 @@ var gradeShema = require('./grade-schema');
 var studentRecord = require('./student-record');
 var COURSE_ABBREVIATION = require('./abbreviations');
 var TERMS = ['Winter', 'Spring', 'Summer', 'Fall'];
-var AssignmentCategory = require('../assignment/assignment-category');
+var AssignmentCategory = require('./assignment/assignment-category');
 var co = require('co');
 
 schema.add({
@@ -87,7 +87,9 @@ schema.statics.makeRandomCourse = generateRandomCourse;
 module.exports = mongoose.model('Course', schema);
 
 function getRestOptions() {
-   return {idProperty: "colloquialUrl"};
+   return {
+      idProperty: "colloquialUrl"
+   };
 }
 
 function getTermByMonth(month) {

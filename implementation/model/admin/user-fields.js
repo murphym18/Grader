@@ -38,6 +38,7 @@ module.exports = {
    emplId: {
       type: String,
       match: /[0-9]{9}/,
-      unique: true
+      unique: true,
+      select: false
    }
 };
