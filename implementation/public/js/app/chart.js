@@ -1,5 +1,5 @@
 
-define(['app/app', 'text!templates/letterGradeGraphics.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'chart'], function(App, chartTemplate, template1, template2, chart) {
+define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'chart'], function(App, chartTemplate, template1, template2, chart) {
     var GradeSchema = App.Backbone.Model;//.extend({
     //defaults: {
     //    aMin: 90,
@@ -129,7 +129,7 @@ define(['app/app', 'text!templates/letterGradeGraphics.hbs', 'text!templates/let
         }
     });
 
-    App.Router.route(("charts"), "histogram", function() {
+    App.Router.route(("charts"), "chart", function() {
         //var layout = App.show(new App.StandardLayoutView());
         var graphView = new GraphView();
         graphView.getRegion("graph").show(new GradeSchemaView({
