@@ -14,7 +14,12 @@ define(['app/app', 'text!templates/histogram.hbs', 'chart'], function(App, templ
             "aMin" : '#aMinInput',
             "bMin" : '#bMinInput',
             "cMin" : '#cMinInput',
-            "dMin" : '#dMinInput'
+            "dMin" : '#dMinInput',
+            "aOut" : '#aMinOutput',
+            "bOut" : '#bMinOutput',
+            "cOut" : '#cMinOutput',
+            "dOut" : '#dMinOutput'
+
         },
         modelEvents: {
             "change" : "onShow"
@@ -24,6 +29,10 @@ define(['app/app', 'text!templates/histogram.hbs', 'chart'], function(App, templ
             this.ui.bMin.val(this.model.get('bMin'));
             this.ui.cMin.val(this.model.get('cMin'));
             this.ui.dMin.val(this.model.get('dMin'));
+            //this.ui.aOut.html(this.model.get('aMin'));
+            //this.ui.bOut.html(this.model.get('bMin'));
+            //this.ui.cOut.html(this.model.get('cMin'));
+            //this.ui.dOut.html(this.model.get('dMin'));
         },
         events: {
             "change @ui.aMin" : "updateAMin",
