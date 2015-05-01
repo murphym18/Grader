@@ -22,9 +22,15 @@ define(['app/app', 'app/session', 'text!templates/topMenu.hbs'], function(App, s
             App.login();
          }
       },
+      getNameText: function() {
+         if (this.model.get('user').first && this.model.get('user').last) {
+            return this.model.get('user').first+" "+this.model.get('user').last;
+         }
+         return this.model.get('user').username;
+      },
       render: function() {
          var action = this.model.isAuthenticated() ? "Sign Out" : "Sign In";
-         var before = this.model.isAuthenticated() ? "Signed in as ".concat(this.model.get('user').username) + " (" : "";
+         var before = this.model.isAuthenticated() ? this.getNameText() + " (" : "";
          var after = this.model.isAuthenticated() ? ")" : "";
          this.$el.html(this.template({
             action: action,
