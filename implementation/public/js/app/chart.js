@@ -125,7 +125,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
         template : App.Handlebars.compile(chartTemplate),
         regions : {
             graph : ".chartGraphics",
-            schema : ".scheme"
+            schema : ".schema"
         }
     });
 
