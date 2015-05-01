@@ -7,7 +7,7 @@ define(['app/app', 'app/top-menu', 'app/courses'], function(App, TopNavView, Cou
       layout.getRegion('header').show(new TopNavView);
       App.UserCourses.once('sync', function() {
          layout.getRegion('main').show(courses);
-         App.Backbone.history.navigate('/Courses', {trigger:false});
+         App.Backbone.history.navigate('/Courses', {trigger:false, replace: true});
       });
       App.login().then(function(){
          layout.getRegion('main').show(new App.Mn.ItemView({
