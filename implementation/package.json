@@ -30,6 +30,7 @@
     "serve-favicon": "~2.2.0",
     "session-file-store": "0.0.3",
     "tungus": "0.0.4",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "mongoose-tree2" : "0.2.2"
   }
 }
