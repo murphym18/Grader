@@ -37,6 +37,8 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
 
 
    var CourseListItemView = App.Mn.ItemView.extend({
+      tagName: "li",
+      className: "course-list-item",
       template: App.Handlebars.compile(courseListItemTemplate),
       modelEvents: {
          "change": "render"
