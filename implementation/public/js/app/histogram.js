@@ -7,6 +7,8 @@ define(['app/app', 'text!templates/histogram.hbs', 'chart'], function(App, templ
         //    dMin: 60
         //}
     //});
+    var GradeArrays = new App.Backbone.Collection([[],[]])
+    //})
     var GradeSchemaView = App.Mn.ItemView.extend({
         model: GradeSchema,
         template : App.Handlebars.compile(template),
