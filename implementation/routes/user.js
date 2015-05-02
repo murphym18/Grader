@@ -9,17 +9,17 @@ var _ = require('underscore');
 
 router.get('/Users/:username/courses', function(req, res, next) {
    co(function *() {
-      try{
-         var user = yield Users.findOne({username: req.params.username}).exec();
+      try {
+         var user = yield Users.findOne({username: req.params.username}).select('_id').exec();
          if (!user) {
-            return res.json([]);
+            res.status(404).end();
          }
-
-         function containsUser(course) {
-            return course.findAllUserIds().indexOf(user.id) != -1;
-         }
-         var allCourses = yield Courses.find({}).exec();
-         var data = allCourses.filter(containsUser)
+         var withUserCriterion = {
+            roles: {
+               $elemMatch: { users: [user._id] }
+            }
+         };
+         var data = yield Courses.find(withUserCriterion).exec();
          res.json(data);
       }
       catch(err) {

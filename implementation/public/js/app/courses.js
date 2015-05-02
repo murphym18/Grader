@@ -1,11 +1,13 @@
 /**  @author Michael Murphy */
 define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(App, session, courseListItemTemplate) {
 
+
    var Course = Backbone.Model.extend({
-      idAttribute: "colloquialUrl"
+      idAttribute: "colloquialUrl",
+      findGraphArray: function(data) {
+
+      }
    });
-
-
 
    var UserCoursesList = Backbone.Collection.extend({
       tagName: 'ul',
@@ -24,9 +26,9 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
          }
       },
       initialize: function() {
-         this.listenTo(session, 'change:user', this.updateUrl.bind(this));
-         this.listenTo(session, 'login', this.fetch.bind(this));
-         this.listenTo(session, 'logout', this.clear.bind(this));
+         this.listenTo(session, 'change:user', this.updateUrl);
+         this.listenTo(session, 'login', this.fetch);
+         this.listenTo(session, 'logout', this.clear);
          this.updateUrl();
       },
       clear: function() {

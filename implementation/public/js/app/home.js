@@ -16,7 +16,7 @@ define(['app/app', 'app/top-menu', 'app/courses'], function(App, TopNavView, Cou
             template: function(){
                return "loading...";
             },
-            onShow() {
+            onShow: function() {
                this.$el().css('top', "205px").position({
                   of: window
                });
@@ -30,6 +30,3 @@ define(['app/app', 'app/top-menu', 'app/courses'], function(App, TopNavView, Cou
       "Courses": "loadPage"
    })
 });
-//var mainView = new App.Marionette.ItemView({
-//   template: App.Handlebars.compile(homeTemplate)
-//});

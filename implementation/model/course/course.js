@@ -4,11 +4,11 @@ var mongoose = require('mongoose');
 var schema = require('../admin/role-manager');
 var _ = require('underscore');
 var gradeShema = require('./grade-schema');
-var studentRecord = require('./student-record');
+var studentRecord = require('./student');
 var COURSE_ABBREVIATION = require('./abbreviations');
 var TERMS = ['Winter', 'Spring', 'Summer', 'Fall'];
-var AssignmentCategory = require('./assignment/assignment-category');
 var co = require('co');
+var Category = require('./assignment/category');
 
 schema.add({
    classNumber: {
@@ -48,41 +48,19 @@ schema.add({
       select: true,
       match: /[A-Z][-A-Z0-9]*/
    },
-   categories: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'AssignmentCategory'
-   },
+   categories: [Category],
    students: [studentRecord]
 });
 schema.add(gradeShema.letterGrade);
 schema.add(gradeShema.creditNoCredit);
-var rootCategory = schema.virtual('fullname');
-rootCategory.get(function () {
-   if (this.categories.length == 0) {
-      this.categories.$push({
-         name: root,
-         weight: 100
-      })
-   }
-   return this.categories[0];
-});
-schema.index({ coursePath: 1, term: 1, year: -1});
+schema.index({colloquialUrl: 1, term: 1, year: -1});
 schema.set('autoIndex', false);
 schema.set('toJSON', { virtuals: true })
-schema.pre('save', function(next){
-   var self = this;
-   if (!this.categories) {
-      AssignmentCategory.create({name:'root', weight: 1}, function(err, root){
-         self.categories = root;
-         next(err)
-      });
-   }
-});
 schema.pre('save', gradeShema.preSave);
 
 schema.statics.getTermByMonth = getTermByMonth;
 schema.statics.getRestOptions = getRestOptions;
-schema.statics.makeRandomCourse = generateRandomCourse;
+schema.statics.generateRandomCourse = generateRandomCourse;
 
 module.exports = mongoose.model('Course', schema);
 
@@ -113,7 +91,7 @@ function generateRandomCourse(admin) {
       {name: "INSTRUCTOR", permissions: [], users: []},
       {name: "TEACHER_ASSISTANT", permissions: [], users: []},
       {name: "STUDENT", permissions: [], users: []},
-      {name: "NONE", permissions: [], users: [admin]}
+      {name: "NONE", permissions: [], users: [admin._id]}
    ];
 
    function genStr(all, len) {
@@ -156,6 +134,7 @@ function generateRandomCourse(admin) {
    };
    _.extend(result, genDates(result.term, Number(result.year)));
    result.colloquialUrl =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
+
    return result;
 }
 

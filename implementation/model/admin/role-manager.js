@@ -29,22 +29,13 @@ function _getRole(roles, roleName) {
    });
 }
 
-//var roleSchema = mongoose.Schema({
-//   name: String,
-//   permissions: [String],
-//   users: [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'User'}]
-//}, { _id: false });
-//
-//var roleManagerSchema = mongoose.Schema({
-//   roles: [roleSchema]
-//});
 var roleManagerSchema = mongoose.Schema({
    roles: [{
       name: String,
       permissions: [String],
       users: [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'User'}]
    }]
-});
+}, {save: {w:1}});
 
 roleManagerSchema.method('findAllUserIds', function() {
    function toUsers(role) {

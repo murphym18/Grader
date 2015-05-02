@@ -4,7 +4,7 @@ var userFields = require('./user-fields');
 var _ = require('underscore');
 var sha = require.main.require('./app/util').hashPasswordString;
 
-var schema = mongoose.Schema(userFields);
+var schema = mongoose.Schema(userFields, {save: {w:1}});
 schema.set('autoIndex', true);
 
 schema.statics.findLogin = function findLogin(user, pass) {
@@ -19,7 +19,7 @@ schema.statics.getRestOptions = function getRestOptions() {
 
 var majors = require('./majors');
 
-schema.statics.generateUsers = function genUsers(names) {
+schema.statics.randomUserData = function genUsers(names) {
    function mkEmail(username) {
       var email = new Buffer(username.replace(/[^-a-zA-Z0-9_\.]/g, '') + '@calpoly.edu');
       return email.toString('ascii');
@@ -32,7 +32,7 @@ schema.statics.generateUsers = function genUsers(names) {
       }
       return result;
    }
-   users = names.map(function(e){
+   var users = names.map(function(e){
       var tmp = e.split(' ');
       return {first: tmp[0], last: tmp[1]};
    }).map(function(e) {

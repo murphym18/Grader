@@ -57,24 +57,19 @@ module.exports = {
          select: true
       },
       aColor: [{
-         type: String,
-         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+         type: String
       }],
       bColor: [{
-         type: String,
-         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+         type: String
       }],
       cColor: [{
-         type: String,
-         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+         type: String
       }],
       dColor: [{
-         type: String,
-         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+         type: String
       }],
       fColor: [{
-         type: String,
-         match: /#\d{6}|rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+         type: String
       }]
    },
    preSave: function (next) {

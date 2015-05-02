@@ -15,12 +15,12 @@ var studentRecordSchema = mongoose.Schema({
    grades: [{
       assignment: {
          'type': mongoose.Schema.Types.ObjectId,
-         'ref': 'AssignmentCategory.assignments',
+         'ref': 'Course.Category.assignments',
          'required': true
       },
       assignmentSubmission: {
          'type': mongoose.Schema.Types.ObjectId,
-         'ref': 'AssignmentSubmission',
+         'ref': 'Submission',
          'required': false
       },
       rawScore: {

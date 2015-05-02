@@ -24,6 +24,9 @@ try {
    if (!isEmbedded) {
       verboseLog("Using MongoDB for database.");
       mongoose.connect(config.db.mongoUrl);
+      mongoose.connection.on('error', function(err) {
+         console.log(er);
+      });
    }
    else {
       var absPath = setupDatabaseDirectory();
@@ -65,6 +68,9 @@ function setupDatabaseDirectory() {
    return absPath;
 }
 
-function onError(absPath) {
-   throw new Error("Could not setup " + (isEmbedded ? "an embedded database in directory " + absPath : "a MongoDB connection to " + config.db.mongoUrl));
+function onError(err) {
+   console.log(err);
+   var err = new Error("Could not setup " + (isEmbedded ? "an embedded database in directory " + absPath : "a MongoDB connection to " + config.db.mongoUrl));
+
+   console.log(err);
 }

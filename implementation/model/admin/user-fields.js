@@ -26,10 +26,11 @@ module.exports = {
       type: String,
       match: /[0-9a-f]{64}/,
       set: sha,
-      select: true
+      select: false
    },
    email: {
-      type: Email
+      type: Email,
+      select: true
    },
    major: {
       type: String,
@@ -39,6 +40,6 @@ module.exports = {
       type: String,
       match: /[0-9]{9}/,
       unique: true,
-      select: false
+      select: true
    }
 };

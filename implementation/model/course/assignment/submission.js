@@ -3,6 +3,7 @@ var _ = require('underscore');
 var mongoose = require('mongoose');
 var userFields = require.main.require('./model/admin/user-fields');
 var config = require.main.require('./app/config');
+var mimeType = require('mime');
 
 var assignmentSubmissionSchema = mongoose.Schema({
    user: {
@@ -23,28 +24,20 @@ var assignmentSubmissionSchema = mongoose.Schema({
       required: true
    },
    mime: {
-      type: String,
-      required: true
+      type: String
    },
    filename: {
       type: String,
       maxlength: 255,
       trim: true
    }
-}, {capped: config.maxAllowedFileSubmissionData});
+}, {capped: config.maxAllowedFileSubmissionData, save: {w: 1}});
 
-assignmentSubmissionSchema.pre('save', function preSaveAssignmentSubmission(next) {
+assignmentSubmissionSchema.pre('save', function lookupMimeType(next) {
    if (!this.mime) {
-      if (this.filename) {
-         var dot = this.filename.lastIndexOf('.');
-         if (dot != -1) {
-            this.mime = s.substr(s.lastIndexOf('.')+1)
-         }
-      }
-      else {
-         this.mime = "bin";
-      }
+      this.mime = mimeType.lookup(this.filename);
    }
+   return next();
 });
 
 module.exports = mongoose.model('AssignmentSubmission', assignmentSubmissionSchema);

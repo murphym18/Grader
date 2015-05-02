@@ -1,7 +1,7 @@
 /** @author Michael Murphy */
 var mongoose = require('mongoose')
 
-var assignmentSchema = mongoose.Schema({
+var GradedItem = mongoose.Schema({
    dueDate: {
       type: Date
    },
@@ -15,6 +15,6 @@ var assignmentSchema = mongoose.Schema({
       required: true,
       default: 100
    }
-});
+}, {save: {w: 1}});
 
-module.exports = assignmentSchema;
+module.exports = GradedItem;
