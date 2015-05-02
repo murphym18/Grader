@@ -20,7 +20,6 @@ var categoryNames = (function*(arr) {
       yield arr[Math.floor(Math.random() * arr.length)];
 })(require('./model/course/assignment/moch-names'))
 
-
 /* Mount login REST endpoints */
 app.use('/api/', routes.login);
 app.use('/api/', routes["user"]);
@@ -44,26 +43,6 @@ app.use('/', function(req, res, next){
 var names = ["Aidan Gillen","Alfie Allen","Amrita Acharia","Art Parkinson","Arya Stark","Ben Crompton","Ben Hawkey","Bran Stark","Catelyn Stark","Cersei Lannister","Charles Dance","Ciaran Hinds","Conleth Hill","Daario Naharis","Daenerys Targaryen","Daniel Portman","Davos Seaworth","Dean-Charles Chapman","Diana Rigg","Dominic Carter","Donald Sumpter","Eddard Stark","Ellaria Sand","Emilia Clarke","Esme Bianco","Eugene Simon","Finn Jones","Gwendoline Christie","Hannah Murray","Harry Lloyd","Iain Glen","Ian Beattie","Ian McElhinney","Indira Varma","Isaac Hempstead-Wright","Iwan Rheon","Jack Gleeson","Jacob Anderson","Jaime Lannister","James Cosmo","Jaqen H'ghar","Jason Momoa","Jeor Mormont","Jerome Flynn","Joe Dempsie","Joffrey Baratheon","John Bradley","Jon Snow","Jonathan Pryce","Jorah Mormont","Josef Altin","Julian Glover","Khal Drogo","Kit Harington","Kristian Nairn","Kristofer Hivju","Lena Headey","Liam Cunningham","Maisie Williams","Margaery Tyrell","Mark Addy","Michael McElhatton","Michelle Fairley","Michiel Huisman","Natalia Tena","Natalie Dormer","Nathalie Emmanuel","Nikolaj Coster-Waldau","Olenna Tyrell","Oona Chaplin","Owen Teale","Pedro Pascal","Peter Dinklage","Petyr Baelish","Ramsay Bolton","Richard Madden","Robb Stark","Robert Baratheon","Ron Donachie","Roose Bolton","Rory McCann","Rose Leslie","Roxanne McKee","Roy Dotrice","Samwell Tarly","Sandor Clegane","Sansa Stark","Sean Bean","Sibel Kekilli","Sophie Turner","Stannis Baratheon","Stephen Dillane","Talisa Stark","Theon Greyjoy","Thomas Brodie-Sangster","Tom Wlaschiha","Tommen Baratheon","Tormund Giantsbane","Tyrion Lannister","Tyrion Lannister", "Tytos Lannister", "Tywin Lannister", "Viserys Targaryen"];
 
 
-
-function genAssignments(categoryName) {
-   var assignments = [], numAssignments = Math.ceil(Math.random()*8);
-   while(numAssignments > 0) {
-      assignments.unshift({name: categoryName +" Assignment "+ String(numAssignments--)});
-   }
-   return assignments;
-}
-
-function mkAssignmentCategory(parentPath) {
-   var name = categoryNames.next().value;
-   return {
-      name: name,
-      weight: 1,
-      assignments: genAssignments(name),
-      path: parentPath ? parentPath.path+"/"+name : name
-   };
-}
-
-
 mongoose.connection.once('open',function() {
    co(function *() {
       try {
@@ -73,7 +52,7 @@ mongoose.connection.once('open',function() {
          yield Q.all(Users.randomUserData(names).map(toSave(Users)));
          var admin = yield Users.find({username: 'admin'}).exec();
          var users = _.shuffle(yield Users.find().exec());
-         for (var i = 0; i < 200; ++i)
+         for (var i = 0; i < 65; ++i)
             yield toSave(Course)(generateCourses(admin, users));
          var courses = yield Course.find({}).exec();
          for (var i = 0; i < courses.length; i++) {
@@ -83,11 +62,11 @@ mongoose.connection.once('open',function() {
                var c1 = mkAssignmentCategory(false);
                course.categories.push(c1);
                yield Q.ninvoke(course, 'save');
-               for (var k = 0, numToGen = Math.ceil(Math.random() * 3 + 2); k < numToGen; k++) {
+               for (var k = 0, numToGen = Math.ceil(Math.random()); k < numToGen; k++) {
                   var c2 = mkAssignmentCategory(c1);
                   course.categories.push(c2);
                   yield Q.ninvoke(course, 'save');
-                  for (var m = 0, numToGen = Math.ceil(Math.random() * 3 + 2); m < numToGen; m++) {
+                  for (var m = 0, numToGen = Math.ceil(Math.random()); m < numToGen; m++) {
                      var c3 = mkAssignmentCategory(c2);
                      course.categories.push(c3);
                      yield Q.ninvoke(course, 'save');
@@ -102,28 +81,6 @@ mongoose.connection.once('open',function() {
          console.log(e.stack);
 
       }
-
-      //console.log(courses);
-      //var newCourses =
-
-      /*
-
-       var c1 = mkAssignmentCategory(courses[i]);
-       var numToGen2 = Math.ceil(Math.random() * 6 + 2);
-       for (var k = 0; k < numToGen2; k++) {
-       var c2 = yield mkAssignmentCategory(c1);
-       var numToGen3 = Math.ceil(Math.random() * 6 + 2);
-       for (var k = 0; k < numToGen3; k++) {
-       var c3 = yield mkAssignmentCategory(c2);
-       }
-       }
-
-       break;
-
-       */
-
-
-
       return "done"
    }).then(function(val){
       console.log("done",val);
@@ -142,32 +99,47 @@ function promiseSave(model, obj){
 function toSave(model) {
    return _.partial(promiseSave, model);
 }
+function genAssignments(categoryName) {
+   var assignments = [], numAssignments = Math.ceil(Math.random()*2);
+   while(numAssignments > 0) {
+      assignments.unshift({name: categoryName +" Assignment "+ String(numAssignments--)});
+   }
+   return assignments;
+}
+
+function mkAssignmentCategory(parentPath) {
+   var name = categoryNames.next().value;
+   return {
+      name: name,
+      weight: 1,
+      assignments: genAssignments(name),
+      path: parentPath ? parentPath.path+"/"+name : name
+   };
+}
 
 function generateCourses(admin, allUsers) {
    function addUsers(course) {
       var j = 0;
+      _.shuffle(allUsers);
       for(var i = 0; i < 1;i++) {
-         course.roles[0].users.push(allUsers[j++ % allUsers.length]);
+         course.roles[0].users.push(allUsers[j++]);
       }
 
       for(var i = 0; i < 2;i++) {
-         course.roles[1].users.push(allUsers[j++ % allUsers.length]);
+         course.roles[1].users.push(allUsers[j++]);
       }
 
       course.students = [];
-      for(var i = 0; i < 20;i++) {
-         var student = allUsers[j++ % allUsers.length];
+      for(var i = 0; i < 25;i++) {
+         var student = allUsers[j++];
          course.roles[2].users.push(student);
          course.students.push({user: student});
       }
+      course.roles[3].users.push(admin.id);
       return course;
    }
    return addUsers(Course.generateRandomCourse(admin));
 }
-
-
-
-
 
 function mountRestEndpoints(){
    function scanModelFiles(dirs){

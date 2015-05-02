@@ -91,7 +91,7 @@ function generateRandomCourse(admin) {
       {name: "INSTRUCTOR", permissions: [], users: []},
       {name: "TEACHER_ASSISTANT", permissions: [], users: []},
       {name: "STUDENT", permissions: [], users: []},
-      {name: "NONE", permissions: [], users: [admin._id]}
+      {name: "NONE", permissions: [], users: [admin.id]}
    ];
 
    function genStr(all, len) {
