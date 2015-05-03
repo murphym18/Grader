@@ -35,7 +35,13 @@ function RichArray(defaultCmpFunc) {
 
 
 
-
+exports.randomString = function randomString(alphabet, len) {
+   var result = "";
+   while (len--) {
+      result += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+   }
+   return result;
+}
 
 exports.hashPasswordString = function(str) {
    var hash = crypto.createHash('sha256');
