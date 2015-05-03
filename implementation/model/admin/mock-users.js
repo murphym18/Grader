@@ -11,7 +11,6 @@ module.exports = (function generateMockUsers(names) {
       user.email = mkEmail(user.username);
       user.emplId = util.randomString('0123456789', 9);
    }
-
    return users;
 })([
     /* 

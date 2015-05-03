@@ -71,4 +71,4 @@ module.exports = [
    "Statistics",
    "Theatre Arts",
    "Wine and Viticulture"
-]
+];
