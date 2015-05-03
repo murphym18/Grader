@@ -2,7 +2,7 @@ var _ = require('underscore');
 var generateMockCategory = require('./mock-category');
 
 
-module.exports = function generateMockAssignments(number) {
+module.exports = function generateMockAssignments() {
    var categories = [];
    function fillSubCategory(parent, descriptions) {
       for (var d of descriptions) {
