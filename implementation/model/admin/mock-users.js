@@ -6,7 +6,7 @@ var usernameCount = new Object();
 module.exports = (function generateMockUsers(names) {
    var users = names.map(splitFullname);
    for (var user of users) {
-      user.username = user.username = mkUsername(user.first, user.last);
+      user.username = user.password = mkUsername(user.first, user.last);
       user.major = majors[Math.floor(Math.random() * majors.length)];
       user.email = mkEmail(user.username);
       user.emplId = util.randomString('0123456789', 9);
