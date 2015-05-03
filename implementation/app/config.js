@@ -39,6 +39,17 @@ exports.verboseLog = false;
 /* DATABASE SETTINGS */
 exports.db = {};
 
+/**
+ * Deletes all model documents from the database on startup.
+ * Use with care!
+ */
+exports.db.clearOnStartup = false;
+
+/**
+ * Will create mock model documents on startup.
+ */
+exports.db.generateMockData = false;
+
 /* if embedded database then these settings */
 /**
  * Use in memory database only.
