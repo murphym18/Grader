@@ -8,40 +8,13 @@ var config = require('./config');
 var MissingPathRootError = Error;
 var CannotMakeDirectoryError = Error;
 
-function RichArray(defaultCmpFunc) {
-   this.flatMap = function(mapFunc) {
-      return [].concat.apply([], this.map(mapFunc));
-   };
-
-   this.removeFirstOccurrence = function(obj) {
-      var i = this.indexOf(obj);
-      if (i >= 0) {
-         this.splice(i, 1);
-      }
-      return this;
-   };
-
-   this.uniq = function(cmpFunc) {
-      var cmp = cmpFunc || defaultCmpFunc || exports.strcmp;
-      var addFirstOccurrence = function(prev, cur) {
-         if (prev.length < 1 || prev[0] !== cur) {
-            prev.unshift(cur);
-         }
-         return prev;
-      };
-      return this.sort(cmp).reduceRight(addFirstOccurrence, []);
-   };
-}
-
-
-
 exports.randomString = function randomString(alphabet, len) {
    var result = "";
    while (len--) {
       result += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
    }
    return result;
-}
+};
 
 exports.hashPasswordString = function(str) {
    var hash = crypto.createHash('sha256');
@@ -113,12 +86,6 @@ exports.strcmpIgnoreCase = function(a, b) {
    return exports.strcmp(a.toUpperCase(), b.toUpperCase());
 };
 
-exports.toRichArray = function(arr, cmpFunc) {
-   arr = arr || [];
-   RichArray.call(arr, cmpFunc);
-   return arr;
-};
-
 exports.verboseLog = (function() {
    if (config.verboseLog) {
       return console.log.bind(console);
@@ -126,4 +93,4 @@ exports.verboseLog = (function() {
    else {
       return function(){};
    }
-})()
+})();
