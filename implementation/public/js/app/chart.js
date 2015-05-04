@@ -1,16 +1,11 @@
 
 define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'chart'], function(App, chartTemplate, template1, template2, chart) {
-    var GradeSchema = App.Backbone.Model;//.extend({
-    //defaults: {
-    //    aMin: 90,
-    //    bMin: 80,
-    //    cMin: 70,
-    //    dMin: 60
-    //}
-    //});
-    //var GraphArray = findGraphArray();
+    var GradeSchema = App.Backbone.Model;
+    var GraphModel = App.Course;
+
+
     var LetterGradeGraphView = App.Mn.ItemView.extend({
-        model : App.Course,
+        model : GraphModel,
         template : App.Handlebars.compile(template1),
         modelEvents : {
             "change" : "onShow"
@@ -184,6 +179,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             this.ui.bMin.val(this.model.get('bMin'));
             this.ui.cMin.val(this.model.get('cMin'));
             this.ui.dMin.val(this.model.get('dMin'));
+
             //this.ui.aOut.html(this.model.get('aMin'));
             //this.ui.bOut.html(this.model.get('bMin'));
             //this.ui.cOut.html(this.model.get('cMin'));
@@ -205,7 +201,6 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             this.updateBMin =  App._.partial(this.updateModel, "bMin");
             this.updateCMin =  App._.partial(this.updateModel, "cMin");
             this.updateDMin =  App._.partial(this.updateModel, "dMin");
-
         }
 
     });
