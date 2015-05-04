@@ -17,11 +17,21 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
         },
         //graphTitle: "A",
         onShow : function () {
-            if (!this.barCtx) {
+            if (!this.barCtx || !this.pieCtx) {
                 return
             }
+            var numGradeLetters = this.model.get('numGradeLetters');
+            var aMin = this.model.get('aMin');
+            var bMin = this.model.get('bMin');
+            var cMin = this.model.get('cMin');
+            var dMin = this.model.get('dMin');
+            var aColor = this.model.get('aColor');
+            var bColor = this.model.get('bColor');
+            var cColor = this.model.get('cColor');
+            var dColor = this.model.get('dColor');
+            var fColor = this.model.get('fColor');
             var gradeArray = this.model.get('findGraphArray')();
-            var gradeData = {
+            var barGraphData = {
                 labels : gradeArray[0],
                 datasets: [
                     {
@@ -34,28 +44,107 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
 
                     }
                 ]
-            }
-            this.barChart = new Chart(this.barCtx).Bar(gradeData, null);
+            };
+            // want to make this global so the gradeSchema can see it.
+            var gradeLetterTotals = function () {
+                var i = 0;
+                var gradeTotalArray = new Uint32Array(5);
+                    gradeArray[0].forEach(function(value) {
+                        switch (true) {
+                            case(value >= aMin):
+                                gradeTotalArray[0] += gradeArray[1][i];
+                                break;
+                            case(value >= bMin):
+                                gradeTotalArray[1] += gradeArray[1][i];
+                                break;
+                            case(value >= cMin):
+                                gradeTotalArray[2] += gradeArray[1][i];
+                                break;
+                            case(value >= dMin):
+                                gradeTotalArray[3] += gradeArray[1][i];
+                                break;
+                            default:
+                                gradeTotalArray[4] += gradeArray[1][i];
+                                break;
+                        }
+                        i++;
+                    });
+
+                return gradeTotalArray;
+            };
+            var pieChartData = [
+                    {
+                        value: gradeLetterTotals()[0],
+                        color: this.model.get('aColor')[0],
+                        highlight: this.model.get('aColor')[1],
+                        label: "A"
+                    },
+                    {
+                        value: gradeLetterTotals()[1],
+                        color: this.model.get('bColor')[0],
+                        highlight: this.model.get('bColor')[1],
+                        label: "B"
+                    },
+                    {
+                        value: gradeLetterTotals()[2],
+                        color: this.model.get('cColor')[0],
+                        highlight: this.model.get('cColor')[1],
+                        label: "C"
+                    },
+                    {
+                        value: gradeLetterTotals()[3],
+                        color:this.model.get('dColor')[0],
+                        highlight: this.model.get('dColor')[1],
+                        label: "D"
+                    },
+                    {
+                        value: gradeLetterTotals()[4],
+                        color: this.model.get('fColor')[0],
+                        highlight: this.model.get('fColor')[1],
+                        label: "F"
+                    }
+
+                ];
+
+
+            this.pieChart = new Chart(this.pieCtx).Pie(pieChartData,null);
+            this.barChart = new Chart(this.barCtx).Bar(barGraphData, null);
+            var changeSingleBarColor = function(chartIn, bar, color) {
+
+                chartIn.datasets[0].bars[bar].fillColor =  color[0];
+                chartIn.datasets[0].bars[bar].strokeColor =  color[1];
+                chartIn.datasets[0].bars[bar].highlightFill = color[2];
+                chartIn.datasets[0].bars[bar].highlightStroke =  color[3];
+
+                chartIn.update();
+            };
+            var varcheckBarChartColors = function (gradesArray, chart){
+                for(var x = 0; x < gradesArray.length; x++) {
+                    switch (true) {
+                        case(gradesArray[x] >= aMin):
+                            changeSingleBarColor(chart, x, aColor);
+                            break;
+                        case(gradesArray[x] >= bMin):
+                            changeSingleBarColor(chart, x, bColor);
+                            break;
+                        case(gradesArray[x] >= cMin):
+                            changeSingleBarColor(chart, x, cColor);
+                            break;
+                        case(gradesArray[x] >= dMin):
+                            changeSingleBarColor(chart, x, dColor);
+                            break;
+                        default:
+                            changeSingleBarColor(chart, x, fColor);
+                            break;
+                    }
+                }
+            }(gradeArray[0], this.barChart);
         },
         onAttach : function (){
             this.barCtx = this.$('.barChart')[0].getContext('2d');
+            this.pieCtx = this.$('.pieChart')[0].getContext('2d');
         }
     });
-
-    //var data = {
-    //    labels: gradeArray[0],
-    //    datasets: [
-    //        {
-    //            label: "My First dataset",
-    //            fillColor: green[0],
-    //            strokeColor: green[1],
-    //            highlightFill: green[2],
-    //            highlightStroke: green[3],
-    //            data: gradeArray[1]
-    //        }
-    //    ]
-    //};
-
 
     var model = new App.Backbone.Model({
         findGraphArray : function() {
@@ -69,10 +158,10 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
         aMin: 90,
         bMin: 80,
         cMin: 70,
-        dMin: 60
+        dMin: 60,
+        numGradeLetters: 5
     });
-        //= new App.Backbone.Collecti
-    //})
+
     var GradeSchemaView = App.Mn.ItemView.extend({
         model: GradeSchema,
         template : App.Handlebars.compile(template2),
@@ -118,6 +207,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             this.updateDMin =  App._.partial(this.updateModel, "dMin");
 
         }
+
     });
 
 
