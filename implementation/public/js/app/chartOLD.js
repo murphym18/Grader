@@ -51,8 +51,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             this.barChart.datasets[0].bars[bar].highlightFill = color[2];
             this.barChart.datasets[0].bars[bar].highlightStroke =  color[3];
         },
-        updateBarColors : function() {
-            var gradesArray = this.model.get('findGraphArray')()[0];
+        updateBarColors : function(gradesArray) {
             for(var x = 0; x < gradesArray.length; x++) {
                 switch (true) {
                     case(gradesArray[x] >= this.model.get('aMin')):
@@ -72,15 +71,17 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
                         break;
                 }
             }
-            this.barChart.update();
         },
         updateGraphs : function () {
-            // update bar chart
-            this.updateBarColors();
-
-            // Destroy and recreate pie chart
+            //console.log(this.barChart.datasets[0].bars[0].fillColor);
+            //this.barChart.datasets[0].bars[0].fillColor =  this.model.get('aColor');
+            var gradeArray = this.model.get('findGraphArray')();
+            this.updateBarColors(gradeArray[0]);
+            console.log(gradeArray)
             this.pieChart.destroy();
             this.pieChart = new Chart(this.pieCtx).Pie(this.createPieData(),null);
+            this.barChart.update();
+            //this.pieChart.update();
         },
         createPieData : function () {
            var data = [
@@ -141,17 +142,96 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             if (!this.barCtx || !this.pieCtx) {
                 return
             }
+            //var numGradeLetters = this.model.get('numGradeLetters');
+            //var aMin = this.model.get('aMin');
+            //var bMin = this.model.get('bMin');
+            //var cMin = this.model.get('cMin');
+            //var dMin = this.model.get('dMin');
+            //var aColor = this.model.get('aColor');
+            //var bColor = this.model.get('bColor');
+            //var cColor = this.model.get('cColor');
+            //var dColor = this.model.get('dColor');
+            //var fColor = this.model.get('fColor');
+            var gradeArray = this.model.get('findGraphArray')();
+            //var barGraphData = {
+            //    labels : gradeArray[0],
+            //    datasets: [
+            //        {
+            //            label : "A",
+            //            fillColor: this.model.get('aColor')[0],
+            //            strokeColor: this.model.get('aColor')[1],
+            //            highlightFill: this.model.get('aColor')[2],
+            //            highlightStroke: this.model.get('aColor')[3],
+            //            data: gradeArray[1]
+            //
+            //        }
+            //    ]
+            //};
+            // want to make this global so the gradeSchema can see it.
+            //var gradeLetterTotals = function () {
+            //    var i = 0;
+            //    var gradeTotalArray = new Uint32Array(5);
+            //        gradeArray[0].forEach(function(value) {
+            //            switch (true) {
+            //                case(value >= aMin):
+            //                    gradeTotalArray[0] += gradeArray[1][i];
+            //                    break;
+            //                case(value >= bMin):
+            //                    gradeTotalArray[1] += gradeArray[1][i];
+            //                    break;
+            //                case(value >= cMin):
+            //                    gradeTotalArray[2] += gradeArray[1][i];
+            //                    break;
+            //                case(value >= dMin):
+            //                    gradeTotalArray[3] += gradeArray[1][i];
+            //                    break;
+            //                default:
+            //                    gradeTotalArray[4] += gradeArray[1][i];
+            //                    break;
+            //            }
+            //            i++;
+            //        });
+            //
+            //    return gradeTotalArray;
+            //};
+            //var pieChartData = this.createPieData();
 
-            // render pie chart
+
             this.pieChart = new Chart(this.pieCtx).Pie(this.createPieData(),null);
-
-            // render bar chart
             this.barChart = new Chart(this.barCtx).Bar(this.createBarData(), null);
+            this.updateBarColors(gradeArray[0]);
+            this.barChart.update();
 
-            // update bar colors
-            this.updateBarColors();
-            // update bar colors
-            this.updateBarColors();
+            //var changeSingleBarColor = function(chartIn, bar, color) {
+            //
+            //    chartIn.datasets[0].bars[bar].fillColor =  color[0];
+            //    chartIn.datasets[0].bars[bar].strokeColor =  color[1];
+            //    chartIn.datasets[0].bars[bar].highlightFill = color[2];
+            //    chartIn.datasets[0].bars[bar].highlightStroke =  color[3];
+            //
+            //    chartIn.update();
+            //};
+            //var varcheckBarChartColors = function (gradesArray, chart){
+            //    for(var x = 0; x < gradesArray.length; x++) {
+            //        switch (true) {
+            //            case(gradesArray[x] >= aMin):
+            //                changeSingleBarColor(chart, x, aColor);
+            //                break;
+            //            case(gradesArray[x] >= bMin):
+            //                changeSingleBarColor(chart, x, bColor);
+            //                break;
+            //            case(gradesArray[x] >= cMin):
+            //                changeSingleBarColor(chart, x, cColor);
+            //                break;
+            //            case(gradesArray[x] >= dMin):
+            //                changeSingleBarColor(chart, x, dColor);
+            //                break;
+            //            default:
+            //                changeSingleBarColor(chart, x, fColor);
+            //                break;
+            //        }
+            //    }
+            //}(gradeArray[0], this.barChart);
         },
         onAttach : function (){
             this.barCtx = this.$('.barChart')[0].getContext('2d');
