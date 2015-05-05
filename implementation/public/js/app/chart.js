@@ -1,5 +1,5 @@
 
-define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'chart'], function(App, chartTemplate, template1, template2, chart) {
+define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'app/top-menu', 'chart'], function(App, chartTemplate, template1, template2, TopNavView, chart) {
     var GradeSchema = App.Backbone.Model;
     var GraphModel = App.Course;
 
@@ -250,7 +250,8 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
     });
 
     App.Router.route(("charts"), "chart", function() {
-        //var layout = App.show(new App.StandardLayoutView());
+        var layout = App.show(new App.StandardLayoutView());
+        layout.getRegion("header").show(new TopNavView);
         var graphView = new GraphView();
         App.show(graphView);
         graphView.getRegion("graph").show(new LetterGradeGraphView({
