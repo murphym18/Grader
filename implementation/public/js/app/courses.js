@@ -6,7 +6,16 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
       idAttribute: "colloquialUrl",
       findGraphArray: function(data) {
 
+      },
+      initialize : function (){
+         this.updateUrl()
+      },
+      updateUrl: function updateUserCourses() {
+         if (session.get('user') && session.get('user').username) {
+            this.url = '/api/Courses/' + this.get("colloquialUrl");
+         }
       }
+
    });
 
    var UserCoursesList = Backbone.Collection.extend({

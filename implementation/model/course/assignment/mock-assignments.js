@@ -31,5 +31,13 @@ module.exports = function generateMockAssignments() {
    categories.sort((a, b) => {
       return a.path.localeCompare(b.path);
    });
+
+   var assignments = _.flatten(categories.map(function(c){
+      return c.assignments;
+   }).reduce(function(pre,cur) {
+          pre.push(cur)
+          return pre
+       }, []))
+
    return categories;
 };

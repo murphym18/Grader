@@ -1,5 +1,5 @@
 
-define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'app/top-menu', 'chart'], function(App, chartTemplate, template1, template2, TopNavView, chart) {
+define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'app/top-menu', 'chart', 'app/courses'], function(App, chartTemplate, template1, template2, TopNavView, chart) {
     var GradeSchema = App.Backbone.Model;
     var GraphModel = App.Course;
 
@@ -152,6 +152,64 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             this.updateBarColors();
             // update bar colors
             this.updateBarColors();
+
+
+            App.UserCourses.fetch().then( function() {
+                var course = App.UserCourses.at(0)         ;
+                //console.log(course)
+                var courseAssignments = course.get('categories').map(function(cat){
+                    console.log(cat);
+                    return cat.assignments;
+                }).reduce(function(pre, cur){
+                    console.log(pre)
+                    pre.push(cur);
+                    return pre;
+                }, [])     ;
+                console.log(_.flatten(courseAssignments))
+
+                //console.log(course.get('students')[0].grades)
+                course.get('students')[0].grades.push({
+                    assignment : '554a92b5bd9b601a82ace21a',
+                    rawScore : 86
+                });
+                course.get('students')[0].grades.push({
+                    assignment : '554a92b5bd9b601a82ace218',
+                    rawScore : 83
+                });
+                course.save();
+                //console.log(App.UserCourses.at(0).get('minA'))
+                //console.log(App.UserCourses.at(0).get('minA'))
+                ////console.log(App.UserCourses.at(0).get('classCode'));
+                //App.UserCourses.at(0).set({
+                //    minA : 89
+                //});
+                //App.UserCourses.at(0).save().then(
+                //    console.log(App.UserCourses.at(0))
+                //);
+
+            })
+
+            //students(0).grades[0].save();
+            //({
+            //    id : "testAssignment",
+            //    rawScore : "100"
+            //});
+
+
+            //console.log(App.UserCourses.fetch().at(1))
+
+            //console.log(App.UserCourses.fetch());
+
+            //App.$.ajax(
+            //    {
+            //        method : "GET",
+            //        url : '/api/Courses',
+            //        async: true,
+            //        success : function(data) {
+            //            console.log(data);
+            //        }
+            //    }
+            //)
         },
         onAttach : function (){
             this.barCtx = this.$('.barChart')[0].getContext('2d');
@@ -253,7 +311,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
         var layout = App.show(new App.StandardLayoutView());
         layout.getRegion("header").show(new TopNavView);
         var graphView = new GraphView();
-        App.show(graphView);
+        layout.getRegion("main").show(graphView);
         graphView.getRegion("graph").show(new LetterGradeGraphView({
             model : model
         }));
