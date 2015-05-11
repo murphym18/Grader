@@ -40,7 +40,8 @@
 <!-- Actual page's layout including the dialog -->
 <div class="demo-wrapper">
     <div class="html5-dialog">
-        <dialog id="window">
+        <button id="modifyStudent">Modify Student Information</button>
+        <dialog id="popup-dialog">
             <!-- Drop down menu to choose students from list -->
             <select><option>Select Student</option></select>
 
@@ -58,7 +59,6 @@
             <button id="ok">OK</button>
             <button id="cancel">Cancel</button>
         </dialog>
-        <button id="addclass">Modify Student</button>
     </div>
 </div>
 
@@ -66,10 +66,10 @@
 <script type="text/javascript">
     (function() {
         // Get the page and dialog layout
-        var dialog = document.getElementById('window');
+        var dialog = document.getElementById('popup-dialog');
 
         // Show the Modal dialog when the button is clicked
-        document.getElementById('addclass').onclick = function() {
+        document.getElementById('modifyStudent').onclick = function() {
             dialog.show();
         };
 
