@@ -1,5 +1,9 @@
-/** @author Michael Murphy */
-define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/standardLayoutView.hbs', 'backbone.marionette', 'radio.shim', 'backbone.radio', 'jquery.magnific-popup', 'domReady!'], function($, _, Q, Backbone, Handlebars, rootLayoutTemplate, Marionette) {
+/**
+ * @author Michael Murphy
+ */
+define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/standardLayoutView.hbs', 'backbone.marionette', 'radio.shim', 'backbone.radio', 'jquery.magnific-popup', 'backbone-relational', 'domReady!'], function($, _, Q, Backbone, Handlebars, rootLayoutTemplate, Marionette) {
+
+
    Backbone.Marionette.Renderer.render = function(template, data){
       return template(data);
    };
@@ -83,32 +87,127 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
       Backbone.history.navigate(path, options);
    }
 
+   /**
+    * A container object for the application. By requiring this module you gain
+    * access to  various libraries  and other application components
+    */
    var App = window.App = new Marionette.Application({
+
+      /**
+       * The jQuery JavaScript library.
+       * http://api.jquery.com/
+       */
       $: $,
+
+      /**
+       * The underscore JavaScript library.
+       * http://underscorejs.org/
+       */
       _: _,
+
+      /**
+       * The handlebars JavaScript library.
+       * http://handlebarsjs.com/
+       */
       Handlebars: Handlebars,
+
+      /**
+       * An alias for the handlebars JavaScript library.
+       * http://handlebarsjs.com/
+       */
       Mustache: Handlebars,
+
+      /**
+       * An alias for the handlebars JavaScript library.
+       * http://handlebarsjs.com/
+       */
       Hbs: Handlebars,
+
+      /**
+       * The backbone JavaScript library.
+       * http://backbonejs.org/
+       */
       Backbone: Backbone,
+
+      /**
+       * The Marionettes JavaScript library
+       * http://marionettejs.com/
+       */
       Marionette: Marionette,
+
+      /**
+       * An alias for the Marionettes JavaScript library
+       * http://marionettejs.com/
+       */
       Mn: Marionette,
+
+      /**
+       * The Marionette region for pop-ups. Application code may call the show
+       * method of this  object to display a pop-up on screen.
+       */
       PopupRegion: new PopupRegion({}),
+
+      /**
+       * Application code should extend this to create a pop up view. This is a
+       * marionette view.
+       */
       PopupView: PopupView,
+
+      /**
+       * The Q JavaScript library. My favorite promise library :)
+       * https://github.com/kriskowal/q
+       */
       Q: Q,
+
+      /**
+       * A framework for decoupling components of the application.
+       * https://github.com/marionettejs/backbone.radio
+       */
       Radio: Backbone.Radio,
+
+      Relational: Backbone.Relational,
+
+      /**
+       * A marionette router.
+       */
       Router: new Marionette.AppRouter({
          routes : {}
       }),
+
+      /**
+       * The marionette region for Main content of the page.
+       */
       RootRegion: new RootRegion(),
+
+      /**
+       * A marionette layout view with a header region, main region, and footer
+       * region.
+       */
       StandardLayoutView: StandardLayoutView,
       initialize: function() {
 
       },
+
+      /**
+       * A method to navigate to route in the application.
+       */
       go: navigateToPage,
+
+      /**
+       * A convenience method to show up you inside the RootRegion.
+       * @param view A marionette view
+       * @returns {*} the view parameter
+       */
       show: function(view) {
          this.RootRegion.show(view);
          return view;
       }
+   });
+
+   Backbone.RelationalModel.extend({
+      urlRoot: '/api/message',
+      idAttribute: 'colloquialUrl'
+
    });
 
    App.on("start", function(){
