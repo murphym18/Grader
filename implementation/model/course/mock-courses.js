@@ -14,21 +14,21 @@ function generateMockCourses(admin, allUsers) {
 
    function addUsers(course) {
       for (var w = 0; w < 1; w++) {
-         course.roles[0].users.push(allUsers[i++ % allUsers.length]);
+         course.roles[0].users.push(next());
       }
 
       for (var x = 0; x < 2; x++) {
-         course.roles[1].users.push(allUsers[i++ % allUsers.length]);
+         course.roles[1].users.push(next());
       }
 
       for (var y = 0; y < 20; y++) {
-         var student = allUsers[i++ % allUsers.length];
+         var student = next();
          course.roles[2].users.push(student);
          course.students.push({user: student});
       }
       return course;
    }
-   var arr = new Array(50); arr.fill(0);
+   var arr = new Array(50).fill(0);
    return arr.map(_.partial(generateMockCourse, admin)).map(addUsers)
 }
 
@@ -40,27 +40,24 @@ function generateMockCourse(admin) {
       {name: "NONE", permissions: [], users: [admin.id]}
    ];
 
-   function genStr(all, len) {
-      var result = "";
-      for (var i = 0; i < len; ++i) {
-         result += all.charAt(Math.floor(Math.random() * all.length));
-      }
-      return result;
-   }
    function COURSE_CODE_GENERATOR() {
-      return COURSE_ABBREVIATION[Math.floor(Math.random() * COURSE_ABBREVIATION.length)];
+      return COURSE_ABBREVIATION[randomInt(COURSE_ABBREVIATION.length)];
    }
+
    function COURSE_NUMBER_GENERATOR() {
       return genStr('12345',1) + genStr('1234567890', 2);
    }
+
    function COURSE_SECTION_GENERATOR() {
-      var all = '0123456789';
-      var result = all.charAt(Math.floor(Math.random() * (all.length-1))+1);
-      return result;
+      return randomLetter('123456789');
    }
+
    function genDates(term, year) {
       function date(m1, d1, m2, d2) {
-         return {start: new Date(year, m1, d1), end: new Date(year, m2, d2)}
+         return {
+            start: new Date(year, m1, d1),
+            end: new Date(year, m2, d2)
+         }
       }
       return {
          'Winter': date(0, 5, 2, 20),
@@ -83,5 +80,21 @@ function generateMockCourse(admin) {
    _.extend(result, genDates(result.term, Number(result.year)));
    result.colloquialUrl =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
 
+   return result;
+}
+
+function randomInt(max) {
+   return Math.floor(Math.random() * max);
+}
+
+function randomLetter(alphabet) {
+   return alphabet.charAt(randomInt(alphabet.length))
+}
+
+function genStr(alphabet, len) {
+   var result = "";
+   while (len--) {
+      result += randomLetter(alphabet);
+   }
    return result;
 }
