@@ -25,7 +25,12 @@ try {
       verboseLog("Using MongoDB for database.");
       mongoose.connect(config.db.mongoUrl);
       mongoose.connection.on('error', function(err) {
-         console.log(er);
+         if (err.message == 'connect ECONNREFUSED') {
+            console.warn('Error: Could not connect to MongoDB server. Is MongoDB server running?');
+            process.exit(1);
+         }
+         else
+            console.warn(err.message);
       });
    }
    else {
