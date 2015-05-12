@@ -34,7 +34,7 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
 
     App.Router.route("modifyStudent", "home", function() {
         var modifyView = new ModifyStudentView();
-        App.show(modifyView);
+        App.PopupRegion.show(modifyView);
         //    layout = App.show(new App.StandardLayoutView());
         //var mainView = new App.Marionette.ItemView({
         //    template: App.Handlebars.compile(template)
