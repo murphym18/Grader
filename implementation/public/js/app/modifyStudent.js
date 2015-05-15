@@ -7,29 +7,38 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             'modifyStudentButton' : '.modifyStudentButton',
             'ok' : '.ok',
             'cancel' : '.cancel',
-            'dialog' : '.popup-dialog'
+            'dialog' : '.popup-dialog',
+            'studentName' : '.studentName',
+            'studentID' : '.studentID',
+            'studentNickname' : '.studentNickname',
+            'studentGroup' : '.studentGroup',
+            'studentEmail' : '.studentEmail',
+            'studentPhone' : '.studentPhone'
+
         },
         onShow : function(){
             this.ui.dialog.hide();
+
         },
         events : {
            'click @ui.modifyStudentButton' :  'showModifyStudent',
             'click @ui.ok' :  'closeModifyStudent',
             'click @ui.cancel' :  'closeModifyStudent'
-
         },
         showModifyStudent : function() {
             this.ui.dialog.show();
-            this.ui.modifyClassButton.hide();
+            this.ui.modifyStudentButton.hide();
+
+            this.ui.studentName.val("Arya Stark");
+            this.ui.studentID.val("10101010");
+            this.ui.studentEmail.val("vmorghulis@gmail.com");
+            this.ui.studentPhone.val("255-687-8343");
+
         },
         closeModifyStudent : function() {
             this.ui.dialog.hide();
-            this.ui.modifyClassButton.show();
-        }
-
-        //onShow : {
-        //    //this.ui.modifyClassButton.on("click", fun)
-        //}
+            this.ui.modifyStudentButton.show();
+        },
     })
 
     App.Router.route("modifyStudent", "home", function() {
