@@ -1,7 +1,7 @@
 /**  @author Michael Murphy */
 define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(App, session, courseListItemTemplate) {
-
-
+   var Backbone = App.Backbone;
+   
    var Course = Backbone.Model.extend({
       idAttribute: "colloquialUrl",
       findGraphArray: function(data) {
@@ -22,6 +22,7 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
       tagName: 'ul',
       className: 'courseList',
       model:Course,
+      
       comparator: function(item) {
          return [
             item.get("start"),
@@ -29,17 +30,20 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
             item.get("classNumber")
          ];
       },
+      
       updateUrl: function updateUserCourses() {
          if (session.get('user') && session.get('user').username) {
             this.url = '/api/Users/'+session.get('user').username+'/Courses';
          }
       },
+      
       initialize: function() {
          this.listenTo(session, 'change:user', this.updateUrl);
          this.listenTo(session, 'login', this.fetch);
          this.listenTo(session, 'logout', this.clear);
          this.updateUrl();
       },
+      
       clear: function() {
          this.reset([]);
       }
@@ -63,7 +67,7 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
       }
    });
 
-   var EmptyCourseListView = Marionette.ItemView.extend({
+   var EmptyCourseListView = App.Mn.ItemView.extend({
       template: function() {
          return "<i></i>";
       }
