@@ -24,7 +24,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var error = require('./errors');
 var events = require('events');
-var config = require('./config');
+var config = require('./config').http;
 var headers = require('./http-headers');
 var expressLayouts = require('express-ejs-layouts');
 var path = require('path');
@@ -49,7 +49,12 @@ app.ready = function() {
          app.use(error["404"])
          app.use(error["500"]);
          console.timeEnd("Routes ready");
-         server = http.createServer(app).listen(config.http.port, process.env.IP);
+         if (process.env.PORT && process.env.IP) {
+            server = http.createServer(app).listen(process.env.PORT, process.env.IP);
+         }
+         else {
+            server = http.createServer(app).listen(config.port);
+         }
          console.timeEnd("Application ready");
       });
    }
