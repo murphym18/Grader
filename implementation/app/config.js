@@ -11,7 +11,10 @@ exports.http = {};
 /**
  * The server port to listen on.
  */
-exports.http.port = 8080;
+if (process.env.PORT)
+    exports.http.port = process.env.PORT;
+else
+    exports.http.port = 8080;
 
 /**
  * Creates missing directories.

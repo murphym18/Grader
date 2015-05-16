@@ -49,7 +49,7 @@ app.ready = function() {
          app.use(error["404"])
          app.use(error["500"]);
          console.timeEnd("Routes ready");
-         server = http.createServer(app).listen(config.http.port);
+         server = http.createServer(app).listen(config.http.port, process.env.IP);
          console.timeEnd("Application ready");
       });
    }
