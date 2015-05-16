@@ -46,22 +46,52 @@ function * main() {
 }
 
 function setupDatabase() {
+   // A co routine takes a generator function that yields promises. These are
+   // great because many co routines can be running concurrently!
    return co(function * initDatabase() {
+      // We can use try and catch instead of a node-style-callback
       try {
          if (config.db.clearOnStartup) {
+            // Clearing the database requires IO.
+            // The Node.js framework typically hides IO behind callbacks
+            // The clearDatabase function returns a promise instead!
+            // When the promise resolves without then error execution continues.
+            // When the promise resolves in an error the co routine causes an 
+            // an exception to be thrown and execution jumps to the catch block.
             yield clearDatabase();
          }
          if (config.db.generateMockData) {
+            // The Mongoose lib returns promises so it fits perfectly here.
             var admin = yield Users.findOne({username: 'admin'});
             if (!admin) {
+               // Originally I named promiseSave() promiseToSave() but it caused
+               // this line to be longer than 80 characters so I gave it this
+               //tarser name.
                yield promiseSave(Users, {username: 'admin', password: 'admin'});
             }
             var mockUsers = require('./model/admin/mock-users');
+            // The Q lib is awesome! Here the `all` method is used to change an 
+            // array of promises into a single promise that resolves when every
+            // promise in the array has resolved. This line of code starts the
+            // IO that saves all the users in the mockUsers array and blocks
+            // until all users are saved.
             yield Q.all(mockUsers.map(toSave(Users)));
-
+            
+            // Now that all the users have been created, it time to load them.
+            // Doing a query like this is kinda hacky but this code is much
+            // easier to understand. The less readable alternative is to map the
+            // documents returned in the promises from the last line. The
+            // problem with that approach is that the promises return a data
+            //structure containing the document.
             var allUsers = yield Users.find().exec();
+            
+            // Also load the admin user
             admin = yield Users.findOne({username: 'admin'}).exec();
+            
+            // Grab the function that makes mock-courses
             var mockCourses = require('./model/course/mock-courses');
+            
+            // Make mock courses and save them to the Course collection
             yield Q.all(mockCourses(admin, allUsers).map(toSave(Course)));
             verboseLog("Loaded mock data");
          }
