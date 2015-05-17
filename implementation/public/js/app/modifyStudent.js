@@ -18,7 +18,6 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
         },
         onShow : function(){
             this.ui.dialog.hide();
-
         },
         events : {
            'click @ui.modifyStudentButton' :  'showModifyStudent',
@@ -29,10 +28,18 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             this.ui.dialog.show();
             this.ui.modifyStudentButton.hide();
 
-            this.ui.studentName.val("Arya Stark");
-            this.ui.studentID.val("10101010");
-            this.ui.studentEmail.val("vmorghulis@gmail.com");
-            this.ui.studentPhone.val("255-687-8343");
+            App.UserCourses.fetch().then( function() {
+                var course = App.UserCourses.at(0);
+                
+                this.ui.studentName.val(course.get('students')[0]);
+                course.save();
+
+            });
+
+            //this.ui.studentName.val("Arya Stark");
+            //this.ui.studentID.val("10101010");
+            //this.ui.studentEmail.val("vmorghulis@gmail.com");
+            //this.ui.studentPhone.val("255-687-8343");
 
         },
         closeModifyStudent : function() {
