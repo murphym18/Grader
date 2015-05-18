@@ -8,12 +8,13 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             'ok' : '.ok',
             'cancel' : '.cancel',
             'dialog' : '.popup-dialog',
-            'studentName' : '.studentName',
+            'studentFirstName' : '.studentFirstName',
+            'studentLastName' : '.studentLastName',
             'studentID' : '.studentID',
-            'studentNickname' : '.studentNickname',
-            'studentGroup' : '.studentGroup',
+            //'studentNickname' : '.studentNickname',
+            //'studentGroup' : '.studentGroup',
             'studentEmail' : '.studentEmail',
-            'studentPhone' : '.studentPhone'
+            //'studentPhone' : '.studentPhone'
 
         },
         onShow : function(){
@@ -21,27 +22,40 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
         },
         events : {
            'click @ui.modifyStudentButton' :  'showModifyStudent',
-            'click @ui.ok' :  'closeModifyStudent',
+            'click @ui.ok' :  'updateStudentInfo',
             'click @ui.cancel' :  'closeModifyStudent'
         },
         showModifyStudent : function() {
             this.ui.dialog.show();
             this.ui.modifyStudentButton.hide();
 
-            App.UserCourses.fetch().then( function() {
-                var course = App.UserCourses.at(0);
-                
-                this.ui.studentName.val(course.get('students')[0]);
-                course.save();
-
-            });
-
-            //this.ui.studentName.val("Arya Stark");
-            //this.ui.studentID.val("10101010");
-            //this.ui.studentEmail.val("vmorghulis@gmail.com");
-            //this.ui.studentPhone.val("255-687-8343");
+            this.ui.studentFirstName.val(this.model.get('first'));
+            this.ui.studentLastName.val(this.model.get('last'));
+            this.ui.studentID.val(this.model.get('emplId'));
+            this.ui.studentEmail.val(this.model.get('email'));
+            //this.ui.studentPhone.val(this.model.get('phone'));
 
         },
+        updateStudentInfo : function () {
+
+            var firstName = this.ui.studentFirstName.val();
+            var lastName = this.ui.studentLastName.val();
+            var id = this.ui.studentID.val();
+            //var nickname = this.ui.studentNickname;
+            //var group = this.ui.studentGroup;
+            var email = this.ui.studentEmail.val();
+            //var phone = this.ui.studentPhone;
+            this.model.set({"first": firstName});
+            this.model.set({"last": lastName});
+            this.model.set({"emplId": id});
+            //this.model.set({"studentNickname": nickname});
+            //this.model.set({"studentGroup": group});
+            this.model.set({"email": email});
+            //this.model.set({"studentPhone": phone});
+            this.ui.dialog.hide();
+            this.ui.modifyStudentButton.show();
+        },
+
         closeModifyStudent : function() {
             this.ui.dialog.hide();
             this.ui.modifyStudentButton.show();
@@ -50,10 +64,10 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
 
     App.Router.route("modifyStudent", "home", function() {
         App.$.ajax({
-            url: '/api/Courses'
+            url: '/api/Users'
         }).done(function(data) {
             var props = data[0];
-            props.url = '/api/Courses/' + props.colloquialUrl;
+            props.url = '/api/Users/' + props.colloquialUrl;
             var course = new App.Backbone.Model(props);
             console.dir(course);
             var modifyView = new ModifyStudentView({
