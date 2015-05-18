@@ -4,7 +4,6 @@
  */
 define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, template) {
 
-    var fullurl;
     var ModifyCourseView = App.Mn.ItemView.extend({
         model: App.Course,
         template: App.Handlebars.compile(template),
@@ -31,9 +30,7 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
             this.model.set({"classNumber": number});
             this.ui.dialog.hide();
             this.ui.modifyClassButton.show();
-            this.model.save({
-                url: fullurl
-            });
+            this.model.save();
         },
         showModifyClass: function () {
             this.ui.dialog.show();
@@ -47,25 +44,9 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
         }
     });
 
-    //App.Router.route("modifyClass", "home", function() {
-    //    App.UserCourses.fetch().then(function() {
-    //        var course = App.UserCourses.at(0);
-    //        var modifyView = new ModifyCourseView({
-    //            model: course
-    //        });
-    //        App.PopupRegion.show(modifyView);
-    //    });
-    //});
-
-    App.Router.route("modifyClass", "home", function () {
-        App.$.ajax({
-            url: '/api/Courses'
-        }).done(function (data) {
-            var props = data[0];
-            props.url = '/api/Courses/' + props.colloquialUrl;
-            fullurl = props.url;
-            var course = new App.Backbone.Model(props);
-            console.dir(course);
+    App.Router.route("modifyClass", "home", function() {
+        App.UserCourses.fetch().then(function() {
+            var course = App.UserCourses.at(0);
             var modifyView = new ModifyCourseView({
                 model: course
             });
