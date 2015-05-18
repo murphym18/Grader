@@ -156,27 +156,28 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
 
             App.UserCourses.fetch().then( function() {
                 var course = App.UserCourses.at(0)         ;
-                //console.log(course)
+                console.log(course);
+                console.log(course.get('categories'))
                 var courseAssignments = course.get('categories').map(function(cat){
-                    console.log(cat);
+                    //console.log(cat);
                     return cat.assignments;
                 }).reduce(function(pre, cur){
-                    console.log(pre)
+                    //console.log(pre)
                     pre.push(cur);
                     return pre;
                 }, [])     ;
-                console.log(_.flatten(courseAssignments))
+                //console.log(_.flatten(courseAssignments))
 
                 //console.log(course.get('students')[0].grades)
-                course.get('students')[0].grades.push({
-                    assignment : '554a92b5bd9b601a82ace21a',
-                    rawScore : 86
-                });
-                course.get('students')[0].grades.push({
-                    assignment : '554a92b5bd9b601a82ace218',
-                    rawScore : 83
-                });
-                course.save();
+                //course.get('students')[0].grades.push({
+                //    assignment : '554a92b5bd9b601a82ace21a',
+                //    rawScore : 86
+                //});
+                //course.get('students')[0].grades.push({
+                //    assignment : '554a92b5bd9b601a82ace218',
+                //    rawScore : 83
+                //});
+                //course.save();
                 //console.log(App.UserCourses.at(0).get('minA'))
                 //console.log(App.UserCourses.at(0).get('minA'))
                 ////console.log(App.UserCourses.at(0).get('classCode'));
