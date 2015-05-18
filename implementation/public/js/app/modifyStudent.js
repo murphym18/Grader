@@ -49,8 +49,17 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
     })
 
     App.Router.route("modifyStudent", "home", function() {
-        var modifyView = new ModifyStudentView();
-        App.PopupRegion.show(modifyView);
+        App.$.ajax({
+            url: '/api/Courses'
+        }).done(function(data) {
+            var course = new App.Backbone.Model(data[0]);
+            var modifyView = new ModifyStudentView({
+                model: course
+            });
+            App.PopupRegion.show(modifyView);
+            
+        });
+        
         //    layout = App.show(new App.StandardLayoutView());
         //var mainView = new App.Marionette.ItemView({
         //    template: App.Handlebars.compile(template)
