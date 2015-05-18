@@ -52,7 +52,10 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
         App.$.ajax({
             url: '/api/Courses'
         }).done(function(data) {
-            var course = new App.Backbone.Model(data[0]);
+            var props = data[0];
+            props.url = '/api/Courses/' + props.colloquialUrl;
+            var course = new App.Backbone.Model(props);
+            console.dir(course);
             var modifyView = new ModifyStudentView({
                 model: course
             });
