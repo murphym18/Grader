@@ -1,3 +1,8 @@
+/**
+ * Event handler for the modify class view.
+ * @author Grant Plaster
+ */
+
 define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, template) {
 
     var ModifyStudentView = App.Mn.ItemView.extend({
@@ -17,6 +22,7 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             //'studentPhone' : '.studentPhone'
 
         },
+
         onShow : function(){
             this.ui.dialog.hide();
         },
@@ -25,6 +31,13 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             'click @ui.ok' :  'updateStudentInfo',
             'click @ui.cancel' :  'closeModifyStudent'
         },
+
+        /**
+         * Hides the pop-up button to display fields for modifying student data.
+         * Fields are automatically filled with existing student data for the selected student.
+         *
+         * @this {ModifyStudentView}
+         */
         showModifyStudent : function() {
             this.ui.dialog.show();
             this.ui.modifyStudentButton.hide();
@@ -36,6 +49,12 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             //this.ui.studentPhone.val(this.model.get('phone'));
 
         },
+
+        /**
+         * Saves any changes to the selected student data in the database.
+         *
+         * @this {ModifyStudentView}
+         */
         updateStudentInfo : function () {
 
             var firstName = this.ui.studentFirstName.val();
@@ -45,6 +64,7 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             //var group = this.ui.studentGroup;
             var email = this.ui.studentEmail.val();
             //var phone = this.ui.studentPhone;
+
             this.model.set({"first": firstName});
             this.model.set({"last": lastName});
             this.model.set({"emplId": id});
@@ -54,7 +74,15 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             //this.model.set({"studentPhone": phone});
             this.ui.dialog.hide();
             this.ui.modifyStudentButton.show();
+
+            //this.model.save();
         },
+
+        /**
+         * Closes the modify student dialog without any changes to information.
+         *
+         * @this {ModifyStudentView}
+         */
 
         closeModifyStudent : function() {
             this.ui.dialog.hide();
@@ -85,59 +113,3 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
         //layout.getRegion('header').show(new TopNavView);
     });
 });
-
-
-//<script>
-//// TODO: change from canned data to real data
-//var fillIn = function (graderClass) {
-//    $("#classCode").val(graderClass.classCode);
-//    $("#classNumber").val(graderClass.classNumber);
-//};
-//
-//$(document).ready(function () {
-//    var exampleClass = {};
-//    exampleClass.classCode = "CPE";
-//    exampleClass.classNumber = "101";
-//
-//    fillIn(exampleClass);
-//});
-//</script>
-//
-//<script type="text/javascript">
-//(function() {
-//    // Get the page and dialog layout
-//    var dialog = document.getElementById('popup-dialog');
-//
-//    // Show the Modal dialog when the button is clicked
-//    document.getElementById('addClass').onclick = function() {
-//        dialog.show();
-//    };
-//
-//
-//    // Event handler for the OK button on the dialog
-//    document.getElementById('ok').onclick = function() {
-//        console.log('OK Button Clicked!');
-//
-//        var className = document.getElementById('classCode').value
-//            + " " + document.getElementById('classNumber').value;
-//
-//        // Simple input validation (empty class code or number disallowed)
-//        if (document.getElementById('classCode').value === '' ||
-//            document.getElementById('classNumber').value === '') {
-//            window.alert('Please enter class code AND number.');
-//        }
-//        else {
-//            // Close the Modal dialog and show class name entered
-//            dialog.close();
-//            window.alert('The following change has been made:\n' +
-//            'Modified class Name: [' + className + ']');
-//        }
-//    };
-//
-//    // Event handler for the Cancel button
-//    document.getElementById('cancel').onclick = function() {
-//        dialog.close();
-//    };
-//})();
-//
-//</script>
