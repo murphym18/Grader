@@ -1,3 +1,7 @@
+/**
+ * Event handler for the modify class view.
+ * @author Mike Ryu
+ */
 define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, template) {
 
     var ModifyCourseView = App.Mn.ItemView.extend({
