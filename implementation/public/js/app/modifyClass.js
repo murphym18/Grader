@@ -7,19 +7,30 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
             'modifyClassButton': '.modifyClassButton',
             'ok': '.ok',
             'cancel': '.cancel',
-            'dialog': '.popup-dialog'
+            'dialog': '.popup-dialog',
+            classCode: 'input.classCode',
+            classNumber: 'input.classNumber'
         },
         onShow: function () {
             this.ui.dialog.hide();
         },
         events: {
             'click @ui.modifyClassButton': 'showModifyClass',
-            'click @ui.ok': 'closeModifyClass',
+            'click @ui.ok': 'updateClassInfo',
             'click @ui.cancel': 'closeModifyClass'
-
+        },
+        updateClassInfo: function() {
+            var code = this.ui.classCode.val();
+            var number = this.ui.classNumber.val();
+            this.model.set({"classCode": code});
+            this.model.set({"classNumber": number});
+            this.ui.dialog.hide();
+            this.ui.modifyClassButton.show();
         },
         showModifyClass: function () {
             this.ui.dialog.show();
+            this.ui.classCode.val(this.model.get('classCode'));
+            this.ui.classNumber.val(this.model.get('classNumber'));
             this.ui.modifyClassButton.hide();
         },
         closeModifyClass: function () {
