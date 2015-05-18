@@ -15,15 +15,24 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
             classCode: 'input.classCode',
             classNumber: 'input.classNumber'
         },
-        onShow: function () {
-            this.ui.dialog.hide();
-        },
         events: {
             'click @ui.modifyClassButton': 'showModifyClass',
             'click @ui.ok': 'updateClassInfo',
             'click @ui.cancel': 'closeModifyClass'
         },
-        updateClassInfo: function() {
+
+        /**
+         * Hides the dialog on initial load
+         */
+        onShow: function onShow () {
+            this.ui.dialog.hide();
+        },
+
+        /**
+         * Updates the class information as entered by user,
+         * and saves changes to the database.
+         */
+        updateClassInfo: function updateClassInfo () {
             var code = this.ui.classCode.val();
             var number = this.ui.classNumber.val();
             this.model.set({"classCode": code});
@@ -32,12 +41,20 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
             this.ui.modifyClassButton.show();
             this.model.save();
         },
-        showModifyClass: function () {
+
+        /**
+         * Shows the Modify Class dialog on click.
+         */
+        showModifyClass: function showDialog() {
             this.ui.dialog.show();
             this.ui.classCode.val(this.model.get('classCode'));
             this.ui.classNumber.val(this.model.get('classNumber'));
             this.ui.modifyClassButton.hide();
         },
+
+        /**
+         * Closes the Modify Class dialog.
+         */
         closeModifyClass: function () {
             this.ui.dialog.hide();
             this.ui.modifyClassButton.show();
