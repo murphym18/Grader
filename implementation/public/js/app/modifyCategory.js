@@ -83,9 +83,17 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
             this.closeModifyCategory();
         },
         closeModifyCategory : function() {
+            var self = this;
+
             this.ui.dialog.hide();
-            // this.ui.modifyCategoryButton.show();
-            // this.ui.catSelector.show();
+            this.ui.category.empty();
+            this.ui.parentCategory.empty();
+
+            App.UserCourses.fetch().then(function() {
+                self.onShow();
+                self.ui.modifyCategoryButton.show();
+                self.ui.catSelector.show();
+            });
         },
     })
 
