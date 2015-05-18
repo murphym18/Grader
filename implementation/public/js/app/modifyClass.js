@@ -1,101 +1,45 @@
-define(['app/app', 'text!templates/modifyClassView.hbs', ], function(App, template) {
+define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, template) {
 
     var ModifyCourseView = App.Mn.ItemView.extend({
         model: App.Course,
         template: App.Handlebars.compile(template),
         ui: {
-            'modifyClassButton' : '.modifyClassButton',
-            'ok' : '.ok',
-            'cancel' : '.cancel',
-            'dialog' : '.popup-dialog'
+            'modifyClassButton': '.modifyClassButton',
+            'ok': '.ok',
+            'cancel': '.cancel',
+            'dialog': '.popup-dialog'
         },
-        onShow : function(){
+        onShow: function () {
             this.ui.dialog.hide();
         },
-        events : {
-           'click @ui.modifyClassButton' :  'showModifyClass',
-            'click @ui.ok' :  'closeModifyClass',
-            'click @ui.cancel' :  'closeModifyClass'
+        events: {
+            'click @ui.modifyClassButton': 'showModifyClass',
+            'click @ui.ok': 'closeModifyClass',
+            'click @ui.cancel': 'closeModifyClass'
 
         },
-        showModifyClass : function() {
+        showModifyClass: function () {
             this.ui.dialog.show();
             this.ui.modifyClassButton.hide();
         },
-        closeModifyClass : function() {
+        closeModifyClass: function () {
             this.ui.dialog.hide();
             this.ui.modifyClassButton.show();
         }
+    });
 
-        //onShow : {
-        //    //this.ui.modifyClassButton.on("click", fun)
-        //}
-    })
-
-    App.Router.route("modifyClass", "home", function() {
-        var modifyView = new ModifyCourseView();
-        App.show(modifyView);
-        //    layout = App.show(new App.StandardLayoutView());
-        //var mainView = new App.Marionette.ItemView({
-        //    template: App.Handlebars.compile(template)
-        //});
-        //layout.getRegion('main').show(mainView);
-        //layout.getRegion('header').show(new TopNavView);
+    App.Router.route("modifyClass", "home", function () {
+        App.$.ajax({
+            url: '/api/Courses'
+        }).done(function (data) {
+            var props = data[0];
+            props.url = '/api/Courses/' + props.colloquialUrl;
+            var course = new App.Backbone.Model(props);
+            console.dir(course);
+            var modifyView = new ModifyCourseView({
+                model: course
+            });
+            App.PopupRegion.show(modifyView);
+        });
     });
 });
-
-
-//<script>
-//// TODO: change from canned data to real data
-//var fillIn = function (graderClass) {
-//    $("#classCode").val(graderClass.classCode);
-//    $("#classNumber").val(graderClass.classNumber);
-//};
-//
-//$(document).ready(function () {
-//    var exampleClass = {};
-//    exampleClass.classCode = "CPE";
-//    exampleClass.classNumber = "101";
-//
-//    fillIn(exampleClass);
-//});
-//</script>
-//
-//<script type="text/javascript">
-//(function() {
-//    // Get the page and dialog layout
-//    var dialog = document.getElementById('popup-dialog');
-//
-//    // Show the Modal dialog when the button is clicked
-//    document.getElementById('addClass').onclick = function() {
-//        dialog.show();
-//    };
-//
-//
-//    // Event handler for the OK button on the dialog
-//    document.getElementById('ok').onclick = function() {
-//        console.log('OK Button Clicked!');
-//
-//        var className = document.getElementById('classCode').value
-//            + " " + document.getElementById('classNumber').value;
-//
-//        // Simple input validation (empty class code or number disallowed)
-//        if (document.getElementById('classCode').value === '' ||
-//            document.getElementById('classNumber').value === '') {
-//            window.alert('Please enter class code AND number.');
-//        }
-//        else {
-//            // Close the Modal dialog and show class name entered
-//            dialog.close();
-//            window.alert('The following change has been made:\n' +
-//            'Modified class Name: [' + className + ']');
-//        }
-//    };
-//
-//    // Event handler for the Cancel button
-//    document.getElementById('cancel').onclick = function() {
-//        dialog.close();
-//    };
-//})();
-//
-//</script>
