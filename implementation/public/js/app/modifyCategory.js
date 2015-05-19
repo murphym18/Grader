@@ -83,7 +83,6 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
             var newParent = $.grep(categories, function(e){ return e.name == ui.parentCategory.val(); })[0];
 
             category.path = newParent ? newParent.path + "#" + category.name : "#" + category.name;
-            console.log(category.path);
 
             Backbone.emulateHTTP = true;
             this.model.set("categories", categories);
