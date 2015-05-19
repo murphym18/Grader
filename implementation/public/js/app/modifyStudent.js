@@ -106,7 +106,7 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             var students = course.get('students');
             var promises = [];
             students.forEach(function(student){
-                var url = 'https://grader-murphym18.c9.io/api/Users?_id=' + student.user;
+                var url = '/api/Users?_id=' + student.user;
                 var p = App.$.ajax({
                     url: url
                 });
