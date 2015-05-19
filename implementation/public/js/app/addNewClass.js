@@ -34,46 +34,53 @@ define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, templat
          * and saves changes to the database.
          */
         addNewClass: function addNewClass () {
-            var code = this.ui.classCode.val();
-            var number = this.ui.classNumber.val();
-            var studentRecord = require('./student');
-            var category = require('./assignment/category');
+            if ((this.ui.classCode.val() + '').length === 0 ||
+                (this.ui.classNumber.val() + '').length === 0) {
+                alert("Please enter BOTH class code and number.");
+                console.log("ERROR");
+            }
+            else {
+                var code = this.ui.classCode.val();
+                var number = this.ui.classNumber.val();
+                var studentRecord = require('./student');
+                var category = require('./assignment/category');
 
-            //this.model.add([{
-            //    classCode: code,
-            //    classNumber: number,
-            //    section: '0',
-            //    students: studentRecord,
-            //    categories: category
-            //}
-            //]);
+                //this.model.add([{
+                //    classCode: code,
+                //    classNumber: number,
+                //    section: '0',
+                //    students: studentRecord,
+                //    categories: category
+                //}
+                //]);
 
-            var Course = Backbone.Model.extend({
-                // Needs proper ID attribute and root url
-                idAttribute: "_id",
-                urlRoot: "/api/Courses"
-            });
+                var Course = Backbone.Model.extend({
+                    // Needs proper ID attribute and root url
+                    idAttribute: "_id",
+                    urlRoot: "/api/Courses"
+                });
 
-            var course = new Course();
-            course.set({
-                classCode: code,
-                classNumber: number,
-                section: '0',
-                start: Date,
-                end: Date,
-                year: '2015',
-                term: 'Spring',
-                colloquialUrl: code + '-' + number + '-0',
-                categories: category,
-                students: studentRecord
-            });
+                var course = new Course();
+                course.set({
+                    classCode: code,
+                    classNumber: number,
+                    section: '0',
+                    start: Date,
+                    end: Date,
+                    year: '2015',
+                    term: 'Spring',
+                    colloquialUrl: code + '-' + number + '-0',
+                    categories: category,
+                    students: studentRecord
+                });
 
-            course.save();
+                course.save();
 
-            this.ui.dialog.hide();
-            this.ui.modifyClassButton.show();
-            Backbone.emulateHTTP = true;
-            this.model.save();
+                this.ui.dialog.hide();
+                this.ui.modifyClassButton.show();
+                Backbone.emulateHTTP = true;
+                this.model.save();
+            }
         },
 
         /**
