@@ -47,7 +47,11 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             this.ui.dialog.show();
             this.ui.modifyStudentButton.hide();
 
-            this.ui.studentFirstName.val("COOL");
+            if (this.model.get('students')[1].first)
+                this.ui.studentFirstName.val(this.model.get('students')[1].first);
+            else
+                this.ui.studentFirstName.val(this.model.get('students')[1].user.first);
+
             this.ui.studentLastName.val(this.model.get('students')[1].first);
             this.ui.studentID.val(this.model.get('students').emplId);
             this.ui.studentEmail.val(this.model.get('students').email);
