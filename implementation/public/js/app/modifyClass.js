@@ -33,14 +33,22 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
          * and saves changes to the database.
          */
         updateClassInfo: function updateClassInfo () {
-            var code = this.ui.classCode.val();
-            var number = this.ui.classNumber.val();
-            this.model.set({"classCode": code});
-            this.model.set({"classNumber": number});
-            this.ui.dialog.hide();
-            this.ui.modifyClassButton.show();
-            Backbone.emulateHTTP = true;
-            this.model.save();
+            if ((this.ui.classCode.val() + '').length === 0 ||
+                (this.ui.classNumber.val() + '').length === 0) {
+                alert("Please enter BOTH class code and number.");
+                console.log("ERROR");
+            }
+            else {
+                console.log("OK");
+                var code = this.ui.classCode.val();
+                var number = this.ui.classNumber.val();
+                this.model.set({"classCode": code});
+                this.model.set({"classNumber": number});
+                this.ui.dialog.hide();
+                this.ui.modifyClassButton.show();
+                Backbone.emulateHTTP = true;
+                this.model.save();
+            }
         },
 
         /**

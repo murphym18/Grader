@@ -26,6 +26,12 @@ define(['app/app', 'text!templates/histogram.hbs', 'chart'], function(App, templ
         modelEvents: {
             "change" : "onShow"
         },
+        /**
+         * Get the grade schema values from the model and set the
+         * corresponding ui elements accordingly.
+         *
+         * @author Grant Campanelli
+         */
         onShow: function() {
             this.ui.aMin.val(this.model.get('aMin'));
             this.ui.bMin.val(this.model.get('bMin'));
@@ -42,11 +48,25 @@ define(['app/app', 'text!templates/histogram.hbs', 'chart'], function(App, templ
             "change @ui.cMin" : "updateCMin",
             "change @ui.dMin" : "updateDMin"
         },
+        /**
+         * Update the model after a change has been made.
+         *
+         * @param modelString The model value to be changed.
+         * @param selector The ui element to be changed.
+         * @param domEvent The type of DOM event that caused the change.
+         * @author Grant Campanelli
+         */
         updateModel : function(modelString, selector, domEvent) {
             var arg = {};
             arg[modelString] = this.ui[selector];
             this.model.set(arg);
         },
+        /**
+         * Initialize the four different update model functions, which
+         * correspond to the minimum values in the grade schema.
+         *
+         * @author Grant Campanelli
+         */
         initalize: function() {
             this.updateAMin =  App._.partial(this.updateModel, "aMin");
             this.updateBMin =  App._.partial(this.updateModel, "bMin");
