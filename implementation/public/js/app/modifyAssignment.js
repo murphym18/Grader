@@ -14,6 +14,9 @@ define(['app/app', 'text!templates/modifyAssignmentView.hbs', ], function(App, t
             'assignmentTotalScore' : '.assignmentTotalScore',
             'category' : '.category'
         },
+        /**
+         * Hides the dialog on initial load
+         */
         onShow : function(){
             this.ui.dialog.hide();
         },
@@ -23,6 +26,9 @@ define(['app/app', 'text!templates/modifyAssignmentView.hbs', ], function(App, t
             'click @ui.cancel' :  'closeModifyAssignment'
 
         },
+        /**
+         * Shows the Modify Assignment dialog on click.
+         */
         showModifyAssignment : function() {
             var ui = this.ui;
             this.ui.dialog.show();
@@ -51,6 +57,10 @@ define(['app/app', 'text!templates/modifyAssignmentView.hbs', ], function(App, t
                 ui.assignmentTotalScore.val(categories[1].assignments[0].rawPoints);
             });
         },
+        /**
+         * Updates the assignment information as entered by user,
+         * and saves changes to the database.
+         */
         saveModifyAssignment : function() {
             var ui = this.ui;
 
@@ -71,14 +81,14 @@ define(['app/app', 'text!templates/modifyAssignmentView.hbs', ], function(App, t
             });
             this.closeModifyAssignment();
         },
+        /**
+         * Closes the Modify Assignment dialog.
+         */
         closeModifyAssignment : function() {
             this.ui.dialog.hide();
             this.ui.modifyAssignmentButton.show();
         }
 
-        //onShow : {
-        //    //this.ui.modifyClassButton.on("click", fun)
-        //}
     })
 
     App.Router.route("modifyAssignment", "home", function() {
