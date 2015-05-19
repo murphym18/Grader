@@ -109,10 +109,11 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
                 this.model.get('students')[1].email = this.ui.studentEmail.val();
             //this.model.set({"studentPhone": phone});
             this.ui.dialog.hide();
-            this.ui.modifyStudentButton.show();
-
             Backbone.emulateHTTP = true;
-            this.model.save();
+            var self = this;
+            this.model.save().then(function(){
+                self.ui.modifyStudentButton.show();
+            });
         },
 
         /**
