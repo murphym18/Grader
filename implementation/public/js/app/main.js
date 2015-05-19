@@ -35,7 +35,9 @@ requirejs.config({
 
 // Start the main app logic.
 
-requirejs(['app/app', 'app/login', 'app/home', 'app/chart', 'app/modifyAssignment', 'app/modifyCategory','app/modifyClass', 'app/modifyStudent', 'app/addNewClass', 'domReady!'], function(app) {
+
+requirejs(['app/app', 'app/login', 'app/home', 'app/chart', 'app/modifyAssignment', 'app/modifyCategory', 'app/newAssignment','app/modifyClass', 'app/modifyStudent', 'app/addNewClass', 'domReady!'], function(app) {
+
 
    app.start({});
 });
