@@ -39,6 +39,7 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
             this.model.set({"classNumber": number});
             this.ui.dialog.hide();
             this.ui.modifyClassButton.show();
+            Backbone.emulateHTTP = true;
             this.model.save();
         },
 
