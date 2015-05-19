@@ -52,9 +52,25 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             else
                 this.ui.studentFirstName.val(this.model.get('students')[1].user.first);
 
-            this.ui.studentLastName.val(this.model.get('students')[1].first);
-            this.ui.studentID.val(this.model.get('students').emplId);
-            this.ui.studentEmail.val(this.model.get('students').email);
+
+            if (this.model.get('students')[1].last)
+                this.ui.studentLastName.val(this.model.get('students')[1].last);
+            else
+                this.ui.studentLastName.val(this.model.get('students')[1].user.last);
+
+
+            if (this.model.get('students')[1].emplId)
+                this.ui.studentID.val(this.model.get('students')[1].emplId);
+            else
+                this.ui.studentID.val(this.model.get('students')[1].user.emplId);
+
+
+            if (this.model.get('students')[1].email)
+                this.ui.studentEmail.val(this.model.get('students')[1].email);
+            else
+                this.ui.studentEmail.val(this.model.get('students')[1].user.email);
+
+            
 
             //this.ui.studentFirstName.val(this.model.get('first'));
             //this.ui.studentLastName.val(this.model.get('last'));
@@ -70,26 +86,34 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
          */
         updateStudentInfo : function () {
 
-            var firstName = this.ui.studentFirstName.val();
-            var lastName = this.ui.studentLastName.val();
-            var id = this.ui.studentID.val();
+            //var firstName = this.ui.studentFirstName.val();
+            //var lastName = this.ui.studentLastName.val();
+            //var id = this.ui.studentID.val();
             //var nickname = this.ui.studentNickname;
             //var group = this.ui.studentGroup;
-            var email = this.ui.studentEmail.val();
+            //var email = this.ui.studentEmail.val();
             //var phone = this.ui.studentPhone;
 
-            this.model.set({"first": firstName});
-            this.model.set({"last": lastName});
-            this.model.set({"emplId": id});
+            if (this.ui.studentFirstName.val())
+                this.model.get('students')[1].first = this.ui.studentFirstName.val();
+
+            if (this.ui.studentLastName.val())
+                this.model.get('students')[1].last = this.ui.studentLastName.val();
+
+            if (this.ui.studentID.val())
+                this.model.get('students')[1].emplId = this.ui.studentID.val();
             //this.model.set({"studentNickname": nickname});
             //this.model.set({"studentGroup": group});
-            this.model.set({"email": email});
+
+            if (this.ui.studentEmail.val())
+                this.model.get('students')[1].email = this.ui.studentEmail.val();
             //this.model.set({"studentPhone": phone});
             this.ui.dialog.hide();
-            this.ui.modifyStudentButton.show();
-
             Backbone.emulateHTTP = true;
-            this.model.save();
+            var self = this;
+            this.model.save().then(function(){
+                self.ui.modifyStudentButton.show();
+            });
         },
 
         /**
