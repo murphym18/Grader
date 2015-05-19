@@ -47,7 +47,7 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             this.ui.dialog.show();
             this.ui.modifyStudentButton.hide();
 
-            this.ui.studentFirstName.val(this.model.get('students')[1].first);
+            this.ui.studentFirstName.val("COOL");
             this.ui.studentLastName.val(this.model.get('students')[1].first);
             this.ui.studentID.val(this.model.get('students').emplId);
             this.ui.studentEmail.val(this.model.get('students').email);
@@ -103,11 +103,25 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
     App.Router.route("modifyStudent", "home", function() {
         App.UserCourses.fetch().then(function () {
             var course = App.UserCourses.at(0);
-            var modifyView = new ModifyStudentView({
-                model: course
+            var students = course.get('students');
+            var promises = [];
+            students.forEach(function(student){
+                var url = 'https://grader-murphym18.c9.io/api/Users?_id=' + student.user;
+                var p = App.$.ajax({
+                    url: url
+                });
+                promises.push(p);
             });
-
-            App.PopupRegion.show(modifyView);
+            App.Q.all(promises).then(function(arr) {
+                arr = App._.flatten(arr);
+                for(var i = 0; i < arr.length; ++i) {
+                    students[i].user = arr[i];
+                }
+                var modifyView = new ModifyStudentView({
+                    model: course
+                });
+                App.PopupRegion.show(modifyView);
+            })
         });
     });
 });
