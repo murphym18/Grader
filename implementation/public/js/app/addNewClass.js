@@ -6,6 +6,7 @@ define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, templat
 
     var AddNewClassView = App.Mn.ItemView.extend({
         model: App.Course,
+        //model: App.UserCourses,
         template: App.Handlebars.compile(template),
         ui: {
             'addNewClassButton': '.addNewClassButton',
@@ -42,15 +43,16 @@ define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, templat
             else {
                 var code = this.ui.classCode.val();
                 var number = this.ui.classNumber.val();
-                var studentRecord = require('./student');
-                var category = require('./assignment/category');
 
                 //this.model.add([{
                 //    classCode: code,
                 //    classNumber: number,
                 //    section: '0',
-                //    students: studentRecord,
-                //    categories: category
+                //    start: Date,
+                //    end: Date,
+                //    year: '2015',
+                //    term: 'Spring',
+                //    colloquialUrl: code + '-' + number + '-0'
                 //}
                 //]);
 
@@ -69,16 +71,14 @@ define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, templat
                     end: Date,
                     year: '2015',
                     term: 'Spring',
-                    colloquialUrl: code + '-' + number + '-0',
-                    categories: category,
-                    students: studentRecord
+                    colloquialUrl: code + '-' + number + '-0'
                 });
 
-                course.save();
-
                 this.ui.dialog.hide();
-                this.ui.modifyClassButton.show();
-                Backbone.emulateHTTP = true;
+                this.ui.addNewClassButton.show();
+
+                // Backbone.emulateHTTP = true;
+                // course.save();
                 this.model.save();
             }
         },
@@ -88,8 +88,6 @@ define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, templat
          */
         showAddNewClass: function showDialog() {
             this.ui.dialog.show();
-            this.ui.classCode.val(this.model.get('classCode'));
-            this.ui.classNumber.val(this.model.get('classNumber'));
             this.ui.addNewClassButton.hide();
         },
 
@@ -105,6 +103,7 @@ define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, templat
     App.Router.route("addNewClass", "home", function() {
         App.UserCourses.fetch().then(function() {
             var course = App.UserCourses.at(0);
+            //var course = App.UserCourses;
             var addNewClassView = new AddNewClassView({
                 model: course
             });

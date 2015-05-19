@@ -35,33 +35,7 @@ requirejs.config({
 
 // Start the main app logic.
 
-requirejs(['app/app', 'app/login', 'app/home', 'app/chart', 'app/modifyAssignment', 'app/modifyCategory','app/modifyClass', 'app/modifyStudent', 'domReady!'], function(app) {
+requirejs(['app/app', 'app/login', 'app/home', 'app/chart', 'app/modifyAssignment', 'app/modifyCategory','app/modifyClass', 'app/modifyStudent', 'app/addNewClass', 'domReady!'], function(app) {
 
    app.start({});
 });
-
-/**
- * @author Mike Ryu
- */
-// 'text!templates/addNewClassView.html' addNewClassView
-//var AddNewClassView = Backbone.View.extend({
-//
-//   template: Handlebars.compile(addNewClassView),
-//   errorMessage: '',
-//
-//   initialize: function() {
-//      this.render();
-//   },
-//
-//   events: {
-//      "click button": "doAddClass"
-//   },
-//
-//   doAddClass: function(e) {
-//      e.preventDefault();
-//      var self = this;
-//
-//      console.log("Add Class button pressed!");
-//   }
-//
-//});
