@@ -70,13 +70,11 @@ define(['app/app', 'text!templates/modifyAssignmentView.hbs', ], function(App, t
                 var course = App.UserCourses.at(0);
 
                 var categories = course.get('categories');
-            
-                var assignment = $.grep(categories.assignments, function(e){ return e.name == reqAssignName; })[0];
+    
 
-                assignment.name = ui.assignmentName.val();
-                category.rawPoints = ui.assignmentTotalScore.val();
+                categories[1].assignments[0].name = ui.assignmentName.val();
+                categories[1].assignments[0].rawPoints = ui.assignmentTotalScore.val();
 
-                course.set("categories", categories);
                 course.save();
             });
             this.closeModifyAssignment();
