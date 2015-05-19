@@ -13,6 +13,13 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
             'category' : '.category',
             'catSelector' : '.cat-selector'
         },
+        /**
+         * Hide the modify category dialog on initial load. Also,
+         * create a dropdown menu for testing purposes that allows
+         * the user to select which category to modify.
+         *
+         * @author Matt Bleifer
+         */
         onShow : function(){
             var ui = this.ui;
 
@@ -36,6 +43,12 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
             'click @ui.ok' :  'saveModifyCategory',
             'click @ui.cancel' :  'closeModifyCategory'
         },
+        /**
+         * Show the modify category dialog. Use the data from the
+         * course model to preload the fields for the chosen category.
+         *
+         * @author Matt Bleifer
+         */
         showModifyCategory : function() {
             var ui = this.ui;
 
@@ -68,6 +81,12 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
             ui.modifyCategoryButton.hide();
             ui.catSelector.hide();
         },
+        /**
+         * Gather the new values from the modify category dialog and
+         * save them to the database.
+         *
+         * @author Matt Bleifer
+         */
         saveModifyCategory : function() {
             var ui = this.ui;
             var self = this;
@@ -90,6 +109,13 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
                 self.closeModifyCategory();
             });
         },
+        /**
+         * Hide the modify category dialog. Bring the user back to the
+         * screen to select which dialog to modify, and re-fetch
+         * the newly updated data.
+         *
+         * @author Matt Bleifer
+         */
         closeModifyCategory : function() {
             var self = this;
 
