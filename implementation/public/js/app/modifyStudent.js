@@ -47,10 +47,15 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             this.ui.dialog.show();
             this.ui.modifyStudentButton.hide();
 
-            this.ui.studentFirstName.val(this.model.get('first'));
-            this.ui.studentLastName.val(this.model.get('last'));
-            this.ui.studentID.val(this.model.get('emplId'));
-            this.ui.studentEmail.val(this.model.get('email'));
+            this.ui.studentFirstName.val(this.model.get('students')[1].first);
+            this.ui.studentLastName.val(this.model.get('students')[1].first);
+            this.ui.studentID.val(this.model.get('students').emplId);
+            this.ui.studentEmail.val(this.model.get('students').email);
+
+            //this.ui.studentFirstName.val(this.model.get('first'));
+            //this.ui.studentLastName.val(this.model.get('last'));
+            //this.ui.studentID.val(this.model.get('emplId'));
+            //this.ui.studentEmail.val(this.model.get('email'));
             //this.ui.studentPhone.val(this.model.get('phone'));
         },
 
