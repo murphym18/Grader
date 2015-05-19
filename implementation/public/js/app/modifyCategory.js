@@ -50,10 +50,12 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
                 catValues.push(category.name);
             });
 
-            $.each(catValues, function(key, value) {   
-                 ui.parentCategory
+            $.each(catValues, function(key, value) {
+                if (value != category.name) {
+                    ui.parentCategory
                      .append($("<option></option>")
                      .text(value)); 
+                }
             });
 
             var path = category.path.split('#');
@@ -78,6 +80,12 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
             category.name = ui.categoryName.val();
             category.weight = ui.categoryWeight.val();
 
+            var newParent = $.grep(categories, function(e){ return e.name == ui.parentCategory.val(); })[0];
+
+            category.path = newParent ? newParent.path + "#" + category.name : "#" + category.name;
+            console.log(category.path);
+
+            Backbone.emulateHTTP = true;
             this.model.set("categories", categories);
             this.model.save().then(function() {
                 self.closeModifyCategory();
