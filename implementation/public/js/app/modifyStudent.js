@@ -23,6 +23,11 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
 
         },
 
+        /**
+         * Hides the dialog on initial load
+         *
+         * @this {ModifyStudentView}
+         */
         onShow : function(){
             this.ui.dialog.hide();
         },
@@ -47,7 +52,6 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             this.ui.studentID.val(this.model.get('emplId'));
             this.ui.studentEmail.val(this.model.get('email'));
             //this.ui.studentPhone.val(this.model.get('phone'));
-
         },
 
         /**
@@ -75,7 +79,8 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             this.ui.dialog.hide();
             this.ui.modifyStudentButton.show();
 
-            //this.model.save();
+            Backbone.emulateHTTP = true;
+            this.model.save();
         },
 
         /**
@@ -91,25 +96,13 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
     })
 
     App.Router.route("modifyStudent", "home", function() {
-        App.$.ajax({
-            url: '/api/Users'
-        }).done(function(data) {
-            var props = data[0];
-            props.url = '/api/Users/' + props.colloquialUrl;
-            var course = new App.Backbone.Model(props);
-            console.dir(course);
+        App.UserCourses.fetch().then(function () {
+            var course = App.UserCourses.at(0);
             var modifyView = new ModifyStudentView({
                 model: course
             });
+
             App.PopupRegion.show(modifyView);
-            
         });
-        
-        //    layout = App.show(new App.StandardLayoutView());
-        //var mainView = new App.Marionette.ItemView({
-        //    template: App.Handlebars.compile(template)
-        //});
-        //layout.getRegion('main').show(mainView);
-        //layout.getRegion('header').show(new TopNavView);
     });
 });
