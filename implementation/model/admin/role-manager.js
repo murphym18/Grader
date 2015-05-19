@@ -52,6 +52,12 @@ function _findPermissionSet(roles) {
    return _.union.apply(_, roles.map(toPerms));
 }
 
+/**
+ * Finds the roles with the given name.
+ * @param roles roles
+ * @param roleName name to search roles with
+ * @private
+ */
 function _getRole(roles, roleName) {
    return _.find(roles, function(role) {
       return role.name === roleName;
