@@ -19,7 +19,7 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
             var categories = this.model.get('categories');
 
             var catValues = [];
-            catValues.push('');
+            catValues.push(''); 
             App._.forEach(categories, function(category) {
                 catValues.push(category.name);
             });
@@ -68,6 +68,7 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
         },
         saveModifyCategory : function() {
             var ui = this.ui;
+            var self = this;
 
             var reqCatName = ui.category.val();
 
@@ -78,9 +79,9 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
             category.weight = ui.categoryWeight.val();
 
             this.model.set("categories", categories);
-            this.model.save();
-
-            this.closeModifyCategory();
+            this.model.save().then(function() {
+                self.closeModifyCategory();
+            });
         },
         closeModifyCategory : function() {
             var self = this;
