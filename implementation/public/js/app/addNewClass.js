@@ -1,5 +1,5 @@
 /**
- * Event handler for the modify class view.
+ * Event handler for the add new class view.
  * @author Mike Ryu
  */
 define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, template) {
