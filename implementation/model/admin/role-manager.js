@@ -1,25 +1,54 @@
-/** @author Michael Murphy */
+/**
+ * Roll manager
+ * @author Michael Murphy
+ * @author Mike Ryu (JSDocs comments only)
+ */
 
 var mongoose = require('mongoose');
 var _ = require('underscore');
-
 var MissingRoleException =  Error.bind(null, "No such role exception.");
 
+/**
+ * Given the roles and the user, returns the roles the user has.
+ * @param roles roles
+ * @param user user to find its assigned roles from
+ * @returns {*}
+ * @private
+ */
 function _findUserRoles(roles, user) {
-   console.log('in _find user roles')
+   console.log('in _find user roles');
    console.dir(roles);
    throw new Error();
    var userId = user.id;
+
+   /**
+    * Returns <cc>true</cc> if the given user has
+    * the given role, and <cc>false</cc> otherwise.
+    * @param role role to check the user with
+    */
    function isMember(role) {
       return _.contains(role.users.map(String), userId);
    }
+
    return roles.filter(isMember);
 }
 
+/**
+ * Given the roles, finds the set of permissions assigned to the given roles.
+ * @param roles roles to find the associated permissions from.
+ * @private
+ */
 function _findPermissionSet(roles) {
+
+   /**
+    * Returns the array of permissions a given role has.
+    * @param role role to find the set of permissions from
+    * @returns {Array|Document.permissions}
+    */
    function toPerms(role) {
       return role.permissions;
    }
+
    return _.union.apply(_, roles.map(toPerms));
 }
 
