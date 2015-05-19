@@ -2,10 +2,10 @@
  * Event handler for the add new class view.
  * @author Mike Ryu
  */
-define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, template) {
+define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, template) {
 
     var AddNewClassView = App.Mn.ItemView.extend({
-        model: App.UserCourses,
+        model: App.Course,
         template: App.Handlebars.compile(template),
         ui: {
             'addNewClassButton': '.addNewClassButton',
@@ -25,6 +25,7 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
          * Hides the dialog on initial load.
          */
         onShow: function onShow () {
+            this.ui.addNewClassButton.show();
             this.ui.dialog.hide();
         },
 
@@ -96,9 +97,9 @@ define(['app/app', 'text!templates/modifyClassView.hbs' ], function(App, templat
 
     App.Router.route("addNewClass", "home", function() {
         App.UserCourses.fetch().then(function() {
-            var coursesList = App.UserCourses;
+            var course = App.UserCourses.at(0);
             var addNewClassView = new AddNewClassView({
-                model: coursesList
+                model: course
             });
             App.PopupRegion.show(addNewClassView);
         });
