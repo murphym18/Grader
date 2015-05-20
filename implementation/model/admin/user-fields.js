@@ -41,5 +41,12 @@ module.exports = {
       match: /[0-9]{9}/,
       unique: true,
       select: true
+   },
+   phone: {
+      type: String,
+      match: /^\d{10}$/
+   },
+   nickname: {
+      type: String
    }
 };
