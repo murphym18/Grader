@@ -21,13 +21,6 @@ requirejs.config({
    //     just use the global, as nothing will get passed into your
    //     require/define functions.)
    shim: {
-      underscore: {
-         exports: '_'
-      },
-      backbone: {
-         deps: ["underscore", "jquery"],
-         exports: "Backbone"
-      },
       'jquery-ui': ['jquery'],
       "jquery.magnific-popup" : ['jquery', 'jquery-ui']
    }
