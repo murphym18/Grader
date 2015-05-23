@@ -4,12 +4,9 @@
  */
 define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, template) {
     var defaultClass = {
-        "_id": ObjectID("555bf556790f01832ac30fe4"),
         "classCode": "ART",
         "classNumber": "388",
         "section": "9",
-        "start": ISODate("2016-03-30T07:00:00.000Z"),
-        "end": ISODate("2016-06-12T07:00:00.000Z"),
         "colloquialUrl": "ART-388-9-Spring2016",
         "minCredit": 60,
         "fColor": [

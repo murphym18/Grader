@@ -39,7 +39,6 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
       
       initialize: function() {
          this.listenTo(session, 'change:user', this.updateUrl);
-         this.listenTo(session, 'login', this.fetch);
          this.listenTo(session, 'logout', this.clear);
          this.updateUrl();
       },
@@ -56,7 +55,7 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
       className: "course-list-item",
       template: App.Handlebars.compile(courseListItemTemplate),
       modelEvents: {
-         "change": "render"
+         "change": "render",
       },
       events: {
          'click a': "openGradebook"
@@ -69,17 +68,21 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
 
    var EmptyCourseListView = App.Mn.ItemView.extend({
       template: function() {
-         return "<i></i>";
+         return "";
       }
    });
 
    var CourseListView = App.Mn.CollectionView.extend({
       className: "coursesList",
       childView: CourseListItemView,
-      emptyView: EmptyCourseListView
+      emptyView: EmptyCourseListView,
    });
 
    App.UserCourses = new UserCoursesList();
    App.Course = Course;
+   App.listenTo(session, 'logout', function() {
+      App.Backbone.history.navigate('/', {trigger:false, replace: true});
+      App.showCoursesList();
+   });
    return CourseListView
 });

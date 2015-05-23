@@ -5,28 +5,22 @@ define(['app/app', 'app/top-menu', 'app/courses'], function(App, TopNavView, Cou
       var layout = App.show(new App.StandardLayoutView());
       var courses = new CourseListView({collection: App.UserCourses});
       layout.getRegion('header').show(new TopNavView);
-      App.UserCourses.once('sync', function() {
-         layout.getRegion('main').show(courses);
-         App.Backbone.history.navigate('/Courses', {trigger:false, replace: true});
+      
+      var loading = new App.LoadingView({
+         model: App.UserCourses
       });
       App.login().then(function(){
-         layout.getRegion('main').show(new App.Mn.ItemView({
-            className: "loading",
-            tagName: "h1",
-            template: function(){
-               return "loading...";
-            },
-            onShow: function() {
-               this.$el().css('top', "205px").position({
-                  of: window
-               });
-            }
-         }))
+         layout.getRegion('main').show(loading);
+         App.UserCourses.once('sync', function() {
+            layout.getRegion('main').show(courses);
+            App.Backbone.history.navigate('/Courses', {trigger:false, replace: true});
+         });
          App.UserCourses.fetch();
       });
    };
+   App.showCoursesList = buildListCoursesPage;
    App.Router.processAppRoutes({loadPage:buildListCoursesPage},{
       "(/)": "loadPage",
-      "Courses": "loadPage"
+      "Courses(/)": "loadPage"
    })
 });

@@ -1,10 +1,68 @@
 /**
  * @author Michael Murphy
  */
-define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/standardLayoutView.hbs', 'backbone.marionette', 'radio.shim', 'backbone.radio', 'jquery.magnific-popup', 'backbone-relational', 'domReady!'], function($, _, Q, Backbone, Handlebars, rootLayoutTemplate, Marionette) {
+define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/standardLayoutView.hbs', 'text!templates/loading.hbs', 'backbone.marionette', 'radio.shim', 'backbone.radio', 'jquery.magnific-popup', 'backbone-relational', 'domReady!'], function($, _, Q, Backbone, Handlebars, rootLayoutTemplate, loadingViewTemplate, Marionette) {
 
+   function updateProgress(modelEventToTrigger, progressEvent) {
+      if (progressEvent.lengthComputable) {
+         var percentDone = 100 * progressEvent.loaded / progressEvent.total;
+         percentDone = Math.round(percentDone);
+         percentDone = Math.min(99, percentDone);
+         this.trigger(modelEventToTrigger, percentDone);
+      }
+   }
+   function updateFetchProgress(event){
+      updateProgress.call(this, "fetch:progress", event);
+      
+   }
+   
+   function updateSaveProgress(event){
+      updateProgress.call(this, "save:progress", event);
+      
+   }
 
-   Backbone.Marionette.Renderer.render = function(template, data){
+   _.each(["Model", "Collection"], function(name) {
+      var constructor = Backbone[name];
+      
+      var fetch = constructor.prototype.fetch;
+      constructor.prototype.updateFetchProgress = updateFetchProgress;
+      constructor.prototype.fetch = function(options) {
+         if (arguments.length < 1) {
+            options = {};
+         }
+         this.trigger("fetch", this, options);
+         var progressFunc = this.updateFetchProgress.bind(this);
+         options.xhr = function() {
+            var xhr = new window.XMLHttpRequest();
+            xhr.addEventListener("progress", progressFunc, false);
+            return xhr;
+         }
+         return fetch.call(this, options);
+      };
+      
+      var save = constructor.prototype.save;
+      constructor.prototype.updateSaveProgress = updateSaveProgress;
+      constructor.prototype.save = function(attr, options) {
+         if (arguments.length < 1) {
+            attr = {};
+         }
+         if (arguments.length < 2) {
+            options = {};
+         }
+         this.trigger("save", this, attr, options);
+         
+         var progressFunc = this.updateSaveProgress.bind(this);
+         options.xhr = function() {
+            var xhr = new window.XMLHttpRequest();
+            xhr.upload.addEventListener("progress", progressFunc, false);
+            return xhr;
+         }
+         // Call "super.save".
+         return save.call(this, attr, options);
+      };
+   });
+
+   Backbone.Marionette.Renderer.render = function(template, data) {
       return template(data);
    };
 
@@ -77,6 +135,28 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
          }
       },
       destroyImmediate: true
+   });
+   
+   var LoadingView = Marionette.ItemView.extend({
+      className: "loading",
+      tagName: "div",
+      template: Handlebars.compile(loadingViewTemplate),
+      progress: "",
+      
+      ui: {
+         progress: ".progress"
+      },
+      
+      modelEvents: {
+         "fetch:progress": "onProgress",
+         "save:progress": "onProgress"
+      },
+      
+      onProgress: function(percentDone) {
+         this.progress = percentDone.toString() + "%";
+         this.ui.progress.html(this.progress);
+      }
+      
    });
 
    function navigateToPage(path, options) {
@@ -178,12 +258,18 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
        * The marionette region for Main content of the page.
        */
       RootRegion: new RootRegion(),
+      
+      /**
+       * A loading view that shows fetch and save progress
+       */
+      LoadingView: LoadingView,
 
       /**
        * A marionette layout view with a header region, main region, and footer
        * region.
        */
       StandardLayoutView: StandardLayoutView,
+      
       initialize: function() {
 
       },
@@ -201,6 +287,14 @@ define(['jquery', 'underscore', 'q', 'backbone', 'handlebars', 'text!templates/s
       show: function(view) {
          this.RootRegion.show(view);
          return view;
+      },
+      
+      load(model) {
+         var view =  this.show(new this.LoadingView({model: model}));
+         view.listenToOnce(model, "sync", function() {
+            App.RootRegion.reset();
+         });
+         return Q(model.fetch());
       }
    });
 
