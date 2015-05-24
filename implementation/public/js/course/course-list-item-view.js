@@ -14,12 +14,15 @@ define(function (require) {
         tagName: "li",
         className: "course-list-item",
         template: App.Handlebars.compile(courseListItemTemplate),
+        
         modelEvents: {
             "change": "render"
         },
+        
         events: {
             'click a': "openGradebook"
         },
+        
         openGradebook: function loadGradebookPage(domEvent) {
             App.go('/Courses/'+this.model.get('colloquialUrl'));
             domEvent.preventDefault();

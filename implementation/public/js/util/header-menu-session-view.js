@@ -61,7 +61,6 @@ define(function (require) {
             ctx.name = this.getNameText();
             template = this.sessionTemplate;
          }
-         console.dir(template(ctx))
          this.$el.html(template(ctx));
       }
    });
