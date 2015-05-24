@@ -1,5 +1,6 @@
 /**  @author Michael Murphy */
-define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(App, session, courseListItemTemplate) {
+define(['app/app', 'user/module', 'text!templates/courseListing.hbs'], function(App, userChannel, courseListItemTemplate) {
+   
    var Backbone = App.Backbone;
    
    var Course = Backbone.Model.extend({
@@ -8,10 +9,11 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
 
       },
       initialize : function (){
-         this.updateUrl()
+         this.session = userChannel.request('session');
+         this.updateUrl();
       },
       updateUrl: function updateUserCourses() {
-         if (session.get('user') && session.get('user').username) {
+         if (this.session.get('user') && this.session.get('user').username) {
             this.url = '/api/Courses/' + this.get("colloquialUrl");
          }
       }
@@ -32,14 +34,16 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
       },
       
       updateUrl: function updateUserCourses() {
-         if (session.get('user') && session.get('user').username) {
-            this.url = '/api/Users/'+session.get('user').username+'/Courses';
+         if (this.session.get('user') && this.session.get('user').username) {
+            var username = this.session.get('user').username;
+            this.url = '/api/Users/'+username+'/Courses';
          }
       },
       
       initialize: function() {
-         this.listenTo(session, 'change:user', this.updateUrl);
-         this.listenTo(session, 'logout', this.clear);
+         this.session = userChannel.request('session');
+         this.listenTo(this.session, 'change:user', this.updateUrl);
+         this.listenTo(this.session, 'logout', this.clear);
          this.updateUrl();
       },
       
@@ -80,7 +84,8 @@ define(['app/app', 'app/session', 'text!templates/courseListing.hbs'], function(
 
    App.UserCourses = new UserCoursesList();
    App.Course = Course;
-   App.listenTo(session, 'logout', function() {
+
+   userChannel.on('logout', function() {
       App.Backbone.history.navigate('/', {trigger:false, replace: true});
       App.showCoursesList();
    });

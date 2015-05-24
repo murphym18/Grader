@@ -9,6 +9,8 @@ requirejs.config({
    // the paths config could be for a directory.
    paths: {
       app: '../app',
+      util: '../util',
+      user: '../user',
       text: 'text',
       templates: '../../templates'
    },
@@ -27,10 +29,19 @@ requirejs.config({
 });
 
 // Start the main app logic.
-
-
-requirejs(['app/app', 'app/login', 'app/home', 'app/chart', 'app/modifyAssignment', 'app/modifyCategory', 'app/newAssignment','app/modifyClass', 'app/modifyStudent', 'domReady!'], function(app) {
-
-
-   app.start({});
+define(function (require) {
+   var App = require('app/app');
+   var Radio = require('backbone.radio');
+   require('user/module');
+   require('app/home');
+   require('app/chart');
+   require('app/modifyAssignment');
+   require('app/modifyCategory');
+   require('app/newAssignment');
+   require('app/modifyClass');
+   require('app/modifyStudent');
+   require('domReady!');
+   
+   App.start({});
+   return App;
 });

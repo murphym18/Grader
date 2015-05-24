@@ -1,23 +1,32 @@
 /** @author Michael Murphy */
-define(['app/app', 'app/top-menu', 'app/courses'], function(App, TopNavView, CourseListView) {
-   /* */
+define(function (require) {
+   var App = require('app/app');
+   var Backbone = require('util/backbone-helper');
+   var TopNavView = require('app/top-menu');
+   var CourseListView = require('app/courses');
+   var LoadingView = require('util/loading-view');
+   var userChannel = require('user/module');
+   var StandardLayoutView = require('util/standard-layout-view');
+   
    function buildListCoursesPage() {
-      var layout = App.show(new App.StandardLayoutView());
+      var layout = App.show(new StandardLayoutView());
       var courses = new CourseListView({collection: App.UserCourses});
       layout.getRegion('header').show(new TopNavView);
       
-      var loading = new App.LoadingView({
-         model: App.UserCourses
-      });
-      App.login().then(function(){
+
+      userChannel.request('login').then(function(){
+         var loading = new LoadingView({
+            model: App.UserCourses
+         });
          layout.getRegion('main').show(loading);
          App.UserCourses.once('sync', function() {
             layout.getRegion('main').show(courses);
-            App.Backbone.history.navigate('/Courses', {trigger:false, replace: true});
+            Backbone.history.navigate('/Courses', {trigger:false, replace: true});
          });
          App.UserCourses.fetch();
       });
-   };
+   }
+   
    App.showCoursesList = buildListCoursesPage;
    App.Router.processAppRoutes({loadPage:buildListCoursesPage},{
       "(/)": "loadPage",

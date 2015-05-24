@@ -1,5 +1,18 @@
-define(['jquery', 'underscore', 'q', 'backbone'], function($, _, Q, Backbone) {
-    function ajaxFactory(fetchProgressFunc, saveProgressFunc) {
+define(function (require) {
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var Q = require('q');
+    var Backbone = require('backbone');
+    require('backbone.marionette');
+    require('radio.shim');
+    require('backbone.radio');
+    require('backbone-relational');
+   
+    Backbone.Marionette.Renderer.render = function(template, data) {
+        return template(data);
+    };
+   
+   function ajaxFactory(fetchProgressFunc, saveProgressFunc) {
         var xhr = new window.XMLHttpRequest();
         if (_.isFunction(fetchProgressFunc)) {
             xhr.addEventListener("progress", fetchProgressFunc, false);
@@ -74,4 +87,6 @@ define(['jquery', 'underscore', 'q', 'backbone'], function($, _, Q, Backbone) {
             return Q(superClassMethod.save.call(this, attr, options));
         }
     });
-})
+    
+   return Backbone;
+});

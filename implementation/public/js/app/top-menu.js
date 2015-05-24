@@ -1,4 +1,5 @@
-define(['app/app', 'app/session', 'text!templates/topMenu.hbs'], function(App, session, template) {
+define(['app/app', 'user/module', 'text!templates/topMenu.hbs'], function(App, userChannel, template) {
+   var session = userChannel.request('session');
    var SessionView = App.Marionette.ItemView.extend({
       model: session,
       template: App.Handlebars.compile("{{beforeText}}<a href=\"#\">{{action}}</a>{{afterText}}"),

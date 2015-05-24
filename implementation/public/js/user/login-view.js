@@ -1,9 +1,23 @@
 /**  @author Michael Murphy */
-define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'app/session', 'text!templates/login.hbs'], function($, Backbone, Marionette, App, Handlebars, session, loginTemplate) {
-   var LoginView = App.LoginView = App.PopupView.extend({
+define(function (require) {
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var App = require('app/app');
+    var Backbone = require('util/backbone-helper');
+    var Hbs = require('handlebars');
+    var Mn = require('backbone.marionette');
+    var PopupView = require('util/popup-view');
+    var Q = require('q');
+    var Radio = require('backbone.radio');
+    
+    var loginTemplate = require('text!templates/login.hbs');
+    
+    var userChannel = Radio.channel('user');
+    
+    return PopupView.extend({
       tagName: 'form',
       className: 'login',
-      template: Handlebars.compile(loginTemplate),
+      template: Hbs.compile(loginTemplate),
       
       ui: {
          username: "input.username",
@@ -27,7 +41,9 @@ define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'a
       },
       
       initialize: function(options) {
-         this.model = this.model ? this.model : session;
+         if (!this.model) {
+            this.model = userChannel.request('session');
+         }
       },
       
       doLogin: function(domEvent) {
@@ -62,21 +78,6 @@ define(['jquery', 'backbone', 'backbone.marionette', 'app/app', 'handlebars', 'a
       }
    });
    
-   App.login = function() {
-      var deferred = App.Q.defer();
-      if (session.isAuthenticated()) {
-         deferred.resolve(session.get('user'));
-      }
-      else {
-         session.once('login', function(user) {
-            App.PopupRegion.close();
-            deferred.resolve(user);
-         });
-         App.PopupRegion.show(new App.LoginView());
-      }
-      return deferred.promise;
-   };
    
-   return LoginView;
 });
 
