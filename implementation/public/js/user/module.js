@@ -35,7 +35,6 @@ define(function (require) {
         return login().then(function(user) {
             var userCourses = new UserCourseList({user: user});
             userCourses.once('fetch', function() {
-                console.dir(userCourses);
                 userChannel.trigger("user:courses:fetch", userCourses);
             });
             return userCourses.fetch().then(function() {

@@ -2,7 +2,7 @@ define(function (require) {
     var App = require('app/app');
     var Backbone = require('util/backbone-helper');
     
-    var HeaderMenuView = require('app/top-menu');
+    var HeaderMenuView = require('util/header-menu-view');
     var CourseList = require('course/course-list');
     var CourseListView = require('course/course-list-view');
     var LoadingView = require('util/promise-loading-view');
@@ -12,7 +12,7 @@ define(function (require) {
     
     return BasicLayoutView.extend({
         initialize: function(options) {
-            this.headerView = new HeaderMenuView;
+            this.headerView = new HeaderMenuView();
             if (options.courseListView)
                 this.mainView = options.courseListView;
         },

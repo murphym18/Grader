@@ -1,5 +1,5 @@
 
-define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'app/top-menu', 'chart'], function(App, chartTemplate, template1, template2, TopNavView, chart) {
+define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'util/header-menu-view', 'chart'], function(App, chartTemplate, template1, template2, TopNavView, chart) {
     var GradeSchema = App.Backbone.Model;
     var GraphModel = App.Course;
 
