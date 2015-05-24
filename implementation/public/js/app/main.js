@@ -11,6 +11,7 @@ requirejs.config({
       app: '../app',
       util: '../util',
       user: '../user',
+      course: '../course',
       text: 'text',
       templates: '../../templates'
    },
@@ -33,7 +34,7 @@ define(function (require) {
    var App = require('app/app');
    var Radio = require('backbone.radio');
    require('user/module');
-   require('app/home');
+   require('course/module');
    require('app/chart');
    require('app/modifyAssignment');
    require('app/modifyCategory');

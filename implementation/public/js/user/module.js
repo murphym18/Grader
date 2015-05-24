@@ -6,10 +6,14 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     
+    var UserCourseList = require('user/user-course-list');
+    
+    
     var LoginView = require('user/login-view')
     var Session = require('user/session');
     
     var session = new Session();
+    var userCourses = new UserCourseList();
 
     function loginFunc() {
         var deferred = Q.defer();
