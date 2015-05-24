@@ -2,35 +2,55 @@ define(function (require) {
     var App = require('app/app');
     var Backbone = require('util/backbone-helper');
     
-    var TopNavView = require('app/top-menu');
+    var HeaderMenuView = require('app/top-menu');
+    var CourseList = require('course/course-list');
     var CourseListView = require('course/course-list-view');
-    var LoadingView = require('util/loading-view');
+    var LoadingView = require('util/promise-loading-view');
     var BasicLayoutView = require('util/basic-layout-view');
     
     var userChannel = require('user/module');
     
-   
-    function buildListCoursesPage() {
-        var layout = App.show(new BasicLayoutView());
-        var courses = new CourseListView({collection: userCourses});
-        layout.getRegion('header').show(new TopNavView);
-        var loading = new LoadingView({
-            model: userCourses
-        });
-        layout.getRegion('main').show(loading);
-        userCourses.once('sync', function() {
-            layout.getRegion('main').show(courses);
-            Backbone.history.navigate('/Courses', {trigger:false, replace: true});
-        });
-        userCourses.fetch();
-        // userChannel.request('login').then(function() {
-            
-        // });
-    }
-   
-   App.showCoursesList = buildListCoursesPage;
-   App.Router.processAppRoutes({loadPage:buildListCoursesPage},{
-      "(/)": "loadPage",
-      "Courses(/)": "loadPage"
-   })
+    return BasicLayoutView.extend({
+        initialize: function(options) {
+            this.headerView = new HeaderMenuView;
+            if (options.courseListView)
+                this.mainView = options.courseListView;
+        },
+        
+        showUserCourses: function() {
+            var self = this;
+            var loginPromise = userChannel.request('user');
+            loginPromise.then(function(user) {
+                var userCoursesPromise = userChannel.request('user:courses');
+                self.showMain(new LoadingView({
+                    promise: userCoursesPromise
+                }));
+                userCoursesPromise.then(function(userCourses) {
+                    self.showMain(new CourseListView({
+                        collection: userCourses
+                    }));
+                    App.go('/user/courses', {
+                        trigger:false,
+                        replace: true
+                        
+                    });
+                });
+            });
+        },
+        
+        showAllCourses: function() {
+            var self = this;
+            var courseList = new CourseList();
+            var coursesPromise = courseList.fetch()
+            self.showMain(new LoadingView({
+                promise: coursesPromise
+            }));
+            coursesPromise.then(function() {
+                self.showMain(new CourseListView({
+                    collection: courseList
+                }));
+                App.go('/courses', {trigger:false, replace: true});
+            });
+        }
+    });
 });

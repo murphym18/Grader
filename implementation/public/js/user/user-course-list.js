@@ -8,25 +8,12 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     
-    var userChannel = require('user/module');
     var CourseList = require('course/course-list');
     
     return CourseList.extend({
-        updateUrl: function updateUserCourses() {
-            if (this.user) {
-                this.url = '/api/Users/'+ this.user.username +'/Courses';
-            }
-            else {
-                this.url = "/api/Courses";
-            }
-        },
-      
         initialize: function(options) {
             this.user = options.user;
             this.url = '/api/Users/'+ this.user.username +'/Courses';
-            // this.listenTo(this.session, 'change:user', this.updateUrl);
-            // this.listenTo(this.session, 'logout', this.clear);
-            this.updateUrl();
         }
     });
 });

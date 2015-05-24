@@ -1,4 +1,5 @@
 define(['app/app', 'user/module', 'text!templates/topMenu.hbs'], function(App, userChannel, template) {
+   
    var session = userChannel.request('session');
    var SessionView = App.Marionette.ItemView.extend({
       model: session,
@@ -20,7 +21,7 @@ define(['app/app', 'user/module', 'text!templates/topMenu.hbs'], function(App, u
             session.logout();
          }
          else {
-            App.login();
+            userChannel.command('login');
          }
       },
       getNameText: function() {

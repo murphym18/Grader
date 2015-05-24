@@ -23,26 +23,27 @@ define(function (require) {
         return xhr;
     }
     
-    function updateProgress(progressEventName, progressEvent) {
+    function updateProgress(deferred, progressEventName, progressEvent) {
         if (progressEvent.lengthComputable) {
             var percentDone = 100 * progressEvent.loaded / progressEvent.total;
             percentDone = Math.round(percentDone);
+            deferred.notify(percentDone);
             this.trigger(progressEventName, percentDone);
         }
     }
     
-    function updateFetchProgress(event){
-        updateProgress.call(this, "fetch:progress", event);
+    function updateFetchProgress(deferred, event){
+        updateProgress.call(this, deferred, "fetch:progress", event);
     }
     
-    function updateSaveProgress(event){
-        updateProgress.call(this, "save:progress", event);
+    function updateSaveProgress(deferred, event){
+        updateProgress.call(this, deferred, "save:progress", event);
     }
     
-    function initAjaxOptions(self, optionsArg) {
+    function initAjaxOptions(self, deferred, optionsArg) {
         var options = _.isObject(optionsArg) ? optionsArg : {};
-        var onFProgress = self.updateFetchProgress.bind(self);
-        var onSProgress = self.updateSaveProgress.bind(self);
+        var onFProgress = self.updateFetchProgress.bind(self, deferred);
+        var onSProgress = self.updateSaveProgress.bind(self, deferred);
         
         options.xhr = _.partial(ajaxFactory, onFProgress, onSProgress);
         return options
@@ -75,16 +76,24 @@ define(function (require) {
         _.extend(clazz.prototype, progressEventGenerators, ioMethods);
         
         function fetchFunc(optionsArg) {
-            var options = initAjaxOptions(this, optionsArg);
+            var deferred = Q.defer();
+            var options = initAjaxOptions(this, deferred, optionsArg);
             this.trigger("fetch", this, options);
-            return Q(superClassMethod.fetch.call(this, options));
+            Q(superClassMethod.fetch.call(this, options)).then(function (data) {
+                deferred.resolve(data);
+            });
+            return deferred.promise;
         }
         
         function saveFunc(attrsArg, optionsArg) {
+            var deferred = Q.defer();
             var attr = _.isObject(attrsArg) ? attrsArg : {};
-            var options = initAjaxOptions(this, optionsArg);
+            var options = initAjaxOptions(this, deferred, optionsArg);
             this.trigger("save", this, attr, options);
-            return Q(superClassMethod.save.call(this, attr, options));
+            Q(superClassMethod.save.call(this, attr, options)).then(function (data) {
+                deferred.resolve(data);
+            });
+            return deferred.promise;
         }
     });
     
