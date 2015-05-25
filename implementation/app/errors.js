@@ -2,6 +2,7 @@
 @author Michael Murphy
 */
 var config = require("./config");
+var _ = require('underscore');
 
 function handle404(req, res, next){
    var err = new Error();
@@ -19,8 +20,10 @@ function devHandler(err, req, res, next) {
    var errData = {
       name: err.name,
       message: err.message,
-
-      stack: arr.join('\n')
+      stack: arr.join('\n'),
+      err: JSON.stringify(err),
+      req: _.pick(req, 'headers', 'method', 'url', 'originalUrl', 'baseUrl',
+       'httpVersion', 'body')
    }
    res.status(err.status || 500);
    res.json(errData);
