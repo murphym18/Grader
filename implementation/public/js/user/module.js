@@ -1,7 +1,6 @@
 define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
-    var App = require('app/app');
     var Backbone = require('util/backbone-helper');
     var Q = require('q');
     var Radio = require('backbone.radio');
@@ -13,6 +12,7 @@ define(function (require) {
     var Session = require('user/session');
     
     var userChannel = Radio.channel('user');
+    var pageChannel = Radio.channel('page');
     var session = new Session();
     
 
@@ -23,10 +23,10 @@ define(function (require) {
         }
         else {
             session.once('login', function(user) {
-                App.modal.hideModal();
+                pageChannel.request('modalRegion').hideModal();
                 deferred.resolve(user);
             });
-            App.modal.show(new LoginView());
+            pageChannel.request('modalRegion').show(new LoginView());
         }
         return deferred.promise;
     }

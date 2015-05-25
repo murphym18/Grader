@@ -1,17 +1,49 @@
 define(function (require) {
     var App = require('app/app');
     var Backbone = require('util/backbone-helper');
-    var CourseListLayoutView = require('course/course-list-layout-view');
+    var LoadingView = require('util/promise-loading-view');
+    var CourseList = require('course/course-list');
+    var CourseListView = require('course/course-list-view');
+    var Radio = require('backbone.radio');
     var userChannel = require('user/module');
-    
+    var pageChannel = Radio.channel('page');
+
     var controller = {
         allCoursesPage: function() {
-            var layout = App.show(new CourseListLayoutView());
-            layout.showAllCourses();
+            var courseList = new CourseList();
+            var coursesPromise = courseList.fetch()
+            var mainRegion = pageChannel.request('mainRegion');
+            mainRegion.show(new LoadingView({
+                promise: coursesPromise
+            }));
+            coursesPromise.then(function() {
+                mainRegion.show(new CourseListView({
+                    collection: courseList
+                }));
+                App.go('/courses', {trigger:false, replace: true});
+            });
+
         },
         userCoursesPage: function() {
-            var layout = App.show(new CourseListLayoutView());
-            layout.showUserCourses();
+            var loginPromise = userChannel.request('user');
+            loginPromise.then(function(user) {
+                var userCoursesPromise = userChannel.request('user:courses');
+                
+                mainRegion.show(new LoadingView({
+                    promise: userCoursesPromise
+                }));
+                userCoursesPromise.then(function(userCourses) {
+                    mainRegion.show(new CourseListView({
+                        collection: userCourses
+                    }));
+                    App.go('/user/courses', {
+                        trigger:false,
+                        replace: true
+                        
+                    });
+                });
+            });
+
         },
         loadCoursePage: function(path) {
             console.log('in load course page',path);

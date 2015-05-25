@@ -10,6 +10,11 @@ define(function (require) {
    var ModalRegion = require('util/modal-region');
    var PopupRegion = require('util/popup-region');
    var RootRegion = require('util/root-region');
+   var BasicLayoutView = require('util/basic-layout-view');
+   var HeaderNavView = require('util/header-nav-view');
+   var Radio = require('backbone.radio');
+   
+   var pageChannel = Radio.channel('page');
    
    function navigateToPage(path, options) {
       var options = _.extend({
@@ -100,6 +105,13 @@ define(function (require) {
          this.modal = new ModalRegion();
          this.RootRegion = new RootRegion();
          this.PopupRegion = new PopupRegion();
+         
+         var basicView = this.show(new BasicLayoutView);
+         var navView = new HeaderNavView;
+         basicView.showHeader(navView);
+         pageChannel.reply('mainRegion', basicView.getRegion('main'));
+         pageChannel.reply('navRegion', navView.getRegion('left'));
+         pageChannel.reply('modalRegion', this.modal);
       },
    
       /**
