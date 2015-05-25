@@ -11,18 +11,21 @@ define(function (require) {
     var Radio = require('backbone.radio');
     
     var loginTemplate = require('text!templates/login.hbs');
+    var alertTemplate = require('text!templates/alert-block.hbs');
     
     var userChannel = Radio.channel('user');
     
-    return PopupView.extend({
-      tagName: 'form',
-      className: 'login',
+    return Mn.ItemView.extend({
+      tagName: 'div',
+      className: 'login modal-dialog  modal-sm',
       template: Hbs.compile(loginTemplate),
+      alertTemplate: Hbs.compile(alertTemplate),
       
       ui: {
          username: "input.username",
          password: "input.password",
-         error: "div.error"
+         error: "div.error",
+         button: ".submit"
       },
       
       events: {
@@ -47,6 +50,7 @@ define(function (require) {
       },
       
       doLogin: function(domEvent) {
+         this.ui.button.button('loading')
          domEvent.preventDefault();
          this.model.login();
       },
@@ -64,11 +68,18 @@ define(function (require) {
       onShow: function() {
          this.ui.username.val(this.model.get('username'));
          this.ui.password.val(this.model.get('password'));
-         this.ui.error.text(this.model.get('message'));
+         if (this.model.get('message')) {
+            this.ui.error.html(this.alertTemplate(this.model.attributes));
+         }
+         this.ui.button.button('reset');
+         this.focus();
+      },
+      
+      onShownModal: function() {
+         this.focus();
       },
       
       focus: function() {
-         console.dir(this.ui);
          if (!this.ui.username.val()) {
             this.ui.username.focus();
          }

@@ -14,6 +14,10 @@ define(function (require) {
         template: Handlebars.compile(loadingViewTemplate),
         progress: "",
         
+        modelEvents: {
+            "change:progress":"render"
+        },
+        
         ui: {
             progress: ".progress"
         },
@@ -23,25 +27,19 @@ define(function (require) {
                 throw new Error("Promise option required", options);
             }
             
+            this.model = new Backbone.Model({
+                progress: 0
+            });
+            
             var self = this;
             options.promise.then(function() {
                 // do nothing
             }, function(err) {
-                self.progress = "Error";
-                self.showProgress();
+                // do nothing
             }, function(percentDone) {
-                self.onProgress(percentDone);
+                self.model.set({progress: percentDone});
             });
         },
-        
-        onProgress: function(percentDone) {
-            this.progress = percentDone.toString() + "%";
-            this.showProgress();
-        },
-        
-        showProgress: function() {
-            this.ui.progress.html(this.progress);
-        }
       
     });
 });

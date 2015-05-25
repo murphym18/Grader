@@ -25,7 +25,8 @@ requirejs.config({
    //     require/define functions.)
    shim: {
       'jquery-ui': ['jquery'],
-      "jquery.magnific-popup" : ['jquery', 'jquery-ui']
+      'jquery.magnific-popup' : ['jquery', 'jquery-ui'],
+      'bootstrap': ['jquery']
    }
 });
 
@@ -41,6 +42,7 @@ define(function (require) {
    require('app/newAssignment');
    require('app/modifyClass');
    require('app/modifyStudent');
+   require('bootstrap');
    require('domReady!');
    
    App.start({});

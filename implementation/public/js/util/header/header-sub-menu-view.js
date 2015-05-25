@@ -7,13 +7,16 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var Radio = require('backbone.radio');
-
-    var CourseListItemView = require('course/course-list-item-view');
-    var EmptyCourseListView = require('course/empty-course-list-view');
     
-    return Mn.CollectionView.extend({
-        className: "row",
-        childView: CourseListItemView,
-        emptyView: EmptyCourseListView,
+    var headerSubMenuTemplate = require('text!templates/headerSubMenu.hbs');
+    
+    return Mn.LayoutView.extend({
+        tagName: 'div',
+        className: 'headerSubMenu',
+        template: Hbs.compile(headerSubMenuTemplate),
+        childViewContainer: 'div.items',
+        childView: Mn.ItemView
     });
 });
+
+

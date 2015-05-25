@@ -8,20 +8,20 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     var SessionView = require('util/header-menu-session-view');
-    var templateSrc = require('text!templates/topMenu.hbs');
+    var templateSrc = require('text!templates/headerNav.hbs');
     
     return Mn.LayoutView.extend({
         template: Hbs.compile(templateSrc),
         
         regions: function(options) {
             return {
-                menu: ".menu",
-                session: ".session"
+                left: ".grader-navbar-left",
+                right: ".grader-navbar-right"
             }
         },
         
         onShow: function() {
-            this.getRegion("session").show(new SessionView());
+            this.getRegion("right").show(new SessionView());
         }
     
     });

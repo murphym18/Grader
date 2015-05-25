@@ -12,13 +12,17 @@ define(function (require) {
         userCoursesPage: function() {
             var layout = App.show(new CourseListLayoutView());
             layout.showUserCourses();
+        },
+        loadCoursePage: function(path) {
+            console.log('in load course page',path);
         }
     }
 
     App.Router.processAppRoutes(controller, {
         "(/)": "allCoursesPage",
         "courses(/)": "allCoursesPage",
-        "user/courses(/)": "userCoursesPage"
+        "user/courses(/)": "userCoursesPage",
+        "courses/:path(/)": "loadCoursePage"
     });
     
     userChannel.on('logout', function() {

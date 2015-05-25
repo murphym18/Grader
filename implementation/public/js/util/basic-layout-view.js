@@ -9,7 +9,7 @@ define(function (require) {
    var Backbone = require('util/backbone-helper');
    
    var Handlebars = require('handlebars');
-   var standardLayoutTemplate = require('text!templates/standardLayout.hbs');
+   var standardLayoutTemplate = require('text!templates/basicLayout.hbs');
    
    return Backbone.Marionette.LayoutView.extend({
       template: Handlebars.compile(standardLayoutTemplate),

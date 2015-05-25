@@ -11,8 +11,8 @@ define(function (require) {
     var courseListItemTemplate = require('text!templates/courseListing.hbs');
     
     return Mn.ItemView.extend({
-        tagName: "li",
-        className: "course-list-item",
+        tagName: "div",
+        className: "col-md-4",
         template: App.Handlebars.compile(courseListItemTemplate),
         
         modelEvents: {
@@ -24,7 +24,7 @@ define(function (require) {
         },
         
         openGradebook: function loadGradebookPage(domEvent) {
-            App.go('/Courses/'+this.model.get('colloquialUrl'));
+            App.go('/courses/'+this.model.get('colloquialUrl'));
             domEvent.preventDefault();
         }
    });

@@ -23,10 +23,10 @@ define(function (require) {
         }
         else {
             session.once('login', function(user) {
-                App.PopupRegion.close();
+                App.modal.hideModal();
                 deferred.resolve(user);
             });
-            App.PopupRegion.show(new LoginView());
+            App.modal.show(new LoginView());
         }
         return deferred.promise;
     }

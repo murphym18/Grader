@@ -7,6 +7,7 @@ define(function (require) {
    var Q = require('q');
    var Handlebars = require('handlebars');
    var Backbone = require('util/backbone-helper');
+   var ModalRegion = require('util/modal-region');
    var PopupRegion = require('util/popup-region');
    var RootRegion = require('util/root-region');
    
@@ -96,6 +97,7 @@ define(function (require) {
       }),
       
       initialize: function() {
+         this.modal = new ModalRegion();
          this.RootRegion = new RootRegion();
          this.PopupRegion = new PopupRegion();
       },

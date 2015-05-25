@@ -2,7 +2,7 @@ define(function (require) {
     var App = require('app/app');
     var Backbone = require('util/backbone-helper');
     
-    var HeaderMenuView = require('util/header-menu-view');
+    var HeaderMenuView = require('util/header-nav-view');
     var CourseList = require('course/course-list');
     var CourseListView = require('course/course-list-view');
     var LoadingView = require('util/promise-loading-view');
