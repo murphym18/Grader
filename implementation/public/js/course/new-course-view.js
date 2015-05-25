@@ -12,6 +12,7 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     var pageChannel = Radio.channel('page');
+    var courseChannel = Radio.channel('course');
     var template = require('text!templates/addNewClassView.hbs');
     var alertTemplate = require('text!templates/alert-block.hbs');
     
@@ -59,14 +60,7 @@ define(function (require) {
         "minC": 70,
         "minB": 80,
         "minA": 90,
-        "roles":[
-            {
-                "name":"NONE",
-                "users":[admin],
-                "permissions":[]
-                
-            }
-        ],
+        "roles":[],
         "students": [],
         "categories": [],
     };
@@ -102,7 +96,19 @@ define(function (require) {
         },
         
         initialize: function(options) {
-            this.model = new Course(defaultCourse);
+            this.model = new Course(_.clone(defaultCourse));
+            this.model.get('roles').push({
+                "name":"NONE",
+                "users":[admin],
+                "permissions":[]
+                
+            });
+            this.model.get('roles').push({
+                "name":"INSTRUCTOR",
+                "users":[options.user],
+                "permissions":[]
+                
+            })
             this.onSelectWinter = _.bind(this.setTerm, this, 'Winter');
             this.onSelectSpring = _.bind(this.setTerm, this, 'Spring');
             this.onSelectSummer = _.bind(this.setTerm, this, 'Summer');
@@ -172,6 +178,10 @@ define(function (require) {
         //     this.ui.dialog.hide();
         // },
         
+        /**
+        * Adds a new class as entered by user,
+        * and saves changes to the database.
+        */
         onSaveCourse: function() {
             var self = this;
             this.updateCourseDates.call(this);
@@ -185,6 +195,7 @@ define(function (require) {
             Q(this.model.save()).then(function(res) {
                 console.dir(['new class save result:', res]);
                 var modalRegion = pageChannel.request('modalRegion');
+                courseChannel.command('updateCourses');
                 modalRegion.hideModal();
             },
             function(err) {
@@ -193,10 +204,7 @@ define(function (require) {
             }).done();
         },
         
-        /**
-        * Adds a new class as entered by user,
-        * and saves changes to the database.
-        */
+        
         // saveNewClass: function saveNewClass () {
         //     if ((this.ui.classCode.val() + '').length === 0 ||
         //         (this.ui.classNumber.val() + '').length === 0) {

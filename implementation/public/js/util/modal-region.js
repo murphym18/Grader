@@ -19,6 +19,11 @@ define(function (require) {
                 
                 self.trigger('shown.bs.modal')
             });
+            this.$el.on('hidden.bs.modal', function() {
+                
+                self.trigger('hidden.bs.modal')
+            });
+            
             
         },
         

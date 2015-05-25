@@ -9,6 +9,7 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var CreateCourseView = require('course/new-course-view');
     var pageChannel = Radio.channel('page');
+    var userChannel = Radio.channel('user');
     var template = require('text!templates/headerNavNewCourseButton.hbs');
     
     return Mn.ItemView.extend({
@@ -17,8 +18,13 @@ define(function (require) {
 
         events: {
             'click': function() {
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new CreateCourseView({}));
+                userChannel.request('user').then(function(user) {
+                    var modalRegion = pageChannel.request('modalRegion');
+                    modalRegion.show(new CreateCourseView({user: user}));
+
+                    
+                })
+                
             }
         }
     });

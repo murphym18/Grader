@@ -44,6 +44,10 @@ define(function (require) {
                 mainRegion.show(new CourseListView({
                     collection: courseList
                 }));
+                courseChannel.comply('updateCourses', function(){
+                    courseList.fetch();
+                    courseList.sort();
+                });
                 App.go('/courses', {trigger:false, replace: true});
             });
 
@@ -59,10 +63,16 @@ define(function (require) {
                 }));
                 userCoursesPromise.then(function(userCourses) {
                     var navRegion = pageChannel.request('navRegion');
-                    navRegion.show(new CourseFilterView);
+                    navRegion.show(new NavItemsCollectionView({
+                        collection: navBarViews
+                    }));
                     mainRegion.show(new CourseListView({
                         collection: userCourses
                     }));
+                    courseChannel.comply('updateCourses', function(){
+                        userCourses.fetch();
+                        userCourses.sort();
+                    });
                     App.go('/user/courses', {
                         trigger:false,
                         replace: true
