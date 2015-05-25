@@ -90,9 +90,10 @@ define(function (require) {
             var attr = _.isObject(attrsArg) ? attrsArg : {};
             var options = initAjaxOptions(this, deferred, optionsArg);
             this.trigger("save", this, attr, options);
-            Q(superClassMethod.save.call(this, attr, options)).then(function (data) {
+            deferred.resolve(Q($.when(superClassMethod.save.call(this, attr, options))))
+            /*.then(function (data) {
                 deferred.resolve(data);
-            });
+            },)*/
             return deferred.promise;
         }
     });

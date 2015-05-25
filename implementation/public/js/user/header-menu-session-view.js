@@ -6,11 +6,11 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var userChannel = require('user/module');
-    var noSessionTemplate = require('text!templates/headerLoginLink.hbs');
-    var sessionTemplate = require('text!templates/headerLogoutLink.hbs');
+    var noSessionTemplate = require('text!templates/header-login-link.hbs');
+    var sessionTemplate = require('text!templates/header-logout-link.hbs');
     
     return Mn.ItemView.extend({
-      className: "header-item",
+      tagName: "li",
       noSessionTemplate: Hbs.compile(noSessionTemplate),
       sessionTemplate: Hbs.compile(sessionTemplate),
 
@@ -20,24 +20,29 @@ define(function (require) {
       },
       
       ui: {
-         button: "a"
+         loginButton: "a.login",
+         logoutButton: "a.logout",
+         editProfileButton: "a.edit-profile"
       },
       
       events: {
-         "click @ui.button": "doSessionAction"
+         "click @ui.loginButton": function() {
+            userChannel.command('login');
+         },
+         "click @ui.logoutButton": "doLogout",
+         "click @ui.editProfileButton": function() {
+            console.log("edit profile clicked");
+         }
       },
       
       initialize: function(options) {
          this.model = userChannel.request('session');
       },
       
-      doSessionAction: function(domEvent) {
+      doLogout: function(domEvent) {
          domEvent.preventDefault();
          if (this.model.isAuthenticated()) {
             this.model.logout();
-         }
-         else {
-            userChannel.command('login');
          }
       },
       

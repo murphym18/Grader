@@ -17,8 +17,8 @@ var MissingRoleException =  Error.bind(null, "No such role exception.");
  */
 function _findUserRoles(roles, user) {
    console.log('in _find user roles');
-   console.dir(roles);
-   throw new Error();
+      console.dir(roles);
+      throw new Error();
    var userId = user.id;
 
    /**

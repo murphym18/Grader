@@ -6,7 +6,7 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var Radio = require('backbone.radio');
-    var SessionView = require('util/header-menu-session-view');
+    var SessionView = require('user/header-menu-session-view');
     var templateSrc = require('text!templates/headerNav.hbs');
     
     return Mn.LayoutView.extend({

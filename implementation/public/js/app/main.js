@@ -13,7 +13,8 @@ requirejs.config({
       user: '../user',
       course: '../course',
       text: 'text',
-      templates: '../../templates'
+      templates: '../../templates',
+      api: '../../api'
    },
    // The shim configuration is simple to use:
    // (1) one states the dependencies (deps), if any, (which may be from the
@@ -26,7 +27,7 @@ requirejs.config({
    shim: {
       'jquery-ui': ['jquery'],
       'jquery.magnific-popup' : ['jquery', 'jquery-ui'],
-      'bootstrap': ['jquery']
+      'bootstrap': ['jquery'],
    }
 });
 
