@@ -8,12 +8,11 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var proxy = require('util/prop-proxy');
     require('query-engine');
-    QueryCollection = window.queryEngine.QueryCollection;
-    
     require('backbone-documentmodel');
+    
+    var QueryCollection = window.queryEngine.QueryCollection;
     var DocModel = Backbone.DocumentModel;
     var DocCollection = Backbone.DocumentCollection;
-    var forwardQueryMethods = ['findAll', 'findAllLive', 'findOne'];
 
     var Category = DocModel.extend({
         idAttribute: '_id',
@@ -29,19 +28,45 @@ define(function (require) {
                 configurable: true,
                 get: function() {
                     var assignments = self.get('assignments').models;
-                    return toAssignmentArray(self.subcategories).concat(assignments);
+                    var subcats = self.subcategories;
+                    return toAssignmentArray(subcats).concat(assignments);
                 }
             });
             
-            _.each(forwardQueryMethods, bindSubcategoriesFunction, this)
+            _.each(['findAll', 'findAllLive', 'findOne'], bindSubcatFunc, this);
         }
     });
     
-    function bindSubcategoriesFunction(name) {
+    return DocCollection.extend({
+        model: Category,
+        initialize: function(models, options) {
+            var self = this;
+            this.query = new QueryCollection(models, {
+                parentCollection: self,
+                live: true
+            });
+            
+            this.tree = this.query.findAllLive({path: /^#[^#]+$/});
+            
+            _.each(['findAll', 'findAllLive', 'findOne'], bindQueryFunc, this);
+            
+            Object.defineProperty(self, 'allAssignments', {
+                configurable: true,
+                get: function() {
+                    return toAssignmentArray(self.findAll());
+                }
+            });
+        },
+        findAssignments: findAssignments
+    }, {
+        toAssignmentArray: toAssignmentArray
+    });
+    
+    function bindSubcatFunc(name) {
         this[name] = _.bind(this.subcategories[name], this.query);
     }
     
-    function bindQueryFunction(name) {
+    function bindQueryFunc(name) {
         this[name] = _.bind(this.query[name], this.query);
     }
     
@@ -57,28 +82,5 @@ define(function (require) {
         }
         return toAssignmentArray(this.findAll({path: pathRegEx}));
     }
-    
-    return DocCollection.extend({
-        model: Category,
-        initialize: function(models, options) {
-            var self = this;
-            this.query = new QueryCollection(models, {
-                parentCollection: self,
-                live: true
-            });
-            this.tree = this.query.findAllLive({path: /^#[^#]+$/});
-            _.each(forwardQueryMethods, bindQueryFunction, this);
-            
-            Object.defineProperty(self, 'allAssignments', {
-                configurable: true,
-                get: function() {
-                    return toAssignmentArray(self.findAll());
-                }
-            });
-        },
-        findAssignments: findAssignments
-    }, {
-        toAssignmentArray: toAssignmentArray
-    });
     
 })
