@@ -18,7 +18,7 @@ define(function (require) {
         idAttribute: '_id',
         initialize: function(options) {
             var self = this;
-            this.subcategories = this.collection.query.findAllLive()
+            this.categories = this.collection.query.findAllLive()
              .setFilter("path starts with filter", function(model, str) {
                 var regex = new RegExp('^'+self.get('path')+'#[^#]+$')
                 return regex.test(model.get('path'));
@@ -28,7 +28,7 @@ define(function (require) {
                 configurable: true,
                 get: function() {
                     var assignments = self.get('assignments').models;
-                    var subcats = self.subcategories;
+                    var subcats = self.categories;
                     return toAssignmentArray(subcats).concat(assignments);
                 }
             });
@@ -58,12 +58,10 @@ define(function (require) {
             });
         },
         findAssignments: findAssignments
-    }, {
-        toAssignmentArray: toAssignmentArray
     });
     
     function bindSubcatFunc(name) {
-        this[name] = _.bind(this.subcategories[name], this.query);
+        this[name] = _.bind(this.categories[name], this.query);
     }
     
     function bindQueryFunc(name) {

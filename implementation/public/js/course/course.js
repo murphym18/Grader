@@ -11,6 +11,7 @@ define(function (require) {
     var StudentRecord = require('course/student');
     var RoleManager = require('course/role-manager');
     require('backbone-documentmodel');
+    
     var DocModel = Backbone.DocumentModel;
     var DocCollection = Backbone.DocumentCollection;
     var adminUserText = require('text!api/Users/admin');
@@ -80,8 +81,6 @@ define(function (require) {
     function isValidYear(year) {
         return /^\d{4}$/.test(year);
     }
-    
-    
     
     var rProxyAttrs = [
         'classCode',
@@ -185,7 +184,7 @@ define(function (require) {
                 case 'fColor':
                     return new DocCollection(nestedValue, nestedOptions);
                 default:
-                    return new Backbone.DocumentCollection(nestedValue, nestedOptions);
+                    return new DocCollection(nestedValue, nestedOptions);
             }
         }
         

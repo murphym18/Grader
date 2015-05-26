@@ -3,7 +3,7 @@ define(function (require) {
         var displayKey = _.isString(displayKeyArg) ? displayKeyArg : modelKey;
         Object.defineProperty(obj, displayKey, {
             enumerable: false,
-            configurable: true,
+            configurable: false,
             get: function() {
                 return obj.get(modelKey);
             }
