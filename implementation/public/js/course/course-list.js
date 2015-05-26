@@ -13,7 +13,7 @@ define(function (require) {
         tagName: 'ul',
         className: 'courseList',
         model: Course,
-        url: '/api/Courses',
+        url: '/api/Courses?populate=roles.users',
         
         comparator: function(item) {
             return [

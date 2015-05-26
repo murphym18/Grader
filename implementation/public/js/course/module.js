@@ -3,13 +3,14 @@ define(function (require) {
     var Backbone = require('util/backbone-helper');
     var LoadingView = require('util/promise-loading-view');
     var CourseList = require('course/course-list');
-    var CourseListView = require('course/course-list-view');
-    var NavCourseFilterView = require('course/course-list-filter-view');
-    var NavCreateCourseView = require('course/nav-new-course-button-view')
+    var CourseListView = require('course/view/course-list-view');
+    var NavCourseFilterView = require('course/nav/filter-list-view');
+    var NavCreateCourseView = require('course/nav/new-course-button-view')
     var Radio = require('backbone.radio');
     var userChannel = require('user/module');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
+    var Course = require('course/course');
     
     var NavItemsCollectionView = Marionette.CollectionView.extend({
         tagName: 'ul',
@@ -83,6 +84,13 @@ define(function (require) {
 
         },
         loadCoursePage: function(path) {
+            var course = new Course({
+                colloquialUrl: path
+            });
+            course.fetch({populate: true}).then(function(c) {
+                console.dir(course);
+                window.x = course;
+            })
             console.log('in load course page',path);
         }
     }

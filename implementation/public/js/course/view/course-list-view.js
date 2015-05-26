@@ -10,7 +10,7 @@ define(function (require) {
     
     var courseListItemTemplate = require('text!templates/courseListing.hbs');
     
-    return Mn.ItemView.extend({
+    CourseListItemView = Mn.ItemView.extend({
         tagName: "div",
         className: "col-md-4",
         template: App.Handlebars.compile(courseListItemTemplate),
@@ -27,5 +27,15 @@ define(function (require) {
             App.go('/courses/'+this.model.get('colloquialUrl'));
             domEvent.preventDefault();
         }
-   });
+    });
+
+    var EmptyCourseListView = Mn.ItemView.extend({
+        template: Hbs.compile("")
+    });
+    
+    return Mn.CollectionView.extend({
+        className: "row",
+        childView: CourseListItemView,
+        emptyView: EmptyCourseListView,
+    });
 });

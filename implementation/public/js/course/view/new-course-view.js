@@ -17,53 +17,6 @@ define(function (require) {
     var alertTemplate = require('text!templates/alert-block.hbs');
     
     var Course = require('course/course');
-    var adminUserText = require('text!api/Users/admin');
-    var admin = JSON.parse(adminUserText);
-    
-    var defaultCourse = {
-        "classCode": null,
-        "classNumber": null,
-        "section": null,
-        "colloquialUrl": null,
-        "minCredit": 60,
-        "fColor": [
-            "rgba(255,0,0,0.8)",
-            "rgba(255,0,0,0.8)",
-            "rgba(255,0,0,0.9)",
-            "rgba(220,220,220,1)"
-        ],
-        "dColor": [
-            "rgba(255,0,0,0.5)",
-            "rgba(255,0,0,0.6)",
-            "rgba(255,0,0,0.7)",
-            "rgba(220,220,220,0.7)"
-        ],
-        "cColor": [
-            "rgba(255, 165, 0, 0.5)",
-            "rgba(255, 165, 0, 0.8)",
-            "rgba(255, 165, 0, 0.75)",
-            "rgba(255, 165, 0, 1)"
-        ],
-        "bColor": [
-            "rgba(255, 255, 0,0.5)",
-            "rgba(255, 255, 0,0.8)",
-            "rgba(255, 255, 0,0.75)",
-            "rgba(255, 255, 0,1)"
-        ],
-        "aColor": [
-            "rgba(0,255,0,0.5)",
-            "rgba(0,255,0,0.8)",
-            "rgba(0,255,0,0.75)",
-            "rgba(0,255,0,1)"
-        ],
-        "minD": 60,
-        "minC": 70,
-        "minB": 80,
-        "minA": 90,
-        "roles":[],
-        "students": [],
-        "categories": [],
-    };
 
     return Mn.ItemView.extend({
         tagName: 'div',
@@ -96,24 +49,17 @@ define(function (require) {
         },
         
         initialize: function(options) {
-            this.model = new Course(_.clone(defaultCourse));
-            this.model.get('roles').push({
-                "name":"NONE",
-                "users":[admin],
-                "permissions":[]
-                
-            });
+            this.model = new Course
             this.model.get('roles').push({
                 "name":"INSTRUCTOR",
                 "users":[options.user],
                 "permissions":[]
-                
-            })
+            });
             this.onSelectWinter = _.bind(this.setTerm, this, 'Winter');
             this.onSelectSpring = _.bind(this.setTerm, this, 'Spring');
             this.onSelectSummer = _.bind(this.setTerm, this, 'Summer');
             this.onSelectFall = _.bind(this.setTerm, this, 'Fall');
-            this.alertTemplate = Hbs.compile(alertTemplate)
+            this.alertTemplate = Hbs.compile(alertTemplate);
         },
         
         onShownModal: function() {
@@ -157,19 +103,37 @@ define(function (require) {
         },
         
         updateCourseDates: function() {
-            var term = this.model.get('term');
-            var year = this.model.get('year');
-            var conditions = [
-                _.isString(term),
-                _.isString(year),
-                this.model.isValidTerm(term),
-                /^[1-9][0-9]{3}$/.test(year)
-            ];
-            if (!_.some(conditions, false)) {
-                this.model.set(this.model.findTermDates(term, year));
+            var term = this.model.get('term')
+            var year = this.model.get('year')
+            if (Course.isValidTerm(term) && Course.isValidYear(year)) {
+                this.model.set(Course.findTermDates(term, year));
             }
         },
         
+        onSaveCourse: function() {
+            var self = this;
+            this.updateCourseDates.call(this);
+            var urlPath = Course.createColloquialUrl(this.model);
+            if (urlPath) {
+                this.model.set({
+                    colloquialUrl: urlPath
+                });
+            }
+            var self = this;
+            Q(this.model.save()).then(function(res) {
+                console.dir(['new class save result:', res]);
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.hideModal();
+                courseChannel.command('updateCourses');
+            },
+            function(err) {
+                self.ui.error.html(self.alertTemplate({message: err.responseText}));
+                self.ui.saveButton.button('reset');
+            }).done();
+        }
+    });
+});
+
         // /**
         // * Hides the dialog on initial load.
         // */
@@ -182,27 +146,7 @@ define(function (require) {
         * Adds a new class as entered by user,
         * and saves changes to the database.
         */
-        onSaveCourse: function() {
-            var self = this;
-            this.updateCourseDates.call(this);
-            var urlPath = this.model.createColloquialUrl();
-            if (urlPath) {
-                this.model.set({
-                    colloquialUrl: urlPath
-                });
-            }
-            var self = this;
-            Q(this.model.save()).then(function(res) {
-                console.dir(['new class save result:', res]);
-                var modalRegion = pageChannel.request('modalRegion');
-                courseChannel.command('updateCourses');
-                modalRegion.hideModal();
-            },
-            function(err) {
-                self.ui.error.html(self.alertTemplate({message: err.responseText}));
-                self.ui.saveButton.button('reset');
-            }).done();
-        },
+        
         
         
         // saveNewClass: function saveNewClass () {
@@ -270,8 +214,6 @@ define(function (require) {
         //     this.ui.dialog.hide();
         //     this.ui.addNewClassButton.show();
         // }
-    });
-});
 // define(['app/app', 'text!templates/addNewClassView.hbs' ], function(App, template) {
     
 //     var AddNewClassView = 

@@ -7,6 +7,7 @@ define(function (require) {
     require('radio.shim');
     require('backbone.radio');
     require('backbone-relational');
+    require('query-engine');
    
     Backbone.Marionette.Renderer.render = function(template, data) {
         return template(data);

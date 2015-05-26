@@ -7,7 +7,7 @@ define(function (require) {
     var Q = require('q');
     var userChannel = require('user/module');
     var Radio = require('backbone.radio');
-    var CreateCourseView = require('course/new-course-view');
+    var CreateCourseView = require('course/view/new-course-view');
     var pageChannel = Radio.channel('page');
     var userChannel = Radio.channel('user');
     var template = require('text!templates/headerNavNewCourseButton.hbs');

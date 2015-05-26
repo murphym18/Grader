@@ -16,11 +16,11 @@ module.exports = {
       },
       colorCredit: {
          type: String,
-         match: /rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
+         //match: /rgba\(\d+,\d+,\d+,\d+\)|rgba\([01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*,[01]?\.?\d*\)/
       },
       colorNoCredit: {
          type: String,
-         match: /rgba\(\d+,\d+,\d+,\d+\)|rgba\(\d?\.?\d*,\d?\.?\d*,\d?\.?\d*,[01]?\.?\d*\)/
+         //match: /rgba\(\d+,\d+,\d+,\d+\)|rgba\(\d?\.?\d*,\d?\.?\d*,\d?\.?\d*,[01]?\.?\d*\)/
       }
    },
    letterGrade: {
@@ -56,21 +56,11 @@ module.exports = {
          required: true,
          select: true
       },
-      aColor: [{
-         type: String
-      }],
-      bColor: [{
-         type: String
-      }],
-      cColor: [{
-         type: String
-      }],
-      dColor: [{
-         type: String
-      }],
-      fColor: [{
-         type: String
-      }]
+      aColor: [String],
+      bColor: [String],
+      cColor: [String],
+      dColor: [String],
+      fColor: [String]
    },
    preSave: function (next) {
       if (this.aColor.length == 0){

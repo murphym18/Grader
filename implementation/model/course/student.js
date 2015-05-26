@@ -4,11 +4,18 @@ var _ = require('underscore');
 var userFields = require.main.require('./model/admin/user-fields');
 var mongoose = require('mongoose');
 
+function limitOne(val) {
+   return val.length <= 1;
+}
+
 var studentRecordSchema = mongoose.Schema({
    user: {
-      type:  mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: false
+      type:[{
+         type:  mongoose.Schema.Types.ObjectId,
+         ref: 'User',
+         required: false
+      }],
+      validate: [limitOne, '{PATH} can only have 1 member']
    },
    comment: String,
    extra: {},
@@ -28,7 +35,7 @@ var studentRecordSchema = mongoose.Schema({
          min: 0
       }
    }]
-});
+}, { _id : false });
 
 userFields.username.required = false;
 studentRecordSchema.add(userFields)
