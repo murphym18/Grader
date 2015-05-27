@@ -43,6 +43,7 @@ define(function (require) {
    require('app/newAssignment');
    require('app/modifyClass');
    require('app/modifyStudent');
+   require('app/addNewStudent')
    require('bootstrap');
    require('domReady!');
    

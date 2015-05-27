@@ -1,5 +1,5 @@
 /**
- * Event handler for the modify class view.
+ * Event handler for the modify student view.
  * @author Grant Plaster
  */
 
