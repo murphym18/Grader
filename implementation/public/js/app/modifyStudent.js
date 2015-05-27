@@ -16,10 +16,10 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             'studentFirstName' : '.studentFirstName',
             'studentLastName' : '.studentLastName',
             'studentID' : '.studentID',
-            //'studentNickname' : '.studentNickname',
-            //'studentGroup' : '.studentGroup',
+            'studentNickname' : '.studentNickname',
+            'studentGroup' : '.studentGroup',
             'studentEmail' : '.studentEmail',
-            //'studentPhone' : '.studentPhone'
+            'studentPhone' : '.studentPhone'
 
         },
 
@@ -64,11 +64,28 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
             else
                 this.ui.studentID.val(this.model.get('students')[1].user.emplId);
 
+            if (this.model.get('students')[1].nickname)
+                this.ui.studentNickname.val(this.model.get('students')[1].nickname);
+            else
+                this.ui.studentNickname.val(this.model.get('students')[1].user.nickname);
+
+
+            if (this.model.get('students')[1].group)
+                this.ui.studentGroup.val(this.model.get('students')[1].group);
+            else
+                this.ui.studentGroup.val(this.model.get('students')[1].user.group);
+
 
             if (this.model.get('students')[1].email)
                 this.ui.studentEmail.val(this.model.get('students')[1].email);
             else
                 this.ui.studentEmail.val(this.model.get('students')[1].user.email);
+
+
+            if (this.model.get('students')[1].phone)
+                this.ui.studentPhone.val(this.model.get('students')[1].phone);
+            else
+                this.ui.studentPhone.val(this.model.get('students')[1].user.phone);
 
             
 
@@ -102,12 +119,19 @@ define(['app/app', 'text!templates/modifyStudentView.hbs', ], function(App, temp
 
             if (this.ui.studentID.val())
                 this.model.get('students')[1].emplId = this.ui.studentID.val();
-            //this.model.set({"studentNickname": nickname});
-            //this.model.set({"studentGroup": group});
+
+            if (this.ui.studentNickname.val())
+                this.model.get('students')[1].nickname = this.ui.studentNickname.val();
+
+            if (this.ui.studentGroup.val())
+                this.model.get('students')[1].group = this.ui.studentGroup.val();
 
             if (this.ui.studentEmail.val())
                 this.model.get('students')[1].email = this.ui.studentEmail.val();
-            //this.model.set({"studentPhone": phone});
+
+            if (this.ui.studentPhone.val())
+                this.model.get('students')[1].phone = this.ui.studentPhone.val();
+
             this.ui.dialog.hide();
             Backbone.emulateHTTP = true;
             var self = this;
