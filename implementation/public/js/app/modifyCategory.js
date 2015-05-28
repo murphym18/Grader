@@ -15,7 +15,7 @@ define(function (require) {
 
     return Mn.ItemView.extend({
         tagName: 'div',
-        className: 'modifyCategory modal-dialog  modal-lg',
+        className: 'modifyCategory modal-dialog modal-lg',
         template: Hbs.compile(template),
         ui: {
             'categoryName' : '.className',
@@ -27,6 +27,7 @@ define(function (require) {
 
         initialize: function(options) {
             this.model = courseChannel.request('current:course');
+            this.alertTemplate = Hbs.compile(alertTemplate);
             console.log(this.model);
         },
 
@@ -134,17 +135,16 @@ define(function (require) {
          */
         closeModifyCategory : function() {
             var self = this;
-
-            this.ui.dialog.hide();
+            Q(this.model.save()).then(function(res) {
+                console.dir(['modify category save result:', res]);
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.hideModal();
+                courseChannel.command('updateCourses');
+            },
+            function(err) {
+                self.ui.error.html(self.alertTemplate({message: err.responseText}));
+                self.ui.saveButton.button('reset');
+            }).done();
         },
     })
-
-    // Router.route("modifyCategory", "home", function() {
-    //     console.log("Yes");
-    //     var course = new Course;
-    //     var modifyCatView = new ModifyCategoryView({
-    //         model: course
-    //     });
-    //     PopupRegion.show(modifyCatView);
-    // });
 });
