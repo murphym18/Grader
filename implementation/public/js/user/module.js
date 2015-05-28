@@ -26,7 +26,12 @@ define(function (require) {
                 pageChannel.request('modalRegion').hideModal();
                 deferred.resolve(user);
             });
-            pageChannel.request('modalRegion').show(new LoginView());
+            var loginView = new LoginView();
+            login.once('destroy', function() {
+                deferred.reject('login modal closed by user');
+            });
+            pageChannel.request('modalRegion').show(loginView);
+            
         }
         return deferred.promise;
     }
@@ -40,7 +45,7 @@ define(function (require) {
             return userCourses.fetch().then(function() {
                 return userCourses;
             });
-        });
+        }).done();
     }
        
     

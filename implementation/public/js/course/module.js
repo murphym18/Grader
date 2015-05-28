@@ -1,4 +1,6 @@
 define(function (require) {
+    var _ = require('underscore')
+    var Q = require('q')
     var App = require('app/app');
     var Backbone = require('util/backbone-helper');
     var LoadingView = require('util/promise-loading-view');
@@ -116,7 +118,8 @@ define(function (require) {
             var course = new Course({
                 colloquialUrl: path
             });
-            course.fetch({populate: true}).then(function(c) {
+            
+            Q.timeout(course.fetch({populate: true}).then(function(c) {
                 courseChannel.respond('current:course', function() {
                     return course;
                 })
@@ -125,7 +128,7 @@ define(function (require) {
                 console.dir(course);
                 console.log('in load course page',path);
                 window.x = course;
-            })
+            })).done()
             
         }
     }
