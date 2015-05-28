@@ -86,7 +86,7 @@ define(function (require) {
         This is faster than rendering in onShow
         http://marionettejs.com/docs/v2.4.1/marionette.layoutview.html#efficient-nested-view-structures
         */
-        onBeforeShow: function() {
+        onShow: function() {
             console.log('here')
             this.showChildView('thead', new HeaderView());
             this.showChildView('tbody', new BodyView());
