@@ -51,7 +51,7 @@ define(function (require) {
 
         showGroupStudents: function(domEvent) {
             //courseChannel.command('showUserCourses');
-        },
+        }
 
     });
 });
