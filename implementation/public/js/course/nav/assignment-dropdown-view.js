@@ -11,6 +11,7 @@ define(function (require) {
     var pageChannel = Radio.channel('page');
     var template = require('text!templates/headerAssignmentDropdownView.hbs');
     var modifyCategory = require('app/modifyCategory');
+    var selectCategory = require('app/selectCategory');
     //var AddAssignmentView = require('app/addNewAssinment')
 
     return Mn.ItemView.extend({
