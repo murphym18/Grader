@@ -8,33 +8,33 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
-    var template = require('text!templates/modifyClassView.hbs');
+    var template = require('text!templates/modifyCourseView.hbs');
     var alertTemplate = require('text!templates/alert-block.hbs');
 
     var Course = require('course/course');
 
     return Mn.ItemView.extend({
         tagName: 'div',
-        className: 'modifyClass modal-dialog  modal-lg',
+        className: 'modifyCourse modal-dialog  modal-lg',
         template: Hbs.compile(template),
 
         ui: {
-            classCode: '.classCode',
-            classNumber: '.classNumber',
-            classSection: '.classSection',
+            courseCode: '.courseCode',
+            courseNumber: '.courseNumber',
+            courseSection: '.courseSection',
             winter: '.winter',
             spring: '.spring',
             summer: '.summer',
             fall: '.fall',
-            year: '.classYear',
+            year: '.courseYear',
             saveButton: '.save',
             error: '.error'
         },
 
         events: {
-            'change @ui.classCode': "updateClassCode",
-            'change @ui.classNumber': "updateClassNumber",
-            'change @ui.classSection': "updateClassSection",
+            'change @ui.courseCode': "updateCourseCode",
+            'change @ui.courseNumber': "updateCourseNumber",
+            'change @ui.courseSection': "updateCourseSection",
             'click @ui.winter': 'onSelectWinter',
             'click @ui.spring': 'onSelectSpring',
             'click @ui.summer': 'onSelectSummer',
@@ -50,7 +50,7 @@ define(function (require) {
             console.log('modify course working');
             this.alertTemplate = Hbs.compile(alertTemplate);
             //console.log(this.model);
-            //this.ui.classSection.val(model.get('section'));
+            //this.ui.courseSection.val(model.get('section'));
             //// TODO: Select Term
             //this.ui.year.val(model.get('year'));
 
@@ -62,10 +62,10 @@ define(function (require) {
         },
 
         onShownModal: function() {
-            this.ui.classCode.focus();
-            this.ui.classCode.val('CPE'/* TODO: model.get('classCode') */);
-            this.ui.classNumber.val('101'/* TODO: model.get('classNumber')*/);
-            this.ui.classSection.val('1'/* TODO: model.get('section') */);
+            this.ui.courseCode.focus();
+            this.ui.courseCode.val('CPE'/* TODO: model.get('courseCode') */);
+            this.ui.courseNumber.val('101'/* TODO: model.get('courseNumber')*/);
+            this.ui.courseSection.val('1'/* TODO: model.get('section') */);
 
             /* TODO: Read term and select button */
             this.ui.fall.button('toggle');
@@ -73,22 +73,22 @@ define(function (require) {
             this.ui.year.val('2015' /* TODO: model.get('year') */);
         },
 
-        updateClassCode: function() {
-            var value = this.ui.classCode.val().toString();
+        updateCourseCode: function() {
+            var value = this.ui.courseCode.val().toString();
             this.model.set({
-                classCode: value
+                courseCode: value
             });
         },
 
-        updateClassNumber: function() {
-            var value = this.ui.classNumber.val().toString();
+        updateCourseNumber: function() {
+            var value = this.ui.courseNumber.val().toString();
             this.model.set({
-                classNumber: value
+                courseNumber: value
             });
         },
 
-        updateClassSection: function() {
-            var value = this.ui.classSection.val().toString();
+        updateCourseSection: function() {
+            var value = this.ui.courseSection.val().toString();
             this.model.set({
                 section: value
             });
@@ -129,7 +129,7 @@ define(function (require) {
             }
             self = this;
             Q(this.model.save()).then(function(res) {
-                    console.dir(['new class save result:', res]);
+                    console.dir(['new course save result:', res]);
                     var modalRegion = pageChannel.request('modalRegion');
                     modalRegion.hideModal();
                     courseChannel.command('updateCourses');
