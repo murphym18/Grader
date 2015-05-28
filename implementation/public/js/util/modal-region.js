@@ -37,7 +37,7 @@ define(function (require) {
             this.once('shown.bs.modal', function() {
                 view.triggerMethod('shown:modal');
             });
-            view.on("close", this.hideModal, this);
+            view.once("close", this.hideModal, this);
             this.$el.modal('show');
         },
         

@@ -62,13 +62,6 @@ define(function (require) {
     return Mn.LayoutView.extend({
         template: Hbs.compile(template),
         
-        regions: {
-            thead: ".gradebook thead",
-            tbody: ".gradebook tbody",
-            tfoot: ".gradebook tfoot",
-            charts: ".charts",
-        },
-        
         initialize: function(options) {
             this.model = Backbone.model;
             this.viewState = new ViewState();
@@ -87,7 +80,13 @@ define(function (require) {
         http://marionettejs.com/docs/v2.4.1/marionette.layoutview.html#efficient-nested-view-structures
         */
         onShow: function() {
-            console.log('here')
+            console.log('here');
+            this.addRegions( {
+                thead: ".gradebook thead",
+                tbody: ".gradebook tbody",
+                tfoot: ".gradebook tfoot",
+                charts: ".charts",
+            })
             this.showChildView('thead', new HeaderView());
             this.showChildView('tbody', new BodyView());
             this.showChildView('tfoot', new FooterView());

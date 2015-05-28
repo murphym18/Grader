@@ -20,6 +20,7 @@ define(function (require) {
     var Course = require('course/course');
     var GradeBookView = require('course/view/gradebook-view');
     require('course/view/modify-course-view');
+    courseChannel.request('default', function(){throw new Error()})
     
     var Registry = Backbone.Collection.extend({
          constructor: function Registery() {
@@ -86,7 +87,7 @@ define(function (require) {
                     courseList.sort();
                 });
                 App.go('/courses', {trigger:false, replace: true});
-            });
+            }).done();
 
         },
         userCoursesPage: function() {
@@ -120,12 +121,13 @@ define(function (require) {
 
         },
         loadCoursePage: function(path) {
+            console.log(path)
             registry.reset();
             var course = new Course({
                 colloquialUrl: path
             });
             
-            Q.timeout(course.fetch({populate: true}).then(function(c) {
+            Q(course.fetch({populate: true})).then(function(c) {
                 courseChannel.reply('current:course', function() {
                     return course;
                 })
@@ -134,13 +136,12 @@ define(function (require) {
                 navRegion.show(new NavItemsCollectionView({
                     collection: navBarCourseSpecificViews
                 }));
-                
+                window.x = course;
                 mainRegion.show(new GradeBookView(course));
                 console.dir(course);
                 console.log('in load course page',path);
-                window.x = course;
-            })).done()
-            
+               
+            }).done();
         }
     }
     

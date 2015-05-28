@@ -73,7 +73,7 @@ define(function (require) {
         
         onQueryCollection: function() {
             var self = this;
-            //this.tree = this.query.findAllLive({path: /^#[^#]+$/});
+            
             Object.defineProperty(self, 'allAssignments', {
                 configurable: true,
                 get: function() {
@@ -92,8 +92,8 @@ define(function (require) {
                 
             }
             function colSpan(elm) {
-                
-                return elm.get('assignments').size() + _.reduce(elm.tree, colSpan, sum, 0);
+                a = elm.get('assignments')
+                return (a ? a.size() : 0) + _.reduce(elm.tree, colSpan, sum, 0);
             }   
         },
         
