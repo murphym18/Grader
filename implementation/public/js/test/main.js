@@ -10,7 +10,7 @@ QUnit.test("courses test", function(assert) {
 
 
 QUnit.test("grant's test", function(assert) {
-    assert.ok(5 == '5', "Passed!");
+    assert.ok(5 == '6', "Passed!");
 });
 
 
