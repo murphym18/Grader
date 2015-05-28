@@ -63,7 +63,7 @@ define(function (require) {
         template: Hbs.compile(template),
 
         initialize: function(options) {
-            this.model = Backbone.model;
+            this.model = new Backbone.model();
             this.viewState = new ViewState();
 
 

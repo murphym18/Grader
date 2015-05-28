@@ -20,7 +20,14 @@ define(function (require) {
     var Course = require('course/course');
     var GradeBookView = require('course/view/gradebook-view');
     require('course/view/modify-course-view');
-    courseChannel.request('default', function(){throw new Error()})
+    var err = function(){throw new Error()};
+    courseChannel.request('default', err)
+    courseChannel.comply('default', err)
+    pageChannel.request('default', err)
+    pageChannel.comply('default', err)
+    userChannel.request('default', err)
+    userChannel.comply('default', err)
+    
 
     //var NavModifyCourseView = require('course/view/modify-course-view');
     
@@ -76,7 +83,7 @@ define(function (require) {
             mainRegion.show(new LoadingView({
                 promise: coursesPromise
             }));
-            coursesPromise.then(function() {
+            Q(coursesPromise).then(function() {
                 var navRegion = pageChannel.request('navRegion');
                 navRegion.show(new NavItemsCollectionView({
                     collection: navBarAllCoursesViews
@@ -106,6 +113,7 @@ define(function (require) {
                     navRegion.show(new NavItemsCollectionView({
                         collection: navBarAllCoursesViews
                     }));
+                    var mainRegion = pageChannel.request('mainRegion');
                     mainRegion.show(new CourseListView({
                         collection: userCourses
                     }));

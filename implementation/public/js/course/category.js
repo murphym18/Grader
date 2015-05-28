@@ -28,9 +28,8 @@ define(function (require) {
     var Category = DocModel.extend({
         idAttribute: '_id',
         queryProperty: 'tree',
-        filterName: "path starts with filter",
         
-        filterFunc: function(model, str) {
+        treeFilterFunc: function(model) {
             var regex = new RegExp('^'+this.get('path')+'#[^#]+$')
             return regex.test(model.get('path'));
         },
@@ -47,15 +46,7 @@ define(function (require) {
         },
         
         initialize: function(options) {
-            
-            Object.defineProperty(self, 'allAssignments', {
-                configurable: true,
-                get: function() {
-                    var assignments = self.get('assignments').models;
-                    var subcats = self.categories;
-                    return toAssignmentArray(subcats).concat(assignments);
-                }
-            });
+            mixinTreeProxy(this)
         },
         
         getNestedCollection: function (nestedKey, nestedValue, nestedOptions) {
@@ -71,30 +62,48 @@ define(function (require) {
     return DocCollection.extend({
         model: Category,
         
-        onQueryCollection: function() {
-            var self = this;
+        // onQueryCollection: function() {
+        //     var self = this;
             
-            Object.defineProperty(self, 'allAssignments', {
-                configurable: true,
-                get: function() {
-                    return toAssignmentArray(self.findAll());
-                }
-            });
-            this.each(function(e) {
-                DocCollection.mixinQueryFunctions(e, null, {});
-            })
+        //     Object.defineProperty(self, 'allAssignments', {
+        //         configurable: true,
+        //         get: function() {
+        //             return toAssignmentArray(self.findAll());
+        //         }
+        //     });
+        //     this.each(function(e) {
+        //         DocCollection.mixinQueryFunctions(e, null, {});
+        //     })
+        // },
+        
+        treeFilterFunc: function(model) {
+            return /^#[^#]+$/.test(model.get('path'));
         },
         
         findColSpans: function() {
-            return this.tree.each(colSpan);
-            function sum(memo, num){
-                return memo + num;
-                
+            var result = {}
+            
+            function sum(runningTotal, next){
+                return runningTotal + next;
             }
+            
             function colSpan(elm) {
-                a = elm.get('assignments')
-                return (a ? a.size() : 0) + _.reduce(elm.tree, colSpan, sum, 0);
-            }   
+                var sub = _.map(elm.tree, colSpan)
+                var num = _.reduce(sub, sum, 0) | 0;
+                
+                if (elm.has && elm.has('assignments'))
+                    num += elm.get('assignments').size();
+                
+                if (elm.cid)
+                    result[elm.cid] = num;
+                    
+                return num;
+            }
+            
+            
+            _.each(this.tree, colSpan);
+            
+            return result;
         },
         
         constructor: function CategoriesCollection() {
@@ -103,7 +112,7 @@ define(function (require) {
         
         findAssignments: findAssignments,
         initialize: function() {
-            
+            mixinTreeProxy(this);
         }
     });
     
@@ -118,6 +127,27 @@ define(function (require) {
             pathRegEx =  new RegExp(pathRegEx)
         }
         return toAssignmentArray(this.findAll({path: pathRegEx}));
+    }
+    
+    function mixinTreeProxy(self) {
+        
+        
+        Object.defineProperty(self, 'tree', {
+            get: function() {
+                var subTreeOnly = self.treeFilterFunc.bind(self);
+                var arr = self.models ? self.models : self.collection.models
+                return arr.filter(subTreeOnly);
+            }
+        });
+        
+        Object.defineProperty(self, 'allAssignments', {
+            get: function() {
+                var assignments = self.get('assignments');
+                var models = _.toArray(assignments.models);
+                var subcats = self.tree;
+                return toAssignmentArray(subcats).concat(models);
+            }
+        });
     }
     
 })
