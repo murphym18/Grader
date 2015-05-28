@@ -1,15 +1,95 @@
-<button class="addStudentButton">Add New Student</button>
-<div class="popup-dialog">
+<!--<button class="addStudentButton">Add New Student</button>-->
+<!--<div class="popup-dialog">-->
 
-    <h3>Add New Student</h3>
-    First Name <input class="studentFirstName" type="text" name="studentFirstName" placeholder="i.e. John"><br>
-    Last Name <input class="studentLastName" type="text" name="studentLastName" placeholder="i.e. Doe"><br>
-    EMPL ID <input class="studentID" type="text" name="studentID" placeholder="i.e. 00000001"><br>
-    Nickname <input class="studentNickname" type="text" name="studentNickname" placeholder="i.e. Johnny"><br>
-    Group <input class="studentGroup" type="text" name="studentGroup" placeholder="i.e. '1' or 'Node"><br>
-    Email <input class="studentEmail" type="text" name="studentEmail" placeholder="i.e. jdoe@gmail.com"><br>
-    Phone <input class="studentPhone" type="text" name="studentPhone" placeholder="i.e. 123-456-7890"><br>
-    <p>Clicking OK below will save the above student information.</p>
-    <button class="ok">OK</button>
-    <button class="cancel">Cancel</button>
+    <!--<h3>Add New Student</h3>-->
+    <!--First Name <input class="studentFirstName" type="text" name="studentFirstName" placeholder="i.e. John"><br>-->
+    <!--Last Name <input class="studentLastName" type="text" name="studentLastName" placeholder="i.e. Doe"><br>-->
+    <!--EMPL ID <input class="studentID" type="text" name="studentID" placeholder="i.e. 00000001"><br>-->
+    <!--Nickname <input class="studentNickname" type="text" name="studentNickname" placeholder="i.e. Johnny"><br>-->
+    <!--Group <input class="studentGroup" type="text" name="studentGroup" placeholder="i.e. '1' or 'Node"><br>-->
+    <!--Email <input class="studentEmail" type="text" name="studentEmail" placeholder="i.e. jdoe@gmail.com"><br>-->
+    <!--Phone <input class="studentPhone" type="text" name="studentPhone" placeholder="i.e. 123-456-7890"><br>-->
+    <!--<p>Clicking OK below will save the above student information.</p>-->
+    <!--<button class="ok">OK</button>-->
+    <!--<button class="cancel">Cancel</button>-->
+<!--</div>-->
+
+<div class="modal-content">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h2 class="modal-title" id="gridSystemModalLabel">Add New Student</h2>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <form class="newStudent form-horizontal col-sm-12">
+
+
+                <div class="form-group">
+
+                    <label for="add-student-studentLastName" class="col-sm-3 col-sm-offset-1 control-label">Student First Name</label>
+                    <div class="col-sm-6">
+                        <input id="add-student-studentFirstName" required="true" class="studentFirstName form-control" type="text" name="studentFirstName" placeholder="i.e. John">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="add-student-studentLastName" class="col-sm-3 col-sm-offset-1 control-label">Student Last Name</label>
+                    <div class="col-sm-6">
+                        <input id="add-student-studentLastName" required="true" class="studentLastName form-control" type="text" name="studentLastName" placeholder="i.e. Doe">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="add-student-studentID" class="col-sm-3 col-sm-offset-1 control-label">Student ID</label>
+                    <div class="col-sm-6">
+                        <input id="add-student-studentID" required="true" class="studentID form-control" type="text" name="studentFirstName" placeholder="i.e. 00000001">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="add-student-studentNickname" class="col-sm-3 col-sm-offset-1 control-label">Student Nick Name</label>
+                    <div class="col-sm-6">
+                        <input id="add-student-studentNickname" required="true" class="studentNickname form-control" type="text" name="studentNickname" placeholder="i.e. Johnny">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="add-student-studentGroup" class="col-sm-3 col-sm-offset-1 control-label">Student Group</label>
+                    <div class="col-sm-6">
+                        <input id="add-student-studentGroup" required="true" class="studentGroup form-control" type="text" name="studentGroup" placeholder="i.e. '1' or 'Node">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="add-student-studentEmail" class="col-sm-3 col-sm-offset-1 control-label">Student Email</label>
+                    <div class="col-sm-6">
+                        <input id="add-student-studentEmail" required="true" class="studentEmail form-control" type="text" name="studentEmail" placeholder="i.e. jdoe@gmail.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="add-student-studentPhone" class="col-sm-3 col-sm-offset-1 control-label">Student Phone</label>
+                    <div class="col-sm-6">
+                        <input id="add-student-studentPhone" required="true" class="studentPhone form-control" type="text" name="studentPhone" placeholder="i.e. 123-456-7890">
+                    </div>
+                </div>
+
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="error text-center"></div>
+        <button type="button" data-loading-text="Loading..."  class="save btn btn-primary" autocomplete="off">Save</button>
+        <button type="button" class="cancel btn btn-default" data-dismiss="modal">Cancel</button>
+    </div>
+
 </div>
