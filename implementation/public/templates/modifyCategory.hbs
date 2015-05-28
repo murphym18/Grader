@@ -1,11 +1,43 @@
-<div class="cat-selector">Choose a Category:<select class="category"></select></div><br>
-<button class="modifyCategoryButton">Modify Category Information</button>
-<div class="popup-dialog">
-<h3>Modify Category</h3>
-    Category Name:<input class="categoryName" type="text" name="categoryName" placeholder="i.e. Tests"><br>
-    Category Weight:<input class="categoryWeight" type="text" name="categoryWeight" placeholder="i.e. 40"><br>
-    Parent Category:<select class="parentCategory"></select>
-    <p>Clicking OK below will save changes to the above category information.</p>
-    <button class="ok">OK</button>
-    <button class="cancel">Cancel</button>
+<div class="modal-content">
+    
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h2 class="modal-title" id="gridSystemModalLabel">Modify Category</h2>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <form class="newCategory form-horizontal col-sm-12">
+
+                
+                <div class="form-group">
+                    
+                    <label for="category-name" class="col-sm-3 col-sm-offset-1 control-label">Category Name</label>
+                    <div class="col-sm-6">
+                        <input id="category-name" required="true" class="categoryName form-control" type="text" name="categoryName" placeholder="i.e. Tests">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category-weight" class="col-sm-3 col-sm-offset-1 control-label">Category Weight</label>
+                    <div class="col-sm-6">
+                        <input id="category-weight" required="true" class="categoryWeight form-control" type="text" name="categoryWeight" placeholder="i.e. 50">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category-parent" class="col-sm-3 col-sm-offset-1 control-label">Parent Category</label>
+                    <div class="col-sm-6">
+                        <select id="category-parent" required="true" class="categoryParent form-control" type="text" name="categoryParent">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="error text-center"></div>
+        <button type="button" data-loading-text="Loading..."  class="save btn btn-primary" autocomplete="off">Save</button>
+        <button type="button" class="cancel btn btn-default" data-dismiss="modal">Cancel</button>
+    </div>
+    
 </div>

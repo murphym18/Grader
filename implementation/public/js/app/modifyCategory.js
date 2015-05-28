@@ -1,18 +1,30 @@
-define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, template) {
+define(function (require) {
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var Backbone = require('util/backbone-helper');
+    var Hbs = require('handlebars');
+    var Mn = require('backbone.marionette');
+    var Q = require('q');
+    var Radio = require('backbone.radio');
+    var pageChannel = Radio.channel('page');
+    var courseChannel = Radio.channel('course');
+    var template = require('text!templates/modifyCategory.hbs');
+    var alertTemplate = require('text!templates/alert-block.hbs');
+    
+    var Course = require('course/course');
 
-    var ModifyCategoryView = App.Mn.ItemView.extend({
-        template: App.Handlebars.compile(template),
+    return Mn.ItemView.extend({
+        tagName: 'div',
+        className: 'modifyCategory modal-dialog  modal-lg',
+        template: Hbs.compile(template),
         ui: {
-            'modifyCategoryButton' : '.modifyCategoryButton',
-            'ok' : '.ok',
-            'cancel' : '.cancel',
-            'dialog' : '.popup-dialog',
-            'categoryName' : '.categoryName',
-            'categoryWeight' : '.categoryWeight',
-            'parentCategory' : '.parentCategory',
-            'category' : '.category',
-            'catSelector' : '.cat-selector'
+            'categoryName' : '.className',
+            'categoryWeight' : '.classWeight',
+            'parentCategory' : '.classParent',
+            'ok' : '.save',
+            'cancel' : '.error'
         },
+
         /**
          * Hide the modify category dialog on initial load. Also,
          * create a dropdown menu for testing purposes that allows
@@ -27,7 +39,7 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
 
             var catValues = [];
             catValues.push(''); 
-            App._.forEach(categories, function(category) {
+            _.forEach(categories, function(category) {
                 catValues.push(category.name);
             });
 
@@ -59,7 +71,7 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
 
             var catValues = [];
             catValues.push('');
-            App._.forEach(categories, function(category) {
+            _.forEach(categories, function(category) {
                 catValues.push(category.name);
             });
 
@@ -131,13 +143,12 @@ define(['app/app', 'text!templates/modifyCategory.hbs', ], function(App, templat
         },
     })
 
-    App.Router.route("modifyCategory", "home", function() {
-        App.UserCourses.fetch().then(function() {
-            var course = App.UserCourses.at(0);
-            var modifyCatView = new ModifyCategoryView({
-                model: course
-            });
-            App.PopupRegion.show(modifyCatView);
-        });
-    });
+    // Router.route("modifyCategory", "home", function() {
+    //     console.log("Yes");
+    //     var course = new Course;
+    //     var modifyCatView = new ModifyCategoryView({
+    //         model: course
+    //     });
+    //     PopupRegion.show(modifyCatView);
+    // });
 });

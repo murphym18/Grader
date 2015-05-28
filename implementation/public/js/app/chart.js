@@ -1,7 +1,26 @@
 
-define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraphics.hbs', 'text!templates/gradeSchema.hbs', 'util/header-nav-view', 'chart'], function(App, chartTemplate, template1, template2, TopNavView, chart) {
+define(function (require) {
+    var App = require('app/app');
     var GradeSchema = App.Backbone.Model;
     var GraphModel = App.Course;
+
+    var Backbone = require('util/backbone-helper');
+    var LoadingView = require('util/promise-loading-view');
+    var CourseList = require('course/course-list');
+    var CourseListView = require('course/view/course-list-view');
+    var NavCourseFilterView = require('course/nav/filter-list-view');
+    var NavCreateCourseView = require('course/nav/new-course-button-view')
+    var Radio = require('backbone.radio');
+    var userChannel = require('user/module');
+    var pageChannel = Radio.channel('page');
+    var courseChannel = Radio.channel('course');
+    var Course = require('course/course');
+    var chartTemplate = require('text!templates/charts.hbs');
+    var template1  = require('text!templates/letterGradeGraphics.hbs');
+    var template2  = require('text!templates/gradeSchema.hbs');
+    var TopNavView  =  require('util/header-nav-view');
+    var chart  = require('chart');
+
 
 
     var globalGradeLetterTotals = function () {
@@ -154,7 +173,7 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
             this.updateBarColors();
 
 
-            App.UserCourses.fetch().then( function() {
+            Course.fetch().then( function() {
                 var course = App.UserCourses.at(0)         ;
                 console.log(course);
                 console.log(course.get('categories'))
@@ -309,16 +328,28 @@ define(['app/app', 'text!templates/charts.hbs', 'text!templates/letterGradeGraph
     });
 
     App.Router.route(("charts"), "chart", function() {
-        var layout = App.show(new App.StandardLayoutView());
-        layout.getRegion("header").show(new TopNavView);
+        var mainRegion = pageChannel.request('mainRegion');
+
         var graphView = new GraphView();
-        layout.getRegion("main").show(graphView);
+        mainRegion.show(graphView);
         graphView.getRegion("graph").show(new LetterGradeGraphView({
             model : model
         }));
         graphView.getRegion("schema").show(new GradeSchemaView({
             model : model
         }));
+
+
+        //var layout = App.show(new App.StandardLayoutView());
+        //layout.getRegion("header").show(new TopNavView);
+        //var graphView = new GraphView();
+        //layout.getRegion("main").show(graphView);
+        //graphView.getRegion("graph").show(new LetterGradeGraphView({
+        //    model : model
+        //}));
+        //graphView.getRegion("schema").show(new GradeSchemaView({
+        //    model : model
+        //}));
 
     })
 });
