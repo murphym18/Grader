@@ -35,7 +35,7 @@ define(function (require) {
         registry.add(doc);
     });
     
-    var NavItemsCollectionView = Marionette.CollectionView.extend({
+    var NavItemsCollectionView = Mn.CollectionView.extend({
         tagName: 'ul',
         className: 'nav navbar-nav grader-navbar-left',
         getChildView: function(item) {
@@ -89,7 +89,7 @@ define(function (require) {
                     courseList.sort();
                 });
                 App.go('/courses', {trigger:false, replace: true});
-            }).done();
+            });
 
         },
         userCoursesPage: function() {
@@ -144,7 +144,7 @@ define(function (require) {
                 console.dir(course);
                 console.log('in load course page',path);
                
-            }).done();
+            });
         }
     }
     

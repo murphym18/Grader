@@ -82,9 +82,9 @@ define(function (require) {
         onShow: function() {
             console.log('here');
             this.addRegions( {
-                thead: ".gradebook thead",
-                tbody: ".gradebook tbody",
-                tfoot: ".gradebook tfoot",
+                thead: "thead",
+                tbody: "tbody",
+                tfoot: "tfoot",
                 charts: ".charts",
             })
             this.showChildView('thead', new HeaderView());
