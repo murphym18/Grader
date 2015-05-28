@@ -123,15 +123,20 @@ define(function (require) {
             });
             
             Q.timeout(course.fetch({populate: true}).then(function(c) {
-                courseChannel.respond('current:course', function() {
+                courseChannel.reply('current:course', function() {
                     return course;
                 })
                 var mainRegion = pageChannel.request('mainRegion');
-                mainRegion.show(new GradeBookView(course));
+                var navRegion = pageChannel.request('navRegion');
+                    navRegion.show(new NavItemsCollectionView({
+                        collection: navBarCourseSpecificViews
+                    }));
+                
+                //mainRegion.show(new GradeBookView(course));
                 console.dir(course);
                 console.log('in load course page',path);
                 window.x = course;
-            })).done()
+            }), 2000).done()
             
         }
     }
