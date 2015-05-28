@@ -91,7 +91,7 @@ define(function (require) {
             this.model.set({
                 term: term,
             });
-            this.ui[term.toLowerCase()].se
+            //this.ui[term.toLowerCase()].se
         },
         
         onUpdateYear: function() {

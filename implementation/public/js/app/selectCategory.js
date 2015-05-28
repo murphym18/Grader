@@ -20,7 +20,7 @@ define(function (require) {
         ui: {
             'category' : '.categorySelected',
             'ok' : '.ok',
-            'cancel' : '.error'
+            'error' : '.error'
         },
 
         initialize: function(options) {
@@ -42,8 +42,14 @@ define(function (require) {
             var categories = this.model.get('categories');
             var self = this;
 
-            ui.category.append(self.optionTemplate());
-            categories.each(function(category) {
+            categories.comparator = function(a, b) {
+                a = a.get("path");
+                b = b.get("path");
+                return a > b ?  1
+                     : a < b ? -1
+                     :          0;
+            }
+            categories.sort().each(function(category) {
                 ui.category.append(self.optionTemplate(category.attributes));
             });
         },

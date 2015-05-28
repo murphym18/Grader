@@ -15,13 +15,13 @@ define(function (require) {
     var theadTemplate = require('text!templates/gradeBookHeader.hbs');
     var tbodyTemplate = require('text!templates/gradeBookBody.hbs');
     var tfooterTemplate = require('text!templates/gradeBookFooter.hbs');
-    var ChartView = require('app/chart');
+    //var ChartView = require('app/chart');
     //var gradebookTemplate = require()
 
 
     var ViewState = Backbone.Model.extend({
         initialize: function() {
-            
+
         }
     });
 
@@ -61,7 +61,7 @@ define(function (require) {
     
     return Mn.LayoutView.extend({
         template: Hbs.compile(template),
-        
+
         initialize: function(options) {
             this.model = Backbone.model;
             this.viewState = new ViewState();

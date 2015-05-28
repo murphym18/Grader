@@ -1,3 +1,7 @@
+/**
+ * Created by grantcampanelli on 5/28/15.
+ */
+
 define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
@@ -8,14 +12,14 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
-    var template = require('text!templates/modifyClassView.hbs');
+    var template = require('text!templates/manageClassView.hbs');
     var alertTemplate = require('text!templates/alert-block.hbs');
 
     var Course = require('course/course');
 
     return Mn.ItemView.extend({
         tagName: 'div',
-        className: 'modifyClass modal-dialog  modal-lg',
+        className: 'newClass modal-dialog  modal-lg',
         template: Hbs.compile(template),
 
         ui: {
@@ -40,37 +44,25 @@ define(function (require) {
             'click @ui.summer': 'onSelectSummer',
             'click @ui.fall': 'onSelectFall',
             'change @ui.year': "onUpdateYear",
-            'click @ui.saveButton': 'onSaveCourse'
+            'click @ui.saveButton': 'onSaveCourse',
         },
 
         initialize: function(options) {
-
-
-            this.model =  new Course; // courseChannel.request('current:course');
-            console.log('modify course working');
-            this.alertTemplate = Hbs.compile(alertTemplate);
-            //console.log(this.model);
-            //this.ui.classSection.val(model.get('section'));
-            //// TODO: Select Term
-            //this.ui.year.val(model.get('year'));
-
+            this.model = new Course
+            this.model.get('roles').push({
+                "name":"INSTRUCTOR",
+                "users":[options.user],
+                "permissions":[]
+            });
             this.onSelectWinter = _.bind(this.setTerm, this, 'Winter');
             this.onSelectSpring = _.bind(this.setTerm, this, 'Spring');
             this.onSelectSummer = _.bind(this.setTerm, this, 'Summer');
             this.onSelectFall = _.bind(this.setTerm, this, 'Fall');
-
+            this.alertTemplate = Hbs.compile(alertTemplate);
         },
 
         onShownModal: function() {
             this.ui.classCode.focus();
-            this.ui.classCode.val('CPE'/* TODO: model.get('classCode') */);
-            this.ui.classNumber.val('101'/* TODO: model.get('classNumber')*/);
-            this.ui.classSection.val('1'/* TODO: model.get('section') */);
-
-            /* TODO: Read term and select button */
-            this.ui.fall.button('toggle');
-
-            this.ui.year.val('2015' /* TODO: model.get('year') */);
         },
 
         updateClassCode: function() {
@@ -98,8 +90,7 @@ define(function (require) {
             this.model.set({
                 term: term,
             });
-           //Errorrrrrrr
-            //this.ui[term.toLowerCase()].se
+            this.ui[term.toLowerCase()].se
         },
 
         onUpdateYear: function() {
@@ -119,25 +110,26 @@ define(function (require) {
         },
 
         onSaveCourse: function() {
-            var self = this;
-            this.updateCourseDates.call(this);
-            var urlPath = Course.createColloquialUrl(this.model);
-            if (urlPath) {
-                this.model.set({
-                    colloquialUrl: urlPath
-                });
-            }
-            self = this;
-            Q(this.model.save()).then(function(res) {
-                    console.dir(['new class save result:', res]);
-                    var modalRegion = pageChannel.request('modalRegion');
-                    modalRegion.hideModal();
-                    courseChannel.command('updateCourses');
-                },
-                function(err) {
-                    self.ui.error.html(self.alertTemplate({message: err.responseText}));
-                    self.ui.saveButton.button('reset');
-                }).done();
+            //var self = this;
+            //this.updateCourseDates.call(this);
+            //var urlPath = Course.createColloquialUrl(this.model);
+            //if (urlPath) {
+            //    this.model.set({
+            //        colloquialUrl: urlPath
+            //    });
+            //}
+            //var self = this;
+            //Q(this.model.save()).then(function(res) {
+            //        console.dir(['new class save result:', res]);
+            //        var modalRegion = pageChannel.request('modalRegion');
+            //        modalRegion.hideModal();
+            //        courseChannel.command('updateCourses');
+            //    },
+            //    function(err) {
+            //        self.ui.error.html(self.alertTemplate({message: err.responseText}));
+            //        self.ui.saveButton.button('reset');
+            //    }).done();
         }
     });
 });
+
