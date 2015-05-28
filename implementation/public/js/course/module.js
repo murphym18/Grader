@@ -11,7 +11,7 @@ define(function (require) {
     var NavModifyCourseView = require('course/nav/modify-course-button-view');
     var NavClassDropdownView = require('course/nav/class-dropdown-view');
     var NavStudentDropdownView = require('course/nav/student-dropdown-view');
-   
+    
     var NavAssignmentDropdownView = require('course/nav/assignment-dropdown-view');
     var Radio = require('backbone.radio');
     var userChannel = require('user/module');
@@ -19,6 +19,7 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var Course = require('course/course');
     var GradeBookView = require('course/view/gradebook-view');
+    require('course/view/modify-course-view');
     
     var Registry = Backbone.Collection.extend({
          constructor: function Registery() {
@@ -138,7 +139,7 @@ define(function (require) {
                 console.dir(course);
                 console.log('in load course page',path);
                 window.x = course;
-            }), 2000).done()
+            })).done()
             
         }
     }
