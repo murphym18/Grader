@@ -48,24 +48,12 @@ define(function (require) {
         },
 
         showModifyCategory: function(domEvent) {
-<<<<<<< HEAD
             courseChannel.request('select:category').then(function(selectedCategory) {
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.show(new modifyCategory({
                     'category': selectedCategory
                 }));
             }).done();
-=======
-            //courseChannel.command('showUserCourses');
-            userChannel.request('user').then(function(user) {
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new modifyCategory);
-
-
-            })
-
-
->>>>>>> origin/master
         }
     });
 });
