@@ -56,7 +56,7 @@ define(function (require) {
         return globalTotalGradeArray;
     };
 
-    var LetterGradeGraphView = App.Mn.ItemView.extend({
+    var LetterGradeGraphView = Mn.ItemView.extend({
         model : GraphModel,
         template : App.Handlebars.compile(template1),
         modelEvents : {
@@ -237,7 +237,7 @@ define(function (require) {
         }
     });
 
-    var model = new App.Backbone.Model({
+    var model = new Backbone.Model({
         findGraphArray : function() {
             return [[50, 55, 60, 65, 68, 70, 71, 75, 78, 79, 80, 83, 88, 89, 90, 91, 94], [1, 2, 3, 1, 2, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4]];
         },
@@ -254,7 +254,7 @@ define(function (require) {
         totalGradeArray : []
     });
 
-    var GradeSchemaView = App.Mn.ItemView.extend({
+    var GradeSchemaView = Mn.ItemView.extend({
         model: GradeSchema,
         template : App.Handlebars.compile(template2),
         ui: {
@@ -319,37 +319,75 @@ define(function (require) {
     });
 
 
-    var GraphView = App.Mn.LayoutView.extend({
+    return Mn.ItemView.extend({
         template : App.Handlebars.compile(chartTemplate),
         regions : {
             graph : ".chartGraphics",
             schema : ".schema"
+        },
+        onShow: function() {
+            this.showChildView('graph', new LetterGradeGraphView());
+            this.showChildView('schema', new GradeSchemaView());
         }
     });
+    //
+    //App.Router.route(("charts"), "chart", function() {
+    //    var mainRegion = pageChannel.request('mainRegion');
+    //
+    //    var graphView = new GraphView();
+    //    mainRegion.show(graphView);
+    //    graphView.getRegion("graph").show(new LetterGradeGraphView({
+    //        model : model
+    //    }));
+    //    graphView.getRegion("schema").show(new GradeSchemaView({
+    //        model : model
+    //    }));
+    //
+    //
+    //    //var layout = App.show(new App.StandardLayoutView());
+    //    //layout.getRegion("header").show(new TopNavView);
+    //    //var graphView = new GraphView();
+    //    //layout.getRegion("main").show(graphView);
+    //    //graphView.getRegion("graph").show(new LetterGradeGraphView({
+    //    //    model : model
+    //    //}));
+    //    //graphView.getRegion("schema").show(new GradeSchemaView({
+    //    //    model : model
+    //    //}));
+    //
+    //})
 
-    App.Router.route(("charts"), "chart", function() {
-        var mainRegion = pageChannel.request('mainRegion');
-
-        var graphView = new GraphView();
-        mainRegion.show(graphView);
-        graphView.getRegion("graph").show(new LetterGradeGraphView({
-            model : model
-        }));
-        graphView.getRegion("schema").show(new GradeSchemaView({
-            model : model
-        }));
-
-
-        //var layout = App.show(new App.StandardLayoutView());
-        //layout.getRegion("header").show(new TopNavView);
-        //var graphView = new GraphView();
-        //layout.getRegion("main").show(graphView);
-        //graphView.getRegion("graph").show(new LetterGradeGraphView({
-        //    model : model
-        //}));
-        //graphView.getRegion("schema").show(new GradeSchemaView({
-        //    model : model
-        //}));
-
-    })
+    //var GraphView = App.Mn.LayoutView.extend({
+    //    template : App.Handlebars.compile(chartTemplate),
+    //    regions : {
+    //        graph : ".chartGraphics",
+    //        schema : ".schema"
+    //    }
+    //});
+    //
+    //App.Router.route(("charts"), "chart", function() {
+    //    var mainRegion = pageChannel.request('mainRegion');
+    //
+    //    var graphView = new GraphView();
+    //    mainRegion.show(graphView);
+    //    graphView.getRegion("graph").show(new LetterGradeGraphView({
+    //        model : model
+    //    }));
+    //    graphView.getRegion("schema").show(new GradeSchemaView({
+    //        model : model
+    //    }));
+    //
+    //
+    //    //var layout = App.show(new App.StandardLayoutView());
+    //    //layout.getRegion("header").show(new TopNavView);
+    //    //var graphView = new GraphView();
+    //    //layout.getRegion("main").show(graphView);
+    //    //graphView.getRegion("graph").show(new LetterGradeGraphView({
+    //    //    model : model
+    //    //}));
+    //    //graphView.getRegion("schema").show(new GradeSchemaView({
+    //    //    model : model
+    //    //}));
+    //
+    //})
 });

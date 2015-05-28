@@ -82,13 +82,17 @@ define(function (require) {
             var categories = this.model.get('categories');
             var category = categories.findWhere({"path" : reqCatPath});
             console.log(category);
+            console.log(categories);
+
+            categories.each(function(catListItem) {
+                if (catListItem.get("path").indexOf(category.get("path")) === 0)
+                    catListItem.set("path", ui.parentCategory.val() + catListItem.get("path"));
+            });
 
             category.set({
                 name : ui.categoryName.val(),
-                weight : ui.categoryWeight.val(),
-                path : ui.parentCategory.val()
+                weight : ui.categoryWeight.val()
             });
-            
             self.closeModifyCategory();
         },
         /**
