@@ -24,9 +24,9 @@ define(function (require) {
         },
 
         initialize: function(options) {
+            this.optionTemplate = Hbs.compile("<option value='{{path}}'>{{path}}</option>")
             this.model = courseChannel.request('current:course');
             this.alertTemplate = Hbs.compile(alertTemplate);
-            console.log(this.model);
         },
 
         /**
@@ -36,21 +36,13 @@ define(function (require) {
          *
          * @author Matt Bleifer
          */
-        onShow : function(){
+        onBeforeShow : function(){
             var ui = this.ui;
 
             var categories = this.model.get('categories');
-
-            var catValues = [];
-            catValues.push(''); 
-            _.forEach(categories, function(category) {
-                catValues.push(category.name);
-            });
-
-            $.each(catValues, function(key, value) {   
-                 ui.category
-                     .append($("<option></option>")
-                     .text(value)); 
+            var self = this;
+            categories.each(function(category) {
+                ui.category.append(self.optionTemplate(this.attributes))
             });
         },
         events : {
@@ -80,7 +72,7 @@ define(function (require) {
             var modalRegion = pageChannel.request('modalRegion');
             _.defer(function() {
                 modalRegion.empty();
-            };
+            });
         },
     })
 
