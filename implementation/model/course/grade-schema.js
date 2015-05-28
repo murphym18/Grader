@@ -1,9 +1,10 @@
+var mongoose = require('mongoose');
 var lightRed =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
 var darkRed =  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"];
 var orange = ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"];
 var yellow =  ["rgba(255, 255, 0,0.5)", "rgba(255, 255, 0,0.8)", "rgba(255, 255, 0,0.75)", "rgba(255, 255, 0,1)"];
 var green = ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rgba(0,255,0,1)"];
-
+var SchemaColors = mongoose.Schema();
 module.exports = {
    creditNoCredit: {
       minCredit: {
@@ -56,11 +57,36 @@ module.exports = {
          required: true,
          select: true
       },
-      aColor: [String],
-      bColor: [String],
-      cColor: [String],
-      dColor: [String],
-      fColor: [String]
+      aColor: {
+         '0': String,
+         '1': String,
+         '2': String,
+         '3': String
+      },
+      bColor: {
+         '0': String,
+         '1': String,
+         '2': String,
+         '3': String
+      },
+      cColor: {
+         '0': String,
+         '1': String,
+         '2': String,
+         '3': String
+      },
+      dColor: {
+         '0': String,
+         '1': String,
+         '2': String,
+         '3': String
+      },
+      fColor: {
+         '0': String,
+         '1': String,
+         '2': String,
+         '3': String
+      }
    },
    preSave: function (next) {
       if (this.aColor.length == 0){

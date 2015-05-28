@@ -12,6 +12,16 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var Course = require('course/course');
     
+    var Registery = Backbone.Collection.extend({
+         constructor: function Registery() {
+             Backbone.Collection.apply(this);
+         }
+     })
+    var registery = window.regestery =new Registery();
+    courseChannel.comply('register', function(doc) {
+        registery.add(doc);
+    })
+    
     var NavItemsCollectionView = Marionette.CollectionView.extend({
         tagName: 'ul',
         className: 'nav navbar-nav grader-navbar-left',
@@ -84,6 +94,7 @@ define(function (require) {
 
         },
         loadCoursePage: function(path) {
+            registery.reset();
             var course = new Course({
                 colloquialUrl: path
             });

@@ -11,9 +11,10 @@ define(function (require) {
     var StudentRecord = require('course/student');
     var RoleManager = require('course/role-manager');
     require('backbone-documentmodel');
+    var courseChannel = Radio.channel('course');
     
-    var DocModel = Backbone.DocumentModel;
-    var DocCollection = Backbone.DocumentCollection;
+    var DocModel = require('util/doc-model');
+    var DocCollection = require('util/doc-collection');
     var adminUserText = require('text!api/Users/admin');
     
     var defaultCourse = JSON.stringify({
@@ -35,6 +36,123 @@ define(function (require) {
         ],
         "students": [],
         "categories": [],
+    });
+    
+    var rProxyAttrs = [
+        'classCode',
+        'classNumber',
+        'colloquialUrl',
+        'aColor',
+        'bColor',
+        'cColor',
+        'dColor',
+        'fColor',
+        'categories',
+        'roles',
+        'section',
+        'students',
+        'term',
+        'year',
+        'start',
+        'end'
+    ];
+    
+    var rwProxyAttrs = [
+        'aMin',
+        'bMin',
+        'cMin',
+        'dMin',
+        'minCredit'
+    ];
+    
+    return DocModel.extend({
+        
+        idAttribute: "_id",
+        
+        defaults: function() {
+            return JSON.parse(defaultCourse);
+        },
+        
+        setupProxyAccessors: function() {
+            _.each(rProxyAttrs, _.partial(proxy.proxyGet, this));
+            _.each(rwProxyAttrs, _.partial(proxy.proxyGetAndSet, this));
+            var self = this;
+            // Object.defineProperty(self, 'findAssignments', {
+            //     enumerable: false,
+            //     configurable: true,
+            //     get: function() {
+            //         var categories = self.get('categories')
+            //         return categories.findAssignments.bind(categories);
+            //     }
+            // });
+        },
+        
+        findGraphArray: function(data) {
+        
+        },
+        
+        initialize : function (options) {
+            this.setupUrl();
+            this.setupProxyAccessors();
+
+        },
+        
+        constructor: function Course() {
+            DocModel.apply(this, arguments);
+        },
+        
+        fetch: function(options) {
+            if (!this.get("colloquialUrl")) {
+                var msg = "Cannot fetch course. Its colloquialUrl is undefined."
+                throw new Error(msg)
+            }
+            var url = this.url;
+            if (options.populate) {
+                this.url = this.url + '?populate=students.user,roles.users'
+                delete options.populate;
+            }
+            var result = DocModel.prototype.fetch.call(this, options);
+            this.url = url;
+            return result;
+        },
+        
+        setupUrl: function() {
+            var colloquialUrl = this.get("colloquialUrl");
+            if (colloquialUrl) {
+                this.url = '/api/Courses/' + this.get("colloquialUrl");
+            }
+            else {
+                this.url = '/api/Courses'
+            }
+        },
+
+        // For collections
+        getNestedCollection: function (nestedKey, nestedValue, nestedOptions) {
+            switch (nestedKey) {
+                case 'students':
+                    return new StudentRecord(nestedValue, nestedOptions);
+                    
+                case 'categories':
+                    return new Category(nestedValue, nestedOptions);
+                    
+                case 'roles':
+                    return new RoleManager(nestedValue, nestedOptions);
+                    
+                case 'aColor':
+                case 'bColor':
+                case 'cColor':
+                case 'dColor':
+                case 'fColor':
+                default:
+                    return new DocCollection(nestedValue, nestedOptions);
+            }
+        }
+        
+    }, {
+        createColloquialUrl: createColloquialUrl,
+        findTermDates: findTermDates,
+        isValidTerm: isValidTerm,
+        isValidYear: isValidYear
     });
     
     function createColloquialUrl(course) {
@@ -82,116 +200,4 @@ define(function (require) {
         return /^\d{4}$/.test(year);
     }
     
-    var rProxyAttrs = [
-        'classCode',
-        'classNumber',
-        'colloquialUrl',
-        'aColor',
-        'bColor',
-        'cColor',
-        'dColor',
-        'fColor',
-        'categories',
-        'roles',
-        'section',
-        'students',
-        'term',
-        'year',
-        'start',
-        'end'
-    ];
-    
-    var rwProxyAttrs = [
-        'aMin',
-        'bMin',
-        'cMin',
-        'dMin',
-        'minCredit'
-    ];
-    
-    return DocModel.extend({
-        idAttribute: "_id",
-        
-        defaults: function() {
-            return JSON.parse(defaultCourse);
-        },
-        
-        setupProxyAccessors: function() {
-            _.each(rProxyAttrs, _.partial(proxy.proxyGet, this));
-            _.each(rwProxyAttrs, _.partial(proxy.proxyGetAndSet, this));
-            var self = this;
-            Object.defineProperty(self, 'findAssignments', {
-                enumerable: false,
-                configurable: true,
-                get: function() {
-                    var categories = self.get('categories')
-                    return categories.findAssignments.bind(categories);
-                }
-            });
-        },
-        
-        findGraphArray: function(data) {
-        
-        },
-        
-        initialize : function (options) {
-            this.setupUrl();
-            this.setupProxyAccessors();
-
-        },
-        
-        fetch: function(options) {
-            if (!this.get("colloquialUrl")) {
-                var msg = "Cannot fetch course. Its colloquialUrl is undefined."
-                throw new Error(msg)
-            }
-            var url = this.url;
-            if (options.populate) {
-                this.url = this.url + '?populate=students.user,roles.users'
-                delete options.populate;
-            }
-            var result = DocModel.prototype.fetch.call(this, options);
-            this.url = url;
-            return result;
-        },
-        
-        setupUrl: function() {
-            var colloquialUrl = this.get("colloquialUrl");
-            if (colloquialUrl) {
-                this.url = '/api/Courses/' + this.get("colloquialUrl");
-            }
-            else {
-                this.url = '/api/Courses'
-            }
-        },
-
-        // For collections
-        getNestedCollection: function (nestedKey, nestedValue, nestedOptions) {
-            switch (nestedKey) {
-                case 'students':
-                    return new StudentRecord(nestedValue, nestedOptions);
-                    
-                case 'categories':
-                    return new Category(nestedValue, nestedOptions);
-                    
-                case 'roles':
-                    return new RoleManager(nestedValue, nestedOptions);
-                    
-                case 'aColor':
-                case 'bColor':
-                case 'cColor':
-                case 'dColor':
-                case 'fColor':
-                    return new DocCollection(nestedValue, nestedOptions);
-                default:
-                    return new DocCollection(nestedValue, nestedOptions);
-            }
-        }
-        
-    }, {
-        createColloquialUrl: createColloquialUrl,
-        findTermDates: findTermDates,
-        isValidTerm: isValidTerm,
-        isValidYear: isValidYear
-    });
 });

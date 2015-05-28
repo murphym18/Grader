@@ -28,6 +28,7 @@ requirejs.config({
       'jquery-ui': ['jquery'],
       'jquery.magnific-popup' : ['jquery', 'jquery-ui'],
       'bootstrap': ['jquery'],
+      'webix': []
    }
 });
 
@@ -44,6 +45,7 @@ define(function (require) {
    require('app/modifyClass');
    require('app/modifyStudent');
    require('bootstrap');
+   require('webix');
    require('domReady!');
    
    App.start({});

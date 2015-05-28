@@ -1,4 +1,8 @@
 define(function (require) {
+    var Backbone = require('util/backbone-helper');
+    // require('query-engine');
+    var QueryCollection = window.queryEngine.QueryCollection;
+    
     function proxyGet(obj, modelKey, displayKeyArg) {
         var displayKey = _.isString(displayKeyArg) ? displayKeyArg : modelKey;
         Object.defineProperty(obj, displayKey, {
@@ -26,8 +30,10 @@ define(function (require) {
         })
     }
     
+    
+    
     return {
         proxyGet: proxyGet,
-        proxyGetAndSet: proxyGetAndSet
+        proxyGetAndSet: proxyGetAndSet,
     }
 });

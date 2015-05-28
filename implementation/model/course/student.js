@@ -35,7 +35,7 @@ var studentRecordSchema = mongoose.Schema({
          min: 0
       }
    }]
-}, { _id : false });
+}, { _id : true });
 
 userFields.username.required = false;
 studentRecordSchema.add(userFields)

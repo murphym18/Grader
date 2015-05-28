@@ -8,22 +8,45 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var proxy = require('util/prop-proxy');
     require('query-engine');
-    require('backbone-documentmodel');
-    
+    var DocCollection = require('util/doc-collection');
+    var DocModel = require('util/doc-model');
     var QueryCollection = window.queryEngine.QueryCollection;
-    var DocModel = Backbone.DocumentModel;
-    var DocCollection = Backbone.DocumentCollection;
+    var courseChannel = Radio.channel('course');
+    
+    var Assignments = DocCollection.extend({
+        constructor: function AssignmentCollection() {
+             DocCollection.apply(this, arguments);
+        },
+        model: DocModel.extend({
+            idAttribute: 'id',
+            constructor: function Assignment() {
+                 DocModel.apply(this, arguments);
+            },
+        })
+    });
 
     var Category = DocModel.extend({
         idAttribute: '_id',
+        queryProperty: 'tree',
+        filterName: "path starts with filter",
+        
+        filterFunc: function(model, str) {
+            var regex = new RegExp('^'+this.get('path')+'#[^#]+$')
+            return regex.test(model.get('path'));
+        },
+        
+        initializeQueryCollection: function() {
+            var name = this.filterName;
+            var func = this.filterFunc.bind(this);
+            return this.collection.query.findAllLive().setFilter(name, func);
+        },
+        
+        constructor: function Category() {
+            DocModel.apply(this, arguments);
+        },
+        
         initialize: function(options) {
-            var self = this;
-            this.categories = this.collection.query.findAllLive()
-             .setFilter("path starts with filter", function(model, str) {
-                var regex = new RegExp('^'+self.get('path')+'#[^#]+$')
-                return regex.test(model.get('path'));
-            });
-            
+            DocCollection.mixinQueryFunctions(this, null, {});
             Object.defineProperty(self, 'allAssignments', {
                 configurable: true,
                 get: function() {
@@ -32,24 +55,24 @@ define(function (require) {
                     return toAssignmentArray(subcats).concat(assignments);
                 }
             });
-            
-            _.each(['findAll', 'findAllLive', 'findOne'], bindSubcatFunc, this);
+        },
+        
+        getNestedCollection: function (nestedKey, nestedValue, nestedOptions) {
+            switch (nestedKey) {
+                case 'assignments':
+                    return new Assignments(nestedValue, nestedOptions);
+                default:
+                    return new DocCollection(nestedValue, nestedOptions);
+            }
         }
     });
     
     return DocCollection.extend({
         model: Category,
-        initialize: function(models, options) {
+        
+        onQueryCollection: function() {
             var self = this;
-            this.query = new QueryCollection(models, {
-                parentCollection: self,
-                live: true
-            });
-            
             this.tree = this.query.findAllLive({path: /^#[^#]+$/});
-            
-            _.each(['findAll', 'findAllLive', 'findOne'], bindQueryFunc, this);
-            
             Object.defineProperty(self, 'allAssignments', {
                 configurable: true,
                 get: function() {
@@ -57,16 +80,16 @@ define(function (require) {
                 }
             });
         },
-        findAssignments: findAssignments
+        
+        constructor: function CategoiesCollection() {
+            DocCollection.apply(this, arguments);
+        },
+        
+        findAssignments: findAssignments,
+        initialize: function() {
+            
+        }
     });
-    
-    function bindSubcatFunc(name) {
-        this[name] = _.bind(this.categories[name], this.query);
-    }
-    
-    function bindQueryFunc(name) {
-        this[name] = _.bind(this.query[name], this.query);
-    }
     
     function toAssignmentArray(categoryList) {
         var listOfAssignmentLists = categoryList.pluck('assignments');
