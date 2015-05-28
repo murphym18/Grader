@@ -11,6 +11,9 @@ define(function (require) {
     var pageChannel = Radio.channel('page');
     var template = require('text!templates/headerCourseDropdownView.hbs');
     var CreateCourseView = require('course/view/new-course-view');
+    var ManageCourseView = require('course/view/manage-course-view');
+
+
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -50,6 +53,12 @@ define(function (require) {
 
         showManageClass: function(domEvent) {
             //courseChannel.command('showUserCourses');
+            userChannel.request('user').then(function(user) {
+                //console.log('show new class');
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new ManageCourseView({user: user}));
+
+            })
         },
 
         showGradeScheme: function(domEvent) {
