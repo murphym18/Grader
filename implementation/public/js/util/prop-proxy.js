@@ -1,7 +1,7 @@
 define(function (require) {
     var Backbone = require('util/backbone-helper');
-    // require('query-engine');
-    var QueryCollection = window.queryEngine.QueryCollection;
+    var queryEngine = require('query-engine');
+    var QueryCollection = queryEngine.QueryCollection;
     
     function proxyGet(obj, modelKey, displayKeyArg) {
         var displayKey = _.isString(displayKeyArg) ? displayKeyArg : modelKey;

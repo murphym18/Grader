@@ -29,6 +29,7 @@ requirejs.config({
       'jquery.magnific-popup' : ['jquery', 'jquery-ui'],
       'bootstrap': ['jquery'],
       'query-engine': {
+         deps: ['backbone'],
          exports: 'queryEngine'
       }
    }

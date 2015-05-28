@@ -11,6 +11,7 @@ define(function (require) {
     var NavModifyCourseView = require('course/nav/modify-course-button-view');
     var NavClassDropdownView = require('course/nav/class-dropdown-view');
     var NavStudentDropdownView = require('course/nav/student-dropdown-view');
+   
     var NavAssignmentDropdownView = require('course/nav/assignment-dropdown-view');
     var Radio = require('backbone.radio');
     var userChannel = require('user/module');
@@ -60,6 +61,7 @@ define(function (require) {
         new Backbone.Model({
             viewClass: NavAssignmentDropdownView
         })
+         
     ]);
 
     var controller = {
