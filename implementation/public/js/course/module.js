@@ -5,8 +5,9 @@ define(function (require) {
     var CourseList = require('course/course-list');
     var CourseListView = require('course/view/course-list-view');
     var NavCourseFilterView = require('course/nav/filter-list-view');
-    var NavCreateCourseView = require('course/nav/new-course-button-view')
+    var NavCreateCourseView = require('course/nav/new-course-button-view');
     var NavClassDropdownView = require('course/nav/class-dropdown-view');
+    var NavStudentDropdownView = require('course/nav/student-dropdown-view');
     var NavAssignmentDropdownView = require('course/nav/assignment-dropdown-view');
     var Radio = require('backbone.radio');
     var userChannel = require('user/module');
@@ -36,6 +37,9 @@ define(function (require) {
     var navBarViews = new Backbone.Collection([
         new Backbone.Model({
             viewClass: NavClassDropdownView
+        }),
+        new Backbone.Model({
+            viewClass: NavStudentDropdownView
         }),
         new Backbone.Model({
             viewClass: NavAssignmentDropdownView
