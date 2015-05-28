@@ -24,7 +24,7 @@ define(function (require) {
         },
 
         initialize: function(options) {
-            this.optionTemplate = Hbs.compile("<option value='{{path}}'>{{path}}</option>")
+            this.optionTemplate = Hbs.compile("<option value='{{path}}'>{{path}}</option>");
             this.model = courseChannel.request('current:course');
             this.alertTemplate = Hbs.compile(alertTemplate);
         },
@@ -41,8 +41,10 @@ define(function (require) {
 
             var categories = this.model.get('categories');
             var self = this;
+
+            ui.category.append(self.optionTemplate());
             categories.each(function(category) {
-                ui.category.append(self.optionTemplate(this.attributes))
+                ui.category.append(self.optionTemplate(category.attributes));
             });
         },
         events : {

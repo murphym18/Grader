@@ -29,6 +29,7 @@ define(function (require) {
             this.model = courseChannel.request('current:course');
             this.category = options.category;
             this.alertTemplate = Hbs.compile(alertTemplate);
+            this.optionTemplate = Hbs.compile("<option value='{{path}}'>{{path}}</option>");
         },
 
         /**
@@ -40,30 +41,24 @@ define(function (require) {
          */
         onShow : function(){
             var ui = this.ui;
+            var self = this;
 
-            var reqCatName = this.category;
+            var reqCatPath = this.category;
 
             var categories = this.model.get('categories');
-            var category = $.grep(categories.models, function(e){ return e.get("name") == reqCatName; })[0];
+            var category = categories.findOne({"path" : reqCatPath});
 
-            console.log(category);
-
-            var catValues = [];
-            catValues.push('');
-            _.forEach(categories.models, function(category) {
-                catValues.push(category.get("name"));
-            });
-
-            $.each(catValues, function(key, value) {
-                if (value != category.get("name")) {
-                    ui.parentCategory
-                     .append($("<option></option>")
-                     .text(value)); 
-                }
+            ui.parentCategory.append(self.optionTemplate());
+            categories.each(function(catListItem) {
+                if (catListItem.get("path").indexOf(category.get("path")) !== 0)
+                    ui.parentCategory.append(self.optionTemplate(catListItem.attributes));
             });
 
             var path = category.get("path").split('#');
-            ui.parentCategory.val(path[path.length - 2]).attr("selected");
+            path.pop();
+            path = path.join("#");
+
+            ui.parentCategory.val(path).attr("selected");
 
             ui.categoryName.val(category.get("name"));
             ui.categoryWeight.val(category.get("weight"));
@@ -82,19 +77,18 @@ define(function (require) {
             var ui = this.ui;
             var self = this;
 
-            var reqCatName = this.category;
+            var reqCatPath = this.category;
 
             var categories = this.model.get('categories');
-            var category = categories.findwhere({"name" : reqCatName});
+            var category = categories.findOne({"path" : reqCatPath});
+            console.log(category);
 
-            category.set("name", ui.categoryName.val());
-            category.set("weight", ui.categoryWeight.val());
+            category.set({
+                name : ui.categoryName.val(),
+                weight : ui.categoryWeight.val(),
+                path : ui.parentCategory.val()
+            });
 
-            var newParent = $.grep(categories.each, function(e){ return e.get("name") == ui.parentCategory.val(); })[0];
-
-            category.set("path", newParent ? newParent.get("path") + "#" + category.get("name") : "#" + category.get("name"));
-
-            Backbone.emulateHTTP = true;
             this.model.set("categories", categories);
             self.closeModifyCategory();
         },
@@ -107,6 +101,7 @@ define(function (require) {
          */
         closeModifyCategory : function() {
             var self = this;
+            Backbone.emulateHTTP = true;
             Q(this.model.save()).then(function(res) {
                 console.dir(['modify category save result:', res]);
                 var modalRegion = pageChannel.request('modalRegion');
