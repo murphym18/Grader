@@ -45,7 +45,7 @@ define(function (require) {
         
         constructor: function DocCollection(models, options) {
             Backbone.DocumentCollection.apply(this, arguments);
-            mixinQueryFunctions(this, models, options);
+            //mixinQueryFunctions(this, models, options);
             this.onQueryCollection();
             this.trigger('query:collection:ready');
         }

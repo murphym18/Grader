@@ -93,7 +93,6 @@ define(function (require) {
                 name : ui.categoryName.val(),
                 weight : ui.categoryWeight.val()
             });
-
             self.closeModifyCategory();
         },
         /**

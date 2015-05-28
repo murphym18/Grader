@@ -38,6 +38,7 @@ define(function (require) {
         initializeQueryCollection: function() {
             var name = this.filterName;
             var func = this.filterFunc.bind(this);
+            console.log('here');
             return this.collection.query.findAllLive().setFilter(name, func);
         },
         
@@ -46,7 +47,7 @@ define(function (require) {
         },
         
         initialize: function(options) {
-            DocCollection.mixinQueryFunctions(this, null, {});
+            
             Object.defineProperty(self, 'allAssignments', {
                 configurable: true,
                 get: function() {
@@ -72,13 +73,16 @@ define(function (require) {
         
         onQueryCollection: function() {
             var self = this;
-            this.tree = this.query.findAllLive({path: /^#[^#]+$/});
+            //this.tree = this.query.findAllLive({path: /^#[^#]+$/});
             Object.defineProperty(self, 'allAssignments', {
                 configurable: true,
                 get: function() {
                     return toAssignmentArray(self.findAll());
                 }
             });
+            this.each(function(e) {
+                DocCollection.mixinQueryFunctions(e, null, {});
+            })
         },
         
         findColSpans: function() {
@@ -93,7 +97,7 @@ define(function (require) {
             }   
         },
         
-        constructor: function CategoiesCollection() {
+        constructor: function CategoriesCollection() {
             DocCollection.apply(this, arguments);
         },
         
