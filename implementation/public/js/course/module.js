@@ -128,9 +128,9 @@ define(function (require) {
                 })
                 var mainRegion = pageChannel.request('mainRegion');
                 var navRegion = pageChannel.request('navRegion');
-                    navRegion.show(new NavItemsCollectionView({
-                        collection: navBarCourseSpecificViews
-                    }));
+                navRegion.show(new NavItemsCollectionView({
+                    collection: navBarCourseSpecificViews
+                }));
                 
                 //mainRegion.show(new GradeBookView(course));
                 console.dir(course);
