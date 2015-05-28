@@ -81,6 +81,13 @@ define(function (require) {
             });
         },
         
+        findColSpans: function() {
+            _.each(this.tree, colSpan)
+            function colSpan(elm) {
+                _.reduce(_.map((elm.pluck('assignments'), function(e)
+            }
+        },
+        
         constructor: function CategoiesCollection() {
             DocCollection.apply(this, arguments);
         },
