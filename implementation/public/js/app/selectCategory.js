@@ -42,7 +42,14 @@ define(function (require) {
             var categories = this.model.get('categories');
             var self = this;
 
-            categories.each(function(category) {
+            categories.comparator = function(a, b) {
+                a = a.get("path");
+                b = b.get("path");
+                return a > b ?  1
+                     : a < b ? -1
+                     :          0;
+            }
+            categories.sort().each(function(category) {
                 ui.category.append(self.optionTemplate(category.attributes));
             });
         },

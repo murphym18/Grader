@@ -44,14 +44,20 @@ define(function (require) {
             var self = this;
 
             var reqCatPath = this.category;
-            console.log(this.category);
 
             var categories = this.model.get('categories');
             var category = categories.findWhere({"path" : reqCatPath});
-            console.log(category);
+
+            categories.comparator = function(a, b) {
+                a = a.get("path");
+                b = b.get("path");
+                return a > b ?  1
+                     : a < b ? -1
+                     :          0;
+            }
 
             ui.parentCategory.append(self.optionTemplate());
-            categories.each(function(catListItem) {
+            categories.sort().each(function(catListItem) {
                 if (catListItem.get("path").indexOf(category.get("path")) !== 0)
                     ui.parentCategory.append(self.optionTemplate(catListItem.attributes));
             });
