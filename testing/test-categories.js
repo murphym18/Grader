@@ -86,7 +86,7 @@ var numTopLevelCategoriesAfter = course.categories.tree.models.length
 
 
 b1 === true && b2 === true /* this should be true, meaning both events were triggered */
-ref1 !== null && ref1.get(‘#Projects’) === ‘#Projects’ && ref1 === ref2 /* this should be true because course.categories.tree should reference as subset of the models in course.categories */
+ref1 !== null && ref1.get(‘path’) === ‘#Projects’ && ref1 === ref2 /* this should be true because course.categories.tree should reference as subset of the models in course.categories */
 (numCategoriesAfter – numCategoriesBefore) === (numTopLevelCategoriesAfter - numTopLevelCategoriesBefore) === 1 /* the size of each collection should have grown by one */
 
 /* Anytime you move a top-level category in course.categories into another category you automatically remove it from course.categories.tree: */

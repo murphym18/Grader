@@ -48,5 +48,8 @@ module.exports = {
    },
    nickname: {
       type: String
+   },
+   group: {
+      type: String
    }
 };
