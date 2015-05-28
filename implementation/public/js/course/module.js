@@ -134,7 +134,7 @@ define(function (require) {
                     collection: navBarCourseSpecificViews
                 }));
                 
-                //mainRegion.show(new GradeBookView(course));
+                mainRegion.show(new GradeBookView(course));
                 console.dir(course);
                 console.log('in load course page',path);
                 window.x = course;

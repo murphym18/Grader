@@ -11,8 +11,9 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var Radio = require('backbone.radio');
-    var template = require('text!templates/gradeBookHeader.hbs.hbs');
-    var theadTemplate = require('text!templates/gradeBookHeader.hbs.hbs');
+    var template = require('text!templates/gradeBookView.hbs');
+    var theadTemplate = require('text!templates/gradeBookHeader.hbs');
+    //var gradebookTemplate = require()
 
     var ViewState = Backbone.Model.extend({
         initialize: function() {
