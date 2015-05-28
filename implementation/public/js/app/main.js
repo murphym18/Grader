@@ -27,8 +27,7 @@ requirejs.config({
    shim: {
       'jquery-ui': ['jquery'],
       'jquery.magnific-popup' : ['jquery', 'jquery-ui'],
-      'bootstrap': ['jquery'],
-      'webix': []
+      'bootstrap': ['jquery']
    }
 });
 
