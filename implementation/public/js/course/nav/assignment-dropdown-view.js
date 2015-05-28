@@ -10,7 +10,7 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var pageChannel = Radio.channel('page');
     var template = require('text!templates/headerAssignmentDropdownView.hbs');
-    var modifyCategory = require('app/modifyCategory')
+    var modifyCategory = require('app/modifyCategory');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -41,10 +41,12 @@ define(function (require) {
         },
 
         showModifyCategory: function(domEvent) {
-            //courseChannel.command('showUserCourses');
-            var modalRegion = pageChannel.request('modalRegion');
-            modalRegion.show(new modifyCategory);
-
+            courseChannel.request('select:category').then(function(selectedCategory) {
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new modifyCategory({
+                    'category': selectedCategory
+                }));
+            }).done();
         }
     });
 });

@@ -18,15 +18,16 @@ define(function (require) {
         className: 'modifyCategory modal-dialog modal-lg',
         template: Hbs.compile(template),
         ui: {
-            'categoryName' : '.className',
-            'categoryWeight' : '.classWeight',
-            'parentCategory' : '.classParent',
+            'categoryName' : '.categoryName',
+            'categoryWeight' : '.categoryWeight',
+            'parentCategory' : '.categoryParent',
             'ok' : '.save',
             'cancel' : '.error'
         },
 
         initialize: function(options) {
             this.model = courseChannel.request('current:course');
+            this.category = options.category;
             this.alertTemplate = Hbs.compile(alertTemplate);
             console.log(this.model);
         },
@@ -41,35 +42,7 @@ define(function (require) {
         onShow : function(){
             var ui = this.ui;
 
-            var categories = this.model.get('categories');
-
-            var catValues = [];
-            catValues.push(''); 
-            _.forEach(categories, function(category) {
-                catValues.push(category.name);
-            });
-
-            $.each(catValues, function(key, value) {   
-                 ui.category
-                     .append($("<option></option>")
-                     .text(value)); 
-            });
-        },
-        events : {
-            'click @ui.modifyCategoryButton' :  'showModifyCategory',
-            'click @ui.ok' :  'saveModifyCategory',
-            'click @ui.cancel' :  'closeModifyCategory'
-        },
-        /**
-         * Show the modify category dialog. Use the data from the
-         * course model to preload the fields for the chosen category.
-         *
-         * @author Matt Bleifer
-         */
-        showModifyCategory : function() {
-            var ui = this.ui;
-
-            var reqCatName = ui.category.val();
+            var reqCatName = this.category;
 
             var categories = this.model.get('categories');
             var category = $.grep(categories, function(e){ return e.name == reqCatName; })[0];
@@ -93,10 +66,10 @@ define(function (require) {
 
             ui.categoryName.val(category.name);
             ui.categoryWeight.val(category.weight);
-
-            ui.dialog.show();
-            ui.modifyCategoryButton.hide();
-            ui.catSelector.hide();
+        },
+        events : {
+            'click @ui.ok' :  'saveModifyCategory',
+            'click @ui.cancel' :  'closeModifyCategory'
         },
         /**
          * Gather the new values from the modify category dialog and
@@ -108,7 +81,7 @@ define(function (require) {
             var ui = this.ui;
             var self = this;
 
-            var reqCatName = ui.category.val();
+            var reqCatName = this.category;
 
             var categories = this.model.get('categories');
             var category = $.grep(categories, function(e){ return e.name == reqCatName; })[0];
