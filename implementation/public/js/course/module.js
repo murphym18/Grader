@@ -103,7 +103,7 @@ define(function (require) {
             var loginPromise = userChannel.request('user');
             loginPromise.then(function(user) {
                 var userCoursesPromise = userChannel.request('user:courses');
-                var mainRegion = pageChannel.request('mainRegion');
+                
                 
                 mainRegion.show(new LoadingView({
                     promise: userCoursesPromise
@@ -131,8 +131,10 @@ define(function (require) {
 
         },
         loadCoursePage: function(path) {
-            console.log(path)
+            console.log(path);
             registry.reset();
+            pageChannel.request('mainRegion').empty();
+            
             var course = new Course({
                 colloquialUrl: path
             });
@@ -148,7 +150,7 @@ define(function (require) {
                 }));
                 window.x = course;
                 var mainRegion = pageChannel.request('mainRegion');
-                mainRegion.show(new GradeBookView(course));
+                mainRegion.show(new GradeBookView());
                 console.dir(course);
                 console.log('in load course page',path);
                

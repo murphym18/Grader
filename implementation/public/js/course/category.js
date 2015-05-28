@@ -99,11 +99,73 @@ define(function (require) {
                     
                 return num;
             }
-            
-            
             _.each(this.tree, colSpan);
             
             return result;
+        },
+        
+        groupByRow: function() {
+            var arr = [];
+            function depth(elm) {
+                return elm.get('path').split('#').length - 1;
+            }
+            var groups = this.groupBy(depth);
+            var keys = _.keys(groups).sort();
+            
+            _.map(keys, function(k) {
+                arr.push(groups[k]);
+            })
+            return arr;
+        },
+        
+        createViewCommands: function() {
+            var rowCats = this.groupByRow();
+            var colCats = this.findColSpans();
+            var rows = [];
+            
+            for (var i = 0; i < rowCats.length; ++i) {
+                if (rows.length <= i) {
+                    rows.push([]);
+                }
+                _.each(rowCats[i], function(cat) {
+                    if (colCats[cat.cid] > 0) {
+                        rows[i].push({
+                            name: cat.get('name'),
+                            style: "category",
+                            colSpan: colCats[cat.cid],
+                            rowSpan: 1
+                        })
+                        if (cat.has('assignments')) {
+                            if (rows.length <= i + 1) {
+                                rows.push([]);
+                            }
+                            var assignments = cat.get('assignments').models;
+                            console.dir(assignments);
+                            _.map(assignments, function(a) {
+                                console.dir(a);
+                                return {
+                                    name: a.get('name'),
+                                    style: "assignment",
+                                    colSpan: 1
+                                }
+                            }).forEach(function(a) {
+                                rows[i + 1].push(a);
+                            });
+                        }
+                    }
+                })
+            }
+            
+            var height = rows.length;
+            for (var i = 1; i < rows.length; ++i) {
+                height -= 1;
+                rows[i].filter(function(e) {
+                    return e.style === "assignment";
+                }).forEach(function (a) {
+                    a.rowSpan = height;
+                });
+            }
+            return rows;
         },
         
         constructor: function CategoriesCollection() {

@@ -28,10 +28,19 @@ define(function (require) {
 
 
     var HeaderView = Mn.ItemView.extend({
-
-        template: Hbs.compile(theadTemplate),
+        tagName: 'tr',
+        
+        template: function() {
+            var mkTd
+            Hbs.compile('<td colSpan={{ col }}>{{ name }}</td>')
+        },
+        
         initialize: function() {
-            this.model = Backbone.model
+            var courseChannel = Radio.channel('course');
+            this.model = courseChannel.request('current:course');
+            console.log('here!')
+            //this.collection = this.model.categories.;
+    
         }
 
         
@@ -41,7 +50,7 @@ define(function (require) {
 
         template: Hbs.compile(tbodyTemplate),
         initialize: function() {
-            this.model = Backbone.model
+            this.model = new Backbone.model();
         }
 
 
@@ -63,8 +72,11 @@ define(function (require) {
         template: Hbs.compile(template),
 
         initialize: function(options) {
-            this.model = new Backbone.model();
+            console.log('here');
+            this.model = Radio.channel('course').request('current:course');
+            console.log('here')
             this.viewState = new ViewState();
+            this.collection
 
 
         },
@@ -80,14 +92,16 @@ define(function (require) {
         http://marionettejs.com/docs/v2.4.1/marionette.layoutview.html#efficient-nested-view-structures
         */
         onShow: function() {
-            console.log('here');
+            
             this.addRegions( {
                 thead: "thead",
                 tbody: "tbody",
                 tfoot: "tfoot",
                 charts: ".charts",
             })
-            this.showChildView('thead', new HeaderView());
+            this.showChildView('thead', new HeaderView({
+                
+            }));
             this.showChildView('tbody', new BodyView());
             this.showChildView('tfoot', new FooterView());
         }

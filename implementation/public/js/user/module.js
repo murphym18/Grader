@@ -25,7 +25,7 @@ define(function (require) {
             session.once('login', function(user) {
                 
                 deferred.resolve(user);
-                pageChannel.request('modalRegion').empty();
+                //pageChannel.request('modalRegion');//.empty();
             });
             var loginView = new LoginView();
             loginView.once('destroy', function() {
