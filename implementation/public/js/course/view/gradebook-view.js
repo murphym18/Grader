@@ -18,12 +18,12 @@ define(function (require) {
     //var ChartView = require('app/chart');
     //var gradebookTemplate = require()
 
-    //
-    //var ViewState = Backbone.Model.extend({
-    //    initialize: function() {
-    //
-    //    }
-    //});
+
+    var ViewState = Backbone.Model.extend({
+        initialize: function() {
+
+        }
+    });
 
 
 
@@ -70,8 +70,8 @@ define(function (require) {
         },
         
         initialize: function(options) {
-            //this.model = Backbone.model;
-            //this.viewState = new ViewState();
+            this.model = Backbone.model;
+            this.viewState = new ViewState();
 
 
         },
@@ -86,7 +86,7 @@ define(function (require) {
         This is faster than rendering in onShow
         http://marionettejs.com/docs/v2.4.1/marionette.layoutview.html#efficient-nested-view-structures
         */
-        onBeforeShow: function() {
+        onShow: function() {
             console.log('here');
             this.showChildView('thead', new HeaderView());
             this.showChildView('tbody', new BodyView());
