@@ -27,6 +27,7 @@ define(function (require) {
 
         initialize: function(options) {
             this.model = courseChannel.request('current:course');
+            console.log(this.model);
         },
 
         /**
@@ -52,7 +53,6 @@ define(function (require) {
                      .append($("<option></option>")
                      .text(value)); 
             });
-            this.ui.dialog.hide();
         },
         events : {
             'click @ui.modifyCategoryButton' :  'showModifyCategory',
@@ -136,14 +136,6 @@ define(function (require) {
             var self = this;
 
             this.ui.dialog.hide();
-            this.ui.category.empty();
-            this.ui.parentCategory.empty();
-
-            App.UserCourses.fetch().then(function() {
-                self.onShow();
-                self.ui.modifyCategoryButton.show();
-                self.ui.catSelector.show();
-            });
         },
     })
 
