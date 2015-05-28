@@ -27,7 +27,7 @@ define(function (require) {
                 deferred.resolve(user);
             });
             var loginView = new LoginView();
-            login.once('destroy', function() {
+            loginView.once('destroy', function() {
                 deferred.reject('login modal closed by user');
             });
             pageChannel.request('modalRegion').show(loginView);
