@@ -13,7 +13,11 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var template = require('text!templates/gradeBookView.hbs');
     var theadTemplate = require('text!templates/gradeBookHeader.hbs');
+    var tbodyTemplate = require('text!templates/gradeBookBody.hbs');
+    var tfooterTemplate = require('text!templates/gradeBookFooter.hbs');
+    var ChartView = require('app/chart');
     //var gradebookTemplate = require()
+
 
     var ViewState = Backbone.Model.extend({
         initialize: function() {
@@ -22,9 +26,36 @@ define(function (require) {
     });
     
     var HeaderView = Mn.ItemView.extend({
-        template: Hbs.compile(theadTemplate)
+
+        template: Hbs.compile(theadTemplate),
+        initialize: function() {
+            this.model = Backbone.model
+        }
+
         
-    })
+    });
+
+    var BodyView = Mn.ItemView.extend({
+
+        template: Hbs.compile(tbodyTemplate),
+        initialize: function() {
+            this.model = Backbone.model
+        }
+
+
+    });
+
+    var FooterView = Mn.ItemView.extend({
+
+        template: Hbs.compile(tfooterTemplate),
+        initialize: function() {
+            this.model = Backbone.model
+        }
+
+
+    });
+
+
     
     return Mn.LayoutView.extend({
         template: Hbs.compile(template),
@@ -32,11 +63,17 @@ define(function (require) {
         regions: {
             thead: ".gradebook thead",
             tbody: ".gradebook tbody",
-            tfoot: ".gradebook tfoot"
+            tfoot: ".gradebook tfoot",
+            charts: ".charts"
         },
         
         initialize: function(options) {
+            this.model = Backbone.model;
             this.viewState = new ViewState();
+
+        },
+        onShow: function() {
+            this.showChildView('charts', new ChartView());
         },
         
         /* 
@@ -46,8 +83,8 @@ define(function (require) {
         onBeforeShow: function() {
             console.log('here')
             this.showChildView('thead', new HeaderView());
-            // this.showChildView('tbody', new FooterView());
-            // this.showChildView('tfoot', new FooterView());
+            this.showChildView('tbody', new BodyView());
+            this.showChildView('tfoot', new FooterView());
         }
     });
 });
