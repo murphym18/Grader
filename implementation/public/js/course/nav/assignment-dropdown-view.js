@@ -10,7 +10,8 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var pageChannel = Radio.channel('page');
     var template = require('text!templates/headerAssignmentDropdownView.hbs');
-    var modifyCategory = require('app/modifyCategory')
+    var modifyCategory = require('app/modifyCategory');
+    //var AddAssignmentView = require('app/addNewAssinment')
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -34,6 +35,12 @@ define(function (require) {
 
         showNewAssignment: function(domEvent) {
             //courseChannel.command('showAllCourses');
+            //userChannel.request('user').then(function(user) {
+            //    var modalRegion = pageChannel.request('modalRegion');
+            //    modalRegion.show(new AddAssignmentView);
+            //
+            //
+            //})
         },
 
         showNewCategory: function(domEvent) {
@@ -42,8 +49,13 @@ define(function (require) {
 
         showModifyCategory: function(domEvent) {
             //courseChannel.command('showUserCourses');
-            var modalRegion = pageChannel.request('modalRegion');
-            modalRegion.show(new modifyCategory);
+            userChannel.request('user').then(function(user) {
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new modifyCategory);
+
+
+            })
+
 
         }
     });
