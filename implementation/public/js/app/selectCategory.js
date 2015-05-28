@@ -20,7 +20,7 @@ define(function (require) {
         ui: {
             'category' : '.categorySelected',
             'ok' : '.ok',
-            'cancel' : '.error'
+            'error' : '.error'
         },
 
         initialize: function(options) {

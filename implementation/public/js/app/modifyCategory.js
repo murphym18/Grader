@@ -22,7 +22,7 @@ define(function (require) {
             'categoryWeight' : '.categoryWeight',
             'parentCategory' : '.categoryParent',
             'ok' : '.save',
-            'cancel' : '.error'
+            'error': '.error'
         },
 
         initialize: function(options) {
@@ -84,6 +84,20 @@ define(function (require) {
         saveModifyCategory : function() {
             var ui = this.ui;
             var self = this;
+
+            if (ui.categoryName.val().length === 0) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Error: Category name can not be empty"
+                }));
+                self.ui.saveButton.button('reset');
+            }
+
+            if (isNaN(ui.categoryWeight.val()) || ui.categoryWeight.val() < 0 || ui.categoryWeight.val() > 1) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Error: Category weight must be a number between 0 and 1"
+                }));
+                self.ui.saveButton.button('reset');
+            }
 
             var reqCatPath = this.category;
 
