@@ -72,7 +72,6 @@ define(function (require) {
         initialize: function(options) {
             this.model = Backbone.model;
             this.viewState = new ViewState();
-            console.log("path: ",path);
 
 
         },
