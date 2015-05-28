@@ -82,14 +82,15 @@ define(function (require) {
         },
         
         findColSpans: function() {
-            return _.each(this.tree, colSpan);
+            return this.tree.each(colSpan);
             function sum(memo, num){
                 return memo + num;
                 
             }
             function colSpan(elm) {
-                _.reduce(_.invoke(_.pluck(elm, 'assignments'), 'size'), sum, 0);
-            }
+                
+                return elm.get('assignments').size() + _.reduce(elm.tree, colSpan, sum, 0);
+            }   
         },
         
         constructor: function CategoiesCollection() {
