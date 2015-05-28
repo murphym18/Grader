@@ -11,6 +11,7 @@ define(function (require) {
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
     var Course = require('course/course');
+    var GradeBookView = require('course/view/gradebook-view');
     
     var Registery = Backbone.Collection.extend({
          constructor: function Registery() {
@@ -99,6 +100,8 @@ define(function (require) {
                 colloquialUrl: path
             });
             course.fetch({populate: true}).then(function(c) {
+                var mainRegion = pageChannel.request('mainRegion');
+                mainRegion.show(new GradeBookView(course));
                 console.dir(course);
                 window.x = course;
             })

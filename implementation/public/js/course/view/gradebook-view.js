@@ -11,20 +11,42 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var Radio = require('backbone.radio');
-    var webix = require('webix');
-    var textTemplate = require('text!templates/#.hbs');
+    var template = require('text!templates/gradeBookHeader.hbs.hbs');
+    var theadTemplate = require('text!templates/gradeBookHeader.hbs.hbs');
+
     var ViewState = Backbone.Model.extend({
         initialize: function() {
             
         }
     });
     
-    return Mn.ItemView.extend({
-        modelEvents: {
-            "change:name": "nameChanged" // equivalent to view.listenTo(view.model, "change:name", view.nameChanged, view)
+    var HeaderView = Mn.ItemView.extend({
+        template: Hbs.compile(theadTemplate)
+        
+    })
+    
+    return Mn.LayoutView.extend({
+        template: Hbs.compile(template),
+        
+        regions: {
+            thead: ".gradebook thead",
+            tbody: ".gradebook tbody",
+            tfoot: ".gradebook tfoot"
         },
+        
         initialize: function(options) {
             this.viewState = new ViewState();
+        },
+        
+        /* 
+        This is faster than rendering in onShow
+        http://marionettejs.com/docs/v2.4.1/marionette.layoutview.html#efficient-nested-view-structures
+        */
+        onBeforeShow: function() {
+            console.log('here')
+            this.showChildView('thead', new HeaderView());
+            // this.showChildView('tbody', new FooterView());
+            // this.showChildView('tfoot', new FooterView());
         }
     });
 });
