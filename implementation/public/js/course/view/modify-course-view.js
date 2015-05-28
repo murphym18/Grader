@@ -47,8 +47,9 @@ define(function (require) {
 
 
             this.model =  new Course; // courseChannel.request('current:course');
+            console.log('modify course working');
             this.alertTemplate = Hbs.compile(alertTemplate);
-            console.log(this.model);
+            //console.log(this.model);
             //this.ui.classSection.val(model.get('section'));
             //// TODO: Select Term
             //this.ui.year.val(model.get('year'));
