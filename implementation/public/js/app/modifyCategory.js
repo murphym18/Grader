@@ -126,7 +126,6 @@ define(function (require) {
             var self = this;
             Backbone.emulateHTTP = true;
             Q(this.model.save()).then(function(res) {
-                console.dir(['modify category save result:', res]);
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.empty();
                 courseChannel.command('updateCourses');
