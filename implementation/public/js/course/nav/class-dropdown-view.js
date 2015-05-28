@@ -8,7 +8,9 @@ define(function (require) {
     var userChannel = require('user/module');
     var Radio = require('backbone.radio');
     var courseChannel = Radio.channel('course');
+    var pageChannel = Radio.channel('page');
     var template = require('text!templates/headerCourseDropdownView.hbs');
+    var CreateCourseView = require('course/view/new-course-view');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -38,6 +40,12 @@ define(function (require) {
 
         showNewClass: function(domEvent) {
             //courseChannel.command('showAllCourses');
+            userChannel.request('user').then(function(user) {
+                //console.log('show new class');
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new CreateCourseView({user: user}));
+
+            })
         },
 
         showManageClass: function(domEvent) {
