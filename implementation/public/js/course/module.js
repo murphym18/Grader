@@ -19,7 +19,7 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var Course = require('course/course');
     var GradeBookView = require('course/view/gradebook-view');
-    require('course/view/modify-course-view');
+    //var NavModifyCourseView = require('course/view/modify-course-view');
     
     var Registry = Backbone.Collection.extend({
          constructor: function Registery() {
@@ -129,12 +129,12 @@ define(function (require) {
                 courseChannel.reply('current:course', function() {
                     return course;
                 })
-                var mainRegion = pageChannel.request('mainRegion');
+
                 var navRegion = pageChannel.request('navRegion');
                 navRegion.show(new NavItemsCollectionView({
                     collection: navBarCourseSpecificViews
                 }));
-                
+                var mainRegion = pageChannel.request('mainRegion');
                 mainRegion.show(new GradeBookView(course));
                 console.dir(course);
                 console.log('in load course page',path);
