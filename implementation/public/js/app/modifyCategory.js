@@ -44,9 +44,11 @@ define(function (require) {
             var self = this;
 
             var reqCatPath = this.category;
+            console.log(this.category);
 
             var categories = this.model.get('categories');
             var category = categories.findWhere({"path" : reqCatPath});
+            console.log(category);
 
             ui.parentCategory.append(self.optionTemplate());
             categories.each(function(catListItem) {
@@ -81,12 +83,24 @@ define(function (require) {
 
             var categories = this.model.get('categories');
             var category = categories.findWhere({"path" : reqCatPath});
-            console.log(category);
-            console.log(categories);
+            catPath = category.get("path");
+
+            var splitCatPath = catPath.split("#");
+            splitCatPath.pop();
+
+            var splitCatListItem, newSplitPath, finalPath;
 
             categories.each(function(catListItem) {
-                if (catListItem.get("path").indexOf(category.get("path")) === 0)
-                    catListItem.set("path", ui.parentCategory.val() + catListItem.get("path"));
+                splitCatListItem = catListItem.get("path").split("#");
+                newSplitPath = _.difference(splitCatListItem, splitCatPath);
+                finalPath = newSplitPath.join("#");
+
+                if (catListItem.get("path").indexOf(catPath) === 0) {
+                    if (newSplitPath.length === 0)
+                        catListItem.set("path", ui.parentCategory.val());
+                    else
+                        catListItem.set("path", ui.parentCategory.val() + "#" + finalPath);
+                }
             });
 
             category.set({
@@ -108,7 +122,7 @@ define(function (require) {
             Q(this.model.save()).then(function(res) {
                 console.dir(['modify category save result:', res]);
                 var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.hideModal();
+                modalRegion.empty();
                 courseChannel.command('updateCourses');
             },
             function(err) {

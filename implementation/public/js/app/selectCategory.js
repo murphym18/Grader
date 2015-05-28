@@ -42,7 +42,6 @@ define(function (require) {
             var categories = this.model.get('categories');
             var self = this;
 
-            ui.category.append(self.optionTemplate());
             categories.each(function(category) {
                 ui.category.append(self.optionTemplate(category.attributes));
             });
