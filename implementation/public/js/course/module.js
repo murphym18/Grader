@@ -100,6 +100,9 @@ define(function (require) {
                 colloquialUrl: path
             });
             course.fetch({populate: true}).then(function(c) {
+                courseChannel.respond('current:course', function() {
+                    return course;
+                })
                 var mainRegion = pageChannel.request('mainRegion');
                 mainRegion.show(new GradeBookView(course));
                 console.dir(course);
