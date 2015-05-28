@@ -22,7 +22,6 @@ define(function (require) {
                     var modalRegion = pageChannel.request('modalRegion');
                     modalRegion.show(new ModifyCourseView({user: user}));
 
-
                 })
 
             }
