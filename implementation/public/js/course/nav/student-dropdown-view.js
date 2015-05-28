@@ -10,6 +10,7 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var pageChannel = Radio.channel('page');
     var template = require('text!templates/headerStudentDropdownView.hbs');
+    var AddNewStudentView = require('app/addNewStudent');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -37,6 +38,12 @@ define(function (require) {
 
         showNewStudent: function(domEvent) {
             //courseChannel.command('showAllCourses');
+            userChannel.request('user').then(function(user) {
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new AddNewStudentView);
+
+
+            })
         },
 
         showManageStudent: function(domEvent) {
