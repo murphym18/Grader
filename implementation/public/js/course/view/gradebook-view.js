@@ -24,7 +24,9 @@ define(function (require) {
             
         }
     });
-    
+
+
+
     var HeaderView = Mn.ItemView.extend({
 
         template: Hbs.compile(theadTemplate),
@@ -64,18 +66,23 @@ define(function (require) {
             thead: ".gradebook thead",
             tbody: ".gradebook tbody",
             tfoot: ".gradebook tfoot",
-            charts: ".charts"
+            charts: ".charts",
         },
         
         initialize: function(options) {
             this.model = Backbone.model;
             this.viewState = new ViewState();
+            console.log("path: ",path);
+
 
         },
-        onShow: function() {
-            this.showChildView('charts', new ChartView());
-        },
-        
+        //onShow: function() {
+        //    //this.showChildView('charts', new ChartView());
+        //},
+        //render: function() {
+        //    //this.$el.html(this.template({title: classCode}));
+        //},
+        //
         /* 
         This is faster than rendering in onShow
         http://marionettejs.com/docs/v2.4.1/marionette.layoutview.html#efficient-nested-view-structures
