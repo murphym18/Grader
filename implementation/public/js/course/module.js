@@ -1,4 +1,6 @@
 define(function (require) {
+    var _ = require('underscore')
+    var Q = require('q')
     var App = require('app/app');
     var Backbone = require('util/backbone-helper');
     var LoadingView = require('util/promise-loading-view');
@@ -36,16 +38,7 @@ define(function (require) {
         }
     });
     
-    var navBarViews = new Backbone.Collection([
-        new Backbone.Model({
-            viewClass: NavClassDropdownView
-        }),
-        new Backbone.Model({
-            viewClass: NavStudentDropdownView
-        }),
-        new Backbone.Model({
-            viewClass: NavAssignmentDropdownView
-        }),
+    var navBarAllCoursesViews = new Backbone.Collection([
         new Backbone.Model({
             viewClass: NavCourseFilterView
         }),
@@ -54,6 +47,18 @@ define(function (require) {
         }),
         new Backbone.Model({
             viewClass: NavModifyCourseView
+        })
+    ]);
+
+    var navBarCourseSpecificViews = new Backbone.Collection([
+        new Backbone.Model({
+            viewClass: NavClassDropdownView
+        }),
+        new Backbone.Model({
+            viewClass: NavStudentDropdownView
+        }),
+        new Backbone.Model({
+            viewClass: NavAssignmentDropdownView
         })
     ]);
 
@@ -68,7 +73,7 @@ define(function (require) {
             coursesPromise.then(function() {
                 var navRegion = pageChannel.request('navRegion');
                 navRegion.show(new NavItemsCollectionView({
-                    collection: navBarViews
+                    collection: navBarAllCoursesViews
                 }));
                 mainRegion.show(new CourseListView({
                     collection: courseList
@@ -93,7 +98,7 @@ define(function (require) {
                 userCoursesPromise.then(function(userCourses) {
                     var navRegion = pageChannel.request('navRegion');
                     navRegion.show(new NavItemsCollectionView({
-                        collection: navBarViews
+                        collection: navBarAllCoursesViews
                     }));
                     mainRegion.show(new CourseListView({
                         collection: userCourses
@@ -116,16 +121,22 @@ define(function (require) {
             var course = new Course({
                 colloquialUrl: path
             });
-            course.fetch({populate: true}).then(function(c) {
-                courseChannel.respond('current:course', function() {
+            
+            Q.timeout(course.fetch({populate: true}).then(function(c) {
+                courseChannel.reply('current:course', function() {
                     return course;
                 })
                 var mainRegion = pageChannel.request('mainRegion');
-                mainRegion.show(new GradeBookView(course));
+                var navRegion = pageChannel.request('navRegion');
+                    navRegion.show(new NavItemsCollectionView({
+                        collection: navBarCourseSpecificViews
+                    }));
+                
+                //mainRegion.show(new GradeBookView(course));
                 console.dir(course);
                 console.log('in load course page',path);
                 window.x = course;
-            })
+            }), 2000).done()
             
         }
     }

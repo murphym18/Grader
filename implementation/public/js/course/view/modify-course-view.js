@@ -44,21 +44,32 @@ define(function (require) {
         },
 
         initialize: function(options) {
-            this.model = new Course;
-            this.model.get('roles').push({
-                "name":"INSTRUCTOR",
-                "users":[options.user],
-                "permissions":[]
-            });
+
+
+            this.model =  new Course; // courseChannel.request('current:course');
+            this.alertTemplate = Hbs.compile(alertTemplate);
+            console.log(this.model);
+            //this.ui.classSection.val(model.get('section'));
+            //// TODO: Select Term
+            //this.ui.year.val(model.get('year'));
+
             this.onSelectWinter = _.bind(this.setTerm, this, 'Winter');
             this.onSelectSpring = _.bind(this.setTerm, this, 'Spring');
             this.onSelectSummer = _.bind(this.setTerm, this, 'Summer');
             this.onSelectFall = _.bind(this.setTerm, this, 'Fall');
-            this.alertTemplate = Hbs.compile(alertTemplate);
+
         },
 
         onShownModal: function() {
             this.ui.classCode.focus();
+            this.ui.classCode.val('CPE'/* TODO: model.get('classCode') */);
+            this.ui.classNumber.val('101'/* TODO: model.get('classNumber')*/);
+            this.ui.classSection.val('1'/* TODO: model.get('section') */);
+
+            /* TODO: Read term and select button */
+            this.ui.fall.button('toggle');
+
+            this.ui.year.val('2015' /* TODO: model.get('year') */);
         },
 
         updateClassCode: function() {
