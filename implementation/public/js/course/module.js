@@ -114,9 +114,10 @@ define(function (require) {
                 var mainRegion = pageChannel.request('mainRegion');
                 mainRegion.show(new GradeBookView(course));
                 console.dir(course);
+                console.log('in load course page',path);
                 window.x = course;
             })
-            console.log('in load course page',path);
+            
         }
     }
     
