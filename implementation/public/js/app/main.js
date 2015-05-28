@@ -27,7 +27,10 @@ requirejs.config({
    shim: {
       'jquery-ui': ['jquery'],
       'jquery.magnific-popup' : ['jquery', 'jquery-ui'],
-      'bootstrap': ['jquery']
+      'bootstrap': ['jquery'],
+      'query-engine': {
+         exports: 'queryEngine'
+      }
    }
 });
 
