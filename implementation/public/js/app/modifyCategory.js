@@ -25,6 +25,11 @@ define(function (require) {
             'cancel' : '.error'
         },
 
+        initialize: function(options) {
+            this.model = courseChannel.request('current:course');
+            console.log(this.model);
+        },
+
         /**
          * Hide the modify category dialog on initial load. Also,
          * create a dropdown menu for testing purposes that allows
@@ -48,7 +53,6 @@ define(function (require) {
                      .append($("<option></option>")
                      .text(value)); 
             });
-            this.ui.dialog.hide();
         },
         events : {
             'click @ui.modifyCategoryButton' :  'showModifyCategory',
@@ -132,14 +136,6 @@ define(function (require) {
             var self = this;
 
             this.ui.dialog.hide();
-            this.ui.category.empty();
-            this.ui.parentCategory.empty();
-
-            App.UserCourses.fetch().then(function() {
-                self.onShow();
-                self.ui.modifyCategoryButton.show();
-                self.ui.catSelector.show();
-            });
         },
     })
 

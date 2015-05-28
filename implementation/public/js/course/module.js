@@ -5,8 +5,10 @@ define(function (require) {
     var CourseList = require('course/course-list');
     var CourseListView = require('course/view/course-list-view');
     var NavCourseFilterView = require('course/nav/filter-list-view');
-    var NavCreateCourseView = require('course/nav/new-course-button-view')
+    var NavCreateCourseView = require('course/nav/new-course-button-view');
+    var NavModifyCourseView = require('course/nav/modify-course-button-view');
     var NavClassDropdownView = require('course/nav/class-dropdown-view');
+    var NavStudentDropdownView = require('course/nav/student-dropdown-view');
     var NavAssignmentDropdownView = require('course/nav/assignment-dropdown-view');
     var Radio = require('backbone.radio');
     var userChannel = require('user/module');
@@ -15,15 +17,16 @@ define(function (require) {
     var Course = require('course/course');
     var GradeBookView = require('course/view/gradebook-view');
     
-    var Registery = Backbone.Collection.extend({
+    var Registry = Backbone.Collection.extend({
          constructor: function Registery() {
              Backbone.Collection.apply(this);
          }
-     })
-    var registery = window.regestery =new Registery();
+     });
+
+    var registry = window.regestery = new Registry();
     courseChannel.comply('register', function(doc) {
-        registery.add(doc);
-    })
+        registry.add(doc);
+    });
     
     var NavItemsCollectionView = Marionette.CollectionView.extend({
         tagName: 'ul',
@@ -38,6 +41,9 @@ define(function (require) {
             viewClass: NavClassDropdownView
         }),
         new Backbone.Model({
+            viewClass: NavStudentDropdownView
+        }),
+        new Backbone.Model({
             viewClass: NavAssignmentDropdownView
         }),
         new Backbone.Model({
@@ -45,6 +51,9 @@ define(function (require) {
         }),
         new Backbone.Model({
             viewClass: NavCreateCourseView
+        }),
+        new Backbone.Model({
+            viewClass: NavModifyCourseView
         })
     ]);
 
@@ -103,7 +112,7 @@ define(function (require) {
 
         },
         loadCoursePage: function(path) {
-            registery.reset();
+            registry.reset();
             var course = new Course({
                 colloquialUrl: path
             });
