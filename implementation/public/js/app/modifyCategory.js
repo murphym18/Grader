@@ -25,6 +25,10 @@ define(function (require) {
             'cancel' : '.error'
         },
 
+        initialize: function(options) {
+            this.model = courseChannel.request('current:course');
+        },
+
         /**
          * Hide the modify category dialog on initial load. Also,
          * create a dropdown menu for testing purposes that allows
