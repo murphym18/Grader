@@ -46,7 +46,7 @@ define(function (require) {
             var reqCatPath = this.category;
 
             var categories = this.model.get('categories');
-            var category = categories.findOne({"path" : reqCatPath});
+            var category = categories.findWhere({"path" : reqCatPath});
 
             ui.parentCategory.append(self.optionTemplate());
             categories.each(function(catListItem) {
@@ -80,7 +80,7 @@ define(function (require) {
             var reqCatPath = this.category;
 
             var categories = this.model.get('categories');
-            var category = categories.findOne({"path" : reqCatPath});
+            var category = categories.findWhere({"path" : reqCatPath});
             console.log(category);
 
             category.set({
@@ -88,8 +88,7 @@ define(function (require) {
                 weight : ui.categoryWeight.val(),
                 path : ui.parentCategory.val()
             });
-
-            this.model.set("categories", categories);
+            
             self.closeModifyCategory();
         },
         /**
