@@ -15,15 +15,15 @@ define(function (require) {
     var theadTemplate = require('text!templates/gradeBookHeader.hbs');
     var tbodyTemplate = require('text!templates/gradeBookBody.hbs');
     var tfooterTemplate = require('text!templates/gradeBookFooter.hbs');
-    var ChartView = require('app/chart');
+    //var ChartView = require('app/chart');
     //var gradebookTemplate = require()
 
-
-    var ViewState = Backbone.Model.extend({
-        initialize: function() {
-            
-        }
-    });
+    //
+    //var ViewState = Backbone.Model.extend({
+    //    initialize: function() {
+    //
+    //    }
+    //});
 
 
 
@@ -66,12 +66,12 @@ define(function (require) {
             thead: ".gradebook thead",
             tbody: ".gradebook tbody",
             tfoot: ".gradebook tfoot",
-            charts: ".charts",
+            charts: ".charts"
         },
         
         initialize: function(options) {
-            this.model = Backbone.model;
-            this.viewState = new ViewState();
+            //this.model = Backbone.model;
+            //this.viewState = new ViewState();
 
 
         },
@@ -86,8 +86,8 @@ define(function (require) {
         This is faster than rendering in onShow
         http://marionettejs.com/docs/v2.4.1/marionette.layoutview.html#efficient-nested-view-structures
         */
-        onShow: function() {
-            console.log('here')
+        onBeforeShow: function() {
+            console.log('here');
             this.showChildView('thead', new HeaderView());
             this.showChildView('tbody', new BodyView());
             this.showChildView('tfoot', new FooterView());

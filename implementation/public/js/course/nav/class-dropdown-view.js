@@ -56,7 +56,7 @@ define(function (require) {
             userChannel.request('user').then(function(user) {
                 //console.log('show new class');
                 var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new ManageCourseView({user: user}));
+                modalRegion.show(new ManageCourseView());
 
             })
         },
