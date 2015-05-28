@@ -87,16 +87,23 @@ define(function (require) {
 
             if (ui.categoryName.val().length === 0) {
                 self.ui.error.html(self.alertTemplate({
-                    message: "Error: Category name can not be empty"
+                    message: "Category name can not be empty"
                 }));
-                self.ui.saveButton.button('reset');
+                return;
+            }
+
+            if (ui.categoryName.val().indexOf("#") !== -1) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Category name can not contain a '#' sign"
+                }));
+                return;
             }
 
             if (isNaN(ui.categoryWeight.val()) || ui.categoryWeight.val() < 0 || ui.categoryWeight.val() > 1) {
                 self.ui.error.html(self.alertTemplate({
-                    message: "Error: Category weight must be a number between 0 and 1"
+                    message: "Category weight must be a number between 0 and 1"
                 }));
-                self.ui.saveButton.button('reset');
+                return;
             }
 
             var reqCatPath = this.category;
@@ -141,7 +148,8 @@ define(function (require) {
             Backbone.emulateHTTP = true;
             Q(this.model.save()).then(function(res) {
                 var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.empty();
+                modalRegion.hideModal();
+                //self.trigger("close");
                 courseChannel.command('updateCourses');
             },
             function(err) {
