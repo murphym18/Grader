@@ -45,7 +45,6 @@ define(function (require) {
    require('app/modifyStudent');
    require('app/addNewStudent')
    require('bootstrap');
-   require('webix');
    require('domReady!');
    
    App.start({});
