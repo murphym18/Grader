@@ -52,7 +52,7 @@ define(function (require) {
         new Backbone.Model({
             viewClass: NavCreateCourseView
         }),
-        new BackBone.Model({
+        new Backbone.Model({
             viewClass: NavModifyCourseView
         })
     ]);
