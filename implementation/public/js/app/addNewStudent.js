@@ -20,7 +20,7 @@ define(function (require) {
 
     return Mn.ItemView.extend({
         tagName: 'div',
-        className: 'newClass modal-dialog  modal-lg',
+        className: 'newStudent modal-dialog  modal-lg',
         template: Hbs.compile(template),
         ui: {
             'addStudentButton' : '.addStudentButton',
@@ -105,14 +105,13 @@ define(function (require) {
             if (this.ui.studentPhone.val())
                 newStudent.phone = this.ui.studentPhone.val();
 
-            this.model.get('students').push(newStudent);
+            //this.model.get('students').push(newStudent);
 
-            this.ui.dialog.hide();
-            Backbone.emulateHTTP = true;
+            //this.ui.dialog.hide();
+            //Backbone.emulateHTTP = true;
             var self = this;
-            this.model.save().then(function(){
-                self.ui.addStudentButton.show();
-            });
+            this.model.save();
+            this.model.close();
         },
 
         /**
@@ -121,10 +120,10 @@ define(function (require) {
          * @this {AddStudentView}
          */
 
-        closeModifyStudent : function() {
-            this.ui.dialog.hide();
-            this.ui.addStudentButton.show();
-        }
+        //closeModifyStudent : function() {
+        //    this.ui.dialog.hide();
+        //    this.ui.addStudentButton.show();
+        //}
 
 
     })
