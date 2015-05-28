@@ -11,7 +11,9 @@ define(function (require) {
     var pageChannel = Radio.channel('page');
     var template = require('text!templates/headerCourseDropdownView.hbs');
     var CreateCourseView = require('course/view/new-course-view');
-    var ManageCourseView = require('course/view/manage-course-view');
+    var ManageCourseView = require('course/view/modify-course-view');
+    var GradeSchemeView  = require('course/view/gradescheme-view');
+    var LatePolicyView  = require('course/view/late-policy-view');
 
 
 
@@ -63,10 +65,22 @@ define(function (require) {
 
         showGradeScheme: function(domEvent) {
             //courseChannel.command('showUserCourses');
+            userChannel.request('user').then(function(user) {
+                //console.log('show new class');
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new GradeSchemeView());
+
+            })
         },
 
         showLatePolicy: function(domEvent) {
             //courseChannel.command('showUserCourses');
+            userChannel.request('user').then(function(user) {
+                //console.log('show new class');
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new LatePolicyView());
+
+            })
         },
 
         showPermissions: function(domEvent) {
