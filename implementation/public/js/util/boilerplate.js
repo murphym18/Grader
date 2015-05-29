@@ -12,7 +12,7 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     
-    var textTemplate = require('text!templates/#.hbs');
+    //var textTemplate = require('text!templates/#.hbs');
     
     return
 });

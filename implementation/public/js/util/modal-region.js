@@ -5,8 +5,6 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     require('bootstrap');
     
-    var textTemplate = require('text!templates/#.hbs');
-    
     return Mn.Region.extend({
         el: "#modal",
         

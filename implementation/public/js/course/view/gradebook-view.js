@@ -11,10 +11,10 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var Radio = require('backbone.radio');
-    var template = require('text!templates/gradeBookView.hbs');
-    var theadTemplate = require('text!templates/gradeBookHeader.hbs');
-    var tbodyTemplate = require('text!templates/gradeBookBody.hbs');
-    var tfooterTemplate = require('text!templates/gradeBookFooter.hbs');
+    var template = require('text!templates/gradebookView.hbs');
+    // var theadTemplate = require('text!templates/gradeBookHeader.hbs');
+    // var tbodyTemplate = require('text!templates/gradeBookBody.hbs');
+    // var tfooterTemplate = require('text!templates/gradeBookFooter.hbs');
     //var ChartView = require('app/chart');
     //var gradebookTemplate = require()
 
@@ -24,85 +24,61 @@ define(function (require) {
 
         }
     });
-
-
-
-    var HeaderView = Mn.ItemView.extend({
-        tagName: 'tr',
+    
+    return Mn.ItemView.extend({
+        template: Hbs.compile(template),
         
-        template: function() {
-            Hbs.compile('<td colSpan={{ col }}>{{ name }}</td>')
+        ui: {
+            thead: "thead",
+            tbody: "tbody",
+            tfoot: "tfoot",
+            charts: ".charts",
         },
         
-        initialize: function() {
-            var courseChannel = Radio.channel('course');
-            this.model = courseChannel.request('current:course');
-            console.log('here!')
-            //this.collection = this.model.categories.;
-    
-        }
-
-        
-    });
-
-    var BodyView = Mn.ItemView.extend({
-
-        template: Hbs.compile(tbodyTemplate),
-        initialize: function() {
-            this.model = new Backbone.model();
-        }
-
-
-    });
-
-    var FooterView = Mn.ItemView.extend({
-
-        template: Hbs.compile(tfooterTemplate),
-        initialize: function() {
-            this.model = Backbone.model
-        }
-
-
-    });
-
-
-    
-    return Mn.LayoutView.extend({
-        template: Hbs.compile(template),
+        modelEvents: {
+            'all': 'onShow'
+        },
 
         initialize: function(options) {
             console.log('here');
             this.model = Radio.channel('course').request('current:course');
-            console.log('here')
+            
+            console.log(this.model == window.x, this.model)
             this.viewState = new ViewState();
-            this.collection
+            
 
 
         },
-        //onShow: function() {
-        //    //this.showChildView('charts', new ChartView());
-        //},
-        //render: function() {
-        //    //this.$el.html(this.template({title: classCode}));
-        //},
-        //
-        /* 
-        This is faster than rendering in onShow
-        http://marionettejs.com/docs/v2.4.1/marionette.layoutview.html#efficient-nested-view-structures
-        */
+        
         onShow: function() {
+            var ui = this.ui;
+            console.log(ui);
+            ui.tbody.empty()
             
-            this.addRegions( {
-                thead: "thead",
-                tbody: "tbody",
-                tfoot: "tfoot",
-                charts: ".charts",
-            })
-            this.showChildView('thead', new HeaderView({
+            ui.tbody.get(0).appendChild(this.createHead());
+            console.log('here');
+        },
+        
+        createHead: function() {
+            var docfrag = window.document.createDocumentFragment();
+            var layout = this.model.categories.calculateTableHeaderLayout();
+            _.each(layout, function(row) {
+                var tr = window.document.createElement("tr");
+                _.each(row, function(cell) {
+                    var td = window.document.createElement("td");
+                    
+                    td.setAttribute("colspan", cell.colspan);
+                    td.setAttribute("rowspan", cell.rowspan);
+                    td.setAttribute("class", cell.style);
+                    td.setAttribute("data-cid", cell.cid);
+                    td.appendChild(document.createTextNode(cell.name));
+             
+                    tr.appendChild(td);
+                });
                 
-            }));
-            this.showChildView('tbody', new BodyView());
-            this.showChildView('tfoot', new FooterView());
+                docfrag.appendChild(tr);
+            });
+            return docfrag;
         }
     });
 });

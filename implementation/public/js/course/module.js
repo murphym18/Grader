@@ -95,7 +95,7 @@ define(function (require) {
                     courseList.fetch();
                     courseList.sort();
                 });
-                App.go('/courses', {trigger:false, replace: true});
+                App.go('/', {trigger:false, replace: true});
             });
 
         },
@@ -121,11 +121,11 @@ define(function (require) {
                         userCourses.fetch();
                         userCourses.sort();
                     });
-                    App.go('/user/courses', {
-                        trigger:false,
-                        replace: true
+                    // App.go('/user/courses', {
+                    //     trigger:false,
+                    //     replace: true
                         
-                    });
+                    // });
                 });
             });
 
@@ -174,6 +174,6 @@ define(function (require) {
     });
     
     userChannel.on('logout', function() {
-        App.go('/', {trigger:true, replace: true});
+        //App.go('/', {trigger:true, replace: true});
     });
 });

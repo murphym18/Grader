@@ -131,8 +131,8 @@ define(function (require) {
                         rows[i].push({
                             name: cat.get('name'),
                             style: "category",
-                            colSpan: colCats[cat.cid],
-                            rowSpan: 1,
+                            colspan: colCats[cat.cid],
+                            rowspan: 1,
                             cid: cat.cid
                         })
                         if (cat.has('assignments')) {
@@ -144,7 +144,7 @@ define(function (require) {
                                 return {
                                     name: a.get('name'),
                                     style: "assignment",
-                                    colSpan: 1,
+                                    colspan: 1,
                                     cid: cat.cid
                                 }
                             }).forEach(function(a) {
@@ -161,7 +161,7 @@ define(function (require) {
                 rows[i].filter(function(e) {
                     return e.style === "assignment";
                 }).forEach(function (a) {
-                    a.rowSpan = height;
+                    a.rowspan = height;
                 });
             }
             return rows;
