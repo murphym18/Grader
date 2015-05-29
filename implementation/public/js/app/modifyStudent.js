@@ -27,7 +27,7 @@ define(function (require) {
         template: Hbs.compile(template),
         ui: {
             'modifyStudentButton': '.modifyStudentButton',
-            'ok': '.ok',
+            'save': '.save',
             'cancel': '.cancel',
             'dialog': '.popup-dialog',
             'studentFirstName': '.studentFirstName',
@@ -40,18 +40,52 @@ define(function (require) {
 
         },
 
-        /**
-         * Hides the dialog on initial load
-         *
-         * @this {ModifyStudentView}
-         */
-        //onShow: function () {
-        //
-        //},
         events: {
-            'click @ui.modifyStudentButton': 'showModifyStudent',
-            'click @ui.ok': 'updateStudentInfo',
-            //'click @ui.cancel': 'closeModifyStudent'
+            'click @ui.save': 'updateStudentInfo'
+        },
+
+        // Grant Campanelli Added
+        initialize: function(options) {
+            this.model = courseChannel.request('current:course');
+            this.student = options.student;
+            console.log(this.student);
+        },
+        // Grant Campanelli Added
+        render: function() {
+            var students = this.model.get('students');
+            var self = this;
+            var studentToModify = [];
+            students.each(function(s){
+                if(self.options.student == s.get('user').at(0).get('emplId')) {
+                    studentToModify = s.get('user').at(0);
+                }
+            });
+
+            if(!studentToModify) {
+                console.log("error, student wasnt found for delete");
+                return;
+            }
+
+            var first = studentToModify.get('first')
+            var last = studentToModify.get('last')
+            var id = studentToModify.get('emplId')
+            var nickname = studentToModify.get('nickname')
+            var group = studentToModify.get('group')
+            var email = studentToModify.get('email')
+            var phone  = studentToModify.get('phone')
+
+
+            this.$el.html(this.template({
+                first: first,
+                last: last,
+                id : id,
+                nickname : nickname,
+                group : group,
+                email : email,
+                phone : phone
+            }));
+
+            return this;
         },
 
         /**
@@ -64,45 +98,45 @@ define(function (require) {
             //this.ui.dialog.show();
             //this.ui.modifyStudentButton.hide();
 
-            if (this.model.get('students')[1].first)
-                this.ui.studentFirstName.val(this.model.get('students')[1].first);
-            else
-                this.ui.studentFirstName.val(this.model.get('students')[1].user.first);
-
-
-            if (this.model.get('students')[1].last)
-                this.ui.studentLastName.val(this.model.get('students')[1].last);
-            else
-                this.ui.studentLastName.val(this.model.get('students')[1].user.last);
-
-
-            if (this.model.get('students')[1].emplId)
-                this.ui.studentID.val(this.model.get('students')[1].emplId);
-            else
-                this.ui.studentID.val(this.model.get('students')[1].user.emplId);
-
-            if (this.model.get('students')[1].nickname)
-                this.ui.studentNickname.val(this.model.get('students')[1].nickname);
-            else
-                this.ui.studentNickname.val(this.model.get('students')[1].user.nickname);
-
-
-            if (this.model.get('students')[1].group)
-                this.ui.studentGroup.val(this.model.get('students')[1].group);
-            else
-                this.ui.studentGroup.val(this.model.get('students')[1].user.group);
-
-
-            if (this.model.get('students')[1].email)
-                this.ui.studentEmail.val(this.model.get('students')[1].email);
-            else
-                this.ui.studentEmail.val(this.model.get('students')[1].user.email);
-
-
-            if (this.model.get('students')[1].phone)
-                this.ui.studentPhone.val(this.model.get('students')[1].phone);
-            else
-                this.ui.studentPhone.val(this.model.get('students')[1].user.phone);
+            //if (this.model.get('students')[1].first)
+            //    this.ui.studentFirstName.val(this.model.get('students')[1].first);
+            //else
+            //    this.ui.studentFirstName.val(this.model.get('students')[1].user.first);
+            //
+            //
+            //if (this.model.get('students')[1].last)
+            //    this.ui.studentLastName.val(this.model.get('students')[1].last);
+            //else
+            //    this.ui.studentLastName.val(this.model.get('students')[1].user.last);
+            //
+            //
+            //if (this.model.get('students')[1].emplId)
+            //    this.ui.studentID.val(this.model.get('students')[1].emplId);
+            //else
+            //    this.ui.studentID.val(this.model.get('students')[1].user.emplId);
+            //
+            //if (this.model.get('students')[1].nickname)
+            //    this.ui.studentNickname.val(this.model.get('students')[1].nickname);
+            //else
+            //    this.ui.studentNickname.val(this.model.get('students')[1].user.nickname);
+            //
+            //
+            //if (this.model.get('students')[1].group)
+            //    this.ui.studentGroup.val(this.model.get('students')[1].group);
+            //else
+            //    this.ui.studentGroup.val(this.model.get('students')[1].user.group);
+            //
+            //
+            //if (this.model.get('students')[1].email)
+            //    this.ui.studentEmail.val(this.model.get('students')[1].email);
+            //else
+            //    this.ui.studentEmail.val(this.model.get('students')[1].user.email);
+            //
+            //
+            //if (this.model.get('students')[1].phone)
+            //    this.ui.studentPhone.val(this.model.get('students')[1].phone);
+            //else
+            //    this.ui.studentPhone.val(this.model.get('students')[1].user.phone);
 
 
             //this.ui.studentFirstName.val(this.model.get('first'));
@@ -127,33 +161,34 @@ define(function (require) {
             //var email = this.ui.studentEmail.val();
             //var phone = this.ui.studentPhone;
 
-            if (this.ui.studentFirstName.val())
-                this.model.get('students')[1].first = this.ui.studentFirstName.val();
-
-            if (this.ui.studentLastName.val())
-                this.model.get('students')[1].last = this.ui.studentLastName.val();
-
-            if (this.ui.studentID.val())
-                this.model.get('students')[1].emplId = this.ui.studentID.val();
-
-            if (this.ui.studentNickname.val())
-                this.model.get('students')[1].nickname = this.ui.studentNickname.val();
-
-            if (this.ui.studentGroup.val())
-                this.model.get('students')[1].group = this.ui.studentGroup.val();
-
-            if (this.ui.studentEmail.val())
-                this.model.get('students')[1].email = this.ui.studentEmail.val();
-
-            if (this.ui.studentPhone.val())
-                this.model.get('students')[1].phone = this.ui.studentPhone.val();
-
-            //this.ui.dialog.hide();
-            Backbone.emulateHTTP = true;
-            var self = this;
-            this.model.save().then(function () {
-                self.ui.modifyStudentButton.close();
-            });
+            //if (this.ui.studentFirstName.val())
+            //    this.model.get('students')[1].first = this.ui.studentFirstName.val();
+            //
+            //if (this.ui.studentLastName.val())
+            //    this.model.get('students')[1].last = this.ui.studentLastName.val();
+            //
+            //if (this.ui.studentID.val())
+            //    this.model.get('students')[1].emplId = this.ui.studentID.val();
+            //
+            //if (this.ui.studentNickname.val())
+            //    this.model.get('students')[1].nickname = this.ui.studentNickname.val();
+            //
+            //if (this.ui.studentGroup.val())
+            //    this.model.get('students')[1].group = this.ui.studentGroup.val();
+            //
+            //if (this.ui.studentEmail.val())
+            //    this.model.get('students')[1].email = this.ui.studentEmail.val();
+            //
+            //if (this.ui.studentPhone.val())
+            //    this.model.get('students')[1].phone = this.ui.studentPhone.val();
+            //
+            ////this.ui.dialog.hide();
+            ////Backbone.emulateHTTP = true;
+            //var self = this;
+            //this.model.save().then(function () {
+            //    self.ui.modifyStudentButton.close();
+            //});
+            this.closeModifyStudent();
         },
 
         /**
@@ -163,8 +198,9 @@ define(function (require) {
          */
 
         closeModifyStudent: function () {
-            this.ui.dialog.hide();
-            this.ui.modifyStudentButton.show();
+            //this.ui.dialog.hide();
+           // this.ui.modifyStudentButton.show();
+            $('.cancel').click();
         }
     })
 });
