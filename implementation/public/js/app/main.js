@@ -41,13 +41,13 @@ define(function (require) {
    var Radio = require('backbone.radio');
    require('user/module');
    require('course/module');
-   require('app/chart');
-   require('app/modifyAssignment');
-   require('app/modifyCategory');
-   require('app/newAssignment');
-   require('app/modifyClass');
-   require('app/modifyStudent');
-   require('app/addNewStudent')
+   //require('app/chart');
+   //require('app/modifyAssignment');
+   //require('app/modifyCategory');
+   //require('app/newAssignment');
+   //require('app/modifyClass');
+   //require('app/modifyStudent');
+   //require('app/addNewStudent')
    require('bootstrap');
    require('domReady!');
    

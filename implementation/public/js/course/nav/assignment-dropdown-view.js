@@ -12,7 +12,7 @@ define(function (require) {
     var template = require('text!templates/headerAssignmentDropdownView.hbs');
     var modifyCategory = require('app/modifyCategory');
     var selectCategory = require('app/selectCategory');
-    //var AddAssignmentView = require('app/addNewAssinment')
+    var NewAssignmentView = require('course/view/addNewAssignment');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -40,8 +40,11 @@ define(function (require) {
             //    var modalRegion = pageChannel.request('modalRegion');
             //    modalRegion.show(new AddAssignmentView);
             //
-            //
             //})
+            console.log("clicked on add new assignment");
+            var modalRegion = pageChannel.request('modalRegion');
+            //console.log("clicked on add new assignment");
+            modalRegion.show(new NewAssignmentView());
         },
 
         showNewCategory: function(domEvent) {
