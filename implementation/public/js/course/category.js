@@ -104,6 +104,25 @@ define(function (require) {
             return result;
         },
         
+        findRowSpans: function() {
+            var result = {}
+            function max(a, b) {
+                return Math.max(a, b);
+            }
+            
+            function height(cat) {
+                var h = 1;
+                if (_.isArray(cat.tree)) {
+                    h += _.reduce(cat.tree.map(height), max, 0);
+                }
+                result[cat.cid] = h;
+                return h;
+            }
+            
+            height(this.tree);
+            return result;
+        },
+        
         groupByRow: function() {
             var arr = [];
             function depth(elm) {
@@ -120,51 +139,85 @@ define(function (require) {
         
         calculateTableHeaderLayout: function() {
             var rowCats = this.groupByRow();
-            var colCats = this.findColSpans();
-            var rows = [];
-            for (var i = 0; i < rowCats.length; ++i) {
-                if (rows.length <= i) {
-                    rows.push([]);
-                }
-                _.each(rowCats[i], function(cat) {
-                    if (colCats[cat.cid] > 0) {
-                        rows[i].push({
-                            name: cat.get('name'),
-                            style: "category",
-                            colspan: colCats[cat.cid],
-                            rowspan: 1,
-                            cid: cat.cid
-                        })
-                        if (cat.has('assignments')) {
-                            if (rows.length <= i + 1) {
-                                rows.push([]);
-                            }
-                            var assignments = cat.get('assignments').models;
-                            _.map(assignments, function(a) {
-                                return {
-                                    name: a.get('name'),
-                                    style: "assignment",
-                                    colspan: 1,
-                                    cid: cat.cid
-                                }
-                            }).forEach(function(a) {
-                                rows[i + 1].push(a);
-                            });
-                        }
-                    }
-                })
+            var colspan = _.partial(lookup, this.findColSpans())
+            var rowspan = _.partial(lookup, this.findRowSpans())
+            var result = [];
+            this.tree.forEach(_.partial(render, _, result, 0));
+            return result;
+            
+            function lookup(table, item) {
+                return table[item.cid];
             }
             
-            var height = rows.length;
-            for (var i = 1; i < rows.length; ++i) {
-                height -= 1;
-                rows[i].filter(function(e) {
-                    return e.style === "assignment";
-                }).forEach(function (a) {
-                    a.rowspan = height;
-                });
+            function assignmentColumn(a) {
+                return {
+                    name: a.get('name'),
+                    style: "assignment",
+                    colspan: 1,
+                    rowspan: rowspan(a),
+                    cid: a.cid,
+                }
             }
-            return rows;
+            
+            function categoryColumn(cat) {
+                return {
+                    name: cat.get('name'),
+                    style: "category",
+                    colspan: colspan(cat),
+                    rowspan: 1,
+                    cid: cat.cid
+                }
+            }
+            
+            function appendColumnToRow(rows, rowNum, column) {
+                while (rows.length <= rowNum) {
+                    rows.push([]);
+                }
+                rows[rowNum].push(column);
+            }
+
+            function render(cat, rows, rowNum) {
+                var addBelow = _.partial(appendColumnToRow, rows, rowNum + 1);
+                var renderChild = _.partial(render, _, rows, rowNum + 1);
+                if (cat.has('assignments')) {
+                    var mkLeaf = _.compose(addBelow, assignmentColumn);
+                    cat.get('assignments').map(mkLeaf);
+                }
+                
+                _.each(cat.tree, renderChild);
+                appendColumnToRow(rows, rowNum, categoryColumn(cat));
+                return rows;
+            }
+            
+            
+            // for (var i = 0; i < rowCats.length; ++i) {
+            //     if (rows.length <= i) {
+            //         rows.push([]);
+            //     }
+            //     _.each(rowCats[i], function(cat) {
+            //         if (colCats[cat.cid] > 0) {
+            //             rows[i].push({
+            //                 name: cat.get('name'),
+            //                 style: "category",
+            //                 colspan: colCats[cat.cid],
+            //                 rowspan: 1,
+            //                 cid: cat.cid
+            //             })
+                        
+            //         }
+            //     })
+            // }
+            
+            // var height = rows.length;
+            // for (var i = 1; i < rows.length; ++i) {
+            //     height -= 1;
+            //     rows[i].filter(function(e) {
+            //         return e.style === "assignment";
+            //     }).forEach(function (a) {
+            //         a.rowspan = height;
+            //     });
+            // }
+            // return rows;
         },
         
         constructor: function CategoriesCollection() {
