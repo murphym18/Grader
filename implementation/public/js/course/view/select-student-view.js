@@ -21,7 +21,6 @@ define(function (require) {
             sortOrder = -1;
             property = property.substr(1);
         }
-        console.log('return from dynamic sort')
         return function (a,b) {
             var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
             return result * sortOrder;
@@ -81,7 +80,7 @@ define(function (require) {
 
             studentObjects = [];
             students.each(function(s){
-                //consol.log(s.get('user').at(0))
+                //console.log(s.get('user').at(0).get('em'))
                 first = s.get('user').at(0).get('first');
                 last = s.get('user').at(0).get('last');
                 emplId =  s.get('user').at(0).get('emplId');
@@ -118,6 +117,8 @@ define(function (require) {
             _.defer(function() {
                 modalRegion.empty();
             });
+            //this.$el.data('modal', null);
+            //this.remove();
         }
     });
 
