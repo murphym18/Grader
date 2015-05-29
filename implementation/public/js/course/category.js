@@ -140,7 +140,6 @@ define(function (require) {
                                 rows.push([]);
                             }
                             var assignments = cat.get('assignments').models;
-                            console.dir(assignments);
                             _.map(assignments, function(a) {
                                 return {
                                     name: a.get('name'),
