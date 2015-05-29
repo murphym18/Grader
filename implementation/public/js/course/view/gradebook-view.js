@@ -31,7 +31,6 @@ define(function (require) {
         tagName: 'tr',
         
         template: function() {
-            var mkTd
             Hbs.compile('<td colSpan={{ col }}>{{ name }}</td>')
         },
         
