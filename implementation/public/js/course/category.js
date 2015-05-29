@@ -118,11 +118,10 @@ define(function (require) {
             return arr;
         },
         
-        createViewCommands: function() {
+        calculateTableHeaderLayout: function() {
             var rowCats = this.groupByRow();
             var colCats = this.findColSpans();
             var rows = [];
-            
             for (var i = 0; i < rowCats.length; ++i) {
                 if (rows.length <= i) {
                     rows.push([]);
@@ -133,7 +132,8 @@ define(function (require) {
                             name: cat.get('name'),
                             style: "category",
                             colSpan: colCats[cat.cid],
-                            rowSpan: 1
+                            rowSpan: 1,
+                            cid: cat.cid
                         })
                         if (cat.has('assignments')) {
                             if (rows.length <= i + 1) {
@@ -142,11 +142,11 @@ define(function (require) {
                             var assignments = cat.get('assignments').models;
                             console.dir(assignments);
                             _.map(assignments, function(a) {
-                                console.dir(a);
                                 return {
                                     name: a.get('name'),
                                     style: "assignment",
-                                    colSpan: 1
+                                    colSpan: 1,
+                                    cid: cat.cid
                                 }
                             }).forEach(function(a) {
                                 rows[i + 1].push(a);
