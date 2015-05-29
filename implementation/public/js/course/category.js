@@ -88,6 +88,7 @@ define(function (require) {
             }
             
             function colSpan(elm) {
+ 
                 var sub = _.map(elm.tree, colSpan)
                 var num = _.reduce(sub, sum, 0) | 0;
                 
@@ -104,22 +105,41 @@ define(function (require) {
             return result;
         },
         
-        findRowSpans: function() {
+        findRowSpans: function(colspan) {
             var result = {}
             function max(a, b) {
                 return Math.max(a, b);
             }
             
+            var treeHeight = 0;
+            
             function height(cat) {
-                var h = 1;
-                if (_.isArray(cat.tree)) {
-                    h += _.reduce(cat.tree.map(height), max, 0);
+                var h = 0;
+                var tree = cat.tree;
+                if (tree) {
+                    toHeight = _.partial(height, _);
+                    h = 1 + _.reduce(cat.tree.map(toHeight), max, 0);
                 }
-                result[cat.cid] = h;
                 return h;
             }
             
-            height(this.tree);
+            treeHeight = height(this);
+            console.log(treeHeight)
+            
+            function registerAll(cat, h) {
+                registerResult(cat, h);
+                
+                cat.get('assignments').map(_.partial(registerResult, _, h - 1));
+                _.map(cat.tree, _.partial(registerAll, _, h - 1));
+            }
+            function registerResult(a, h) {
+                if (a && a.cid) {
+                    result[a.cid] = h;
+                }
+            }
+            
+            
+            _.each(this.tree, _.partial(registerAll, _, treeHeight))
             return result;
         },
         
