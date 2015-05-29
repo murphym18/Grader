@@ -28,6 +28,10 @@ define(function (require) {
     return Mn.ItemView.extend({
         template: Hbs.compile(template),
         
+        events: {
+            "click td.grade": "editGrade"
+        },
+        
         ui: {
             thead: "table.gradebook > thead",
             tbody: "table.gradebook > tbody",
@@ -39,7 +43,127 @@ define(function (require) {
         },
         
         modelEvents: {
-            'all': 'onShow'
+
+        },
+        
+        editGrade: function(e) {
+            e.preventDefault();
+            if (this.input) {
+                this.saveRawScoreInput();
+                this.input = null;
+            }
+            else {
+                this.input = e.currentTarget;
+                var elm = $(e.currentTarget);
+                var aId = elm.attr('data-aId');
+                var sId = elm.attr('data-sId');
+
+                this.getCurrentRawScore(aId, sId).then(function(val) {
+                    elm.empty();
+                    console.log('got promise val', val);
+                    elm.html("<input type='number' value='"+val+"'/>");
+                    elm.attr('data-aId', aId);
+                    elm.attr('data-sId', sId);
+                    elm.find('input').focus();
+                    elm.find('input').select();
+                }).done()
+                
+            }
+        },
+        
+        saveRawScoreInput: function() {
+            var deferred = Q.defer();
+            var self = this;
+            var elm = $(this.input);
+            var rawScore = elm.find('input').val() || "0";
+            var aId = elm.attr('data-aId');
+            var sId = elm.attr('data-sId');
+            var model = this.model;
+            var value = {
+                rawScore: rawScore,
+                assignment: aId
+            }
+            setTimeout(function() {
+                doRender()
+                try {
+                    var students = self.model.get('students')
+                    console.log('logging student collection')
+                    console.log(students);
+                    var student = students.findWhere({_id: sId})
+                    console.log('logging current student', sId);
+                    console.log(student);
+                    var grades = student.get('grades');
+                    console.log('logging grades collection')
+                    console.log(grades)
+                    var item = grades.findWhere({assignment: aId});
+                    
+                    
+                    if (item) {
+                        item.model.once('change', doSave);
+                        item.set(value)
+                        item.off('change', doSave);
+                        deferred.resolve(true);
+                    }
+                    else {
+                        grades.add(value);
+                        doSave();
+                    }
+                    
+
+                    function doSave() {
+                        elm.html("<span>"+rawScore+"</span>");
+                        deferred.resolve(self.model.save().then(function(data) {
+                            console.log(data);
+                            return doRender();
+                            deferred.resolve(true);
+                        }));
+                    }
+                    
+                }
+                catch(e) {
+                    deferred.reject(e);
+                }
+            }, 1);
+            
+            function doRender() {
+                elm.empty();
+                elm.html(rawScore);
+                elm.attr('data-aId', aId);
+                elm.attr('data-sId', sId);
+            }
+            
+            return deferred.promise;
+        },
+        
+        getCurrentRawScore: function (aId, sId) {
+            var deferred = Q.defer();
+            var self = this;
+            setTimeout(function() {
+                try {
+                    var students = self.model.get('students')
+                    console.log('logging student collection')
+                    console.log(students);
+                    var student = students.findWhere({_id: sId})
+                    console.log('logging current student', sId);
+                    console.log(student);
+                    var grades = student.get('grades');
+                    console.log('logging grades collection')
+                    console.log(grades)
+                    var item = grades.findWhere({assignment: aId});
+                    console.log('logging assignment grade')
+                    console.log(item)
+                    var value = item.get('rawScore') || "0"
+                    console.log('logging value of raw score');
+                    console.log(value);
+                    console.log('resolving promise');
+                    deferred.resolve(value);
+                }
+                catch(e) {
+                    deferred.resolve("0");
+                }
+            }, 1);
+            
+            return deferred.promise;
         },
 
         initialize: function(options) {
@@ -48,30 +172,34 @@ define(function (require) {
             
             console.log(this.model == window.x, this.model)
             this.viewState = new ViewState();
-            
-
 
         },
         
         onShow: function() {
+            var self = this;
             var ui = this.ui;
-            var layout = this.model.categories.calculateTableHeaderLayout();
+            var layout = this.model.get('categories').calculateTableHeaderLayout();
             var headerHeight = layout.length;
+            var allStudents = this.model.get('students');
+            console.log(allStudents);
+            var students = allStudents.map(function(student) {
+                var user = student.get('user').find(_.identity);
+                var last = user.get('last');
+                var first = user.get('first');
 
-            var students = this.model.students.map(function(student) {
-                var last = student.get('last') || student.get('user.0.last');
-                var first = student.get('last') || student.get('user.0.last');
                 var name = last+', '+first;
-                var id = student.id || student.cid;
-                var grades = student.has('grades') ? student.get('grades') : [];
+                console.log('found name', name);
+                var id = student.id;
+                var grades = student.get('grades');
                 return {
                     name: name,
                     id: id,
                     grades: grades
                 }
             });
+
             console.log(students)
-            var assignments;
+            var assignments = this.model.get('categories').allAssignments();
             var header = createHeader();
             var body = createBody();
             var tableRowHeaders = createRowHeaders();
@@ -89,16 +217,11 @@ define(function (require) {
             console.log(assignments);
             
             function createHeader() {
-                assignments = [];
                 var docfrag = window.document.createDocumentFragment();
                 _.each(layout, function(row) {
                     var tr = window.document.createElement("tr");
                     _.each(row, function(cell) {
                         var td = window.document.createElement("th");
-                        
-                        if (cell.style === "assignment") {
-                            assignments.push(cell.cid);
-                        }
                         
                         if (cell.style === "blank") {
                             td = window.document.createElement("td");
@@ -122,30 +245,38 @@ define(function (require) {
             }
             function createBody() {
                 var docfrag = window.document.createDocumentFragment();
-                var arr = assignments.map(function(cid){
-                    return window.regestery._byId[cid];
-                });
                 var studentRows = _.map(students, function(student) {
-                    var grades = arr.map(function(a) {
-                        var grade = _.find(student.grades, {assignment: a.id});
-                        return {
+                    var grades = [];
+                    for(var i = 0; i < assignments.length; ++i) {
+                    
+                        var grade = _.first(student.grades.filter(function(e) {
+                            return assignments[i].id === e.get('assignment');
+                        }))
+                        
+                        if (grade)
+                            console.log(grade);
+                            
+                        grades.push({
                             colspan: 1,
                             rowspan: 1,
                             style: "grade",
-                            value: grade || "0",
-                            gradeEmpty: !(grade ? true : false)
-                        }
-                    });
-                    
-                    //grades.unshift(studentCell);
+                            value: !!grade ? grade.get('rawScore') : "0",
+                            gradeEmpty: !grade,
+                            aId: assignments[i].id,
+                            sId: student.id
+                        });
+                    }
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
                     return grades;
-                })
+                });
+                
                 _.each(studentRows,function(row) {
                     var tr = window.document.createElement("tr");
                     _.each(row, function(cell) {
                         var td = window.document.createElement("td");
                         
                         if (cell.style == "grade") {
+     
                             var text = document.createTextNode(cell.value);
                             if(cell.gradeEmpty) {
                                 var s = window.document.createElement("span");
@@ -156,7 +287,9 @@ define(function (require) {
                                 td.appendChild(text);
                                 
                             }
-                            td.setAttribute("class", cell.style);    
+                            td.setAttribute("class", cell.style);
+                            td.setAttribute("data-aId", cell.aId);
+                            td.setAttribute("data-sId", cell.sId);
                             
                         }
                         else {

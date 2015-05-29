@@ -10,16 +10,7 @@ define(function (require) {
     require('query-engine');
     require('backbone-documentmodel');
     var courseChannel = Radio.channel('course');
-    return Backbone.DocumentModel.extend({
-        idAttribute: '_id',
-        constructor: function DocModel(models, options) {
-            Backbone.DocumentModel.apply(this, arguments);
-            _.defer(function(self){
-                courseChannel.command('register', self);
-            }, this)
-            
-        }
-    });
+    return Backbone.DocumentModel
     
     
 })

@@ -9,11 +9,9 @@ define(function (require) {
     require('backbone-relational');
     require('query-engine')
     require('backbone-documentmodel');
-    require('query-engine');
     var DocModel = require('util/doc-model');
     var DocCollection = Backbone.DocumentCollection;
-    var QueryCollection = window.queryEngine.QueryCollection;
-    
+
     var defaultMethodNames = ['findAll', 'findAllLive', 'findOne'];
     
     function mixinQueryFunctions(self, models, optionsArg) {
@@ -36,35 +34,8 @@ define(function (require) {
         return self;
     }
     
-    return DocCollection.extend({
-        queryProperty: 'query',
-        queryMethods: defaultMethodNames,
-        initializeQueryCollection: initQueryCollection,
-        onQueryCollection: _.noop,
-        model: DocModel,
-        
-        constructor: function DocCollection(models, options) {
-            Backbone.DocumentCollection.apply(this, arguments);
-            //mixinQueryFunctions(this, models, options);
-            this.onQueryCollection();
-            this.trigger('query:collection:ready');
-        }
-    }, {
-        mixinQueryFunctions: mixinQueryFunctions
-    })
-    
-    function initQueryCollection(models) {
-        var self = this;
-        return new QueryCollection(models, {
-            parentCollection: self,
-            live: true
-        })
-    }
-    
-    function bindQueryFunc(queryPropKey, name) {
-        this[name] = _.bind(this[queryPropKey][name], this[queryPropKey]);
-    }
-    
+    return DocCollection
+
     function paramLookup(options, self, propName, defaultVal) {
         return _.result(options, propName, function() {
             return _.result(self, propName, defaultVal);

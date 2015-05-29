@@ -33,7 +33,7 @@ function * main() {
     * This is a hack so that if connects from an external site to path managed by
     * the client side history API the page still works.
     */
-   app.use('/courses', function(req, res, next){
+   app.get(/^\/courses.?/, function(req, res, next){
       res.sendFile(__dirname + '/public/index.html');
       // if(req.accepts(['html', 'application/json']) !== 'html') {
       //    return next();

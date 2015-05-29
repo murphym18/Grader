@@ -6,7 +6,6 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var Radio = require('backbone.radio');
-    var proxy = require('util/prop-proxy');
     var Category = require('course/category');
     var StudentRecord = require('course/student');
     var RoleManager = require('course/role-manager');
@@ -18,10 +17,6 @@ define(function (require) {
     var adminUserText = require('text!api/Users/admin');
     
     var defaultCourse = JSON.stringify({
-        "classCode": null,
-        "classNumber": null,
-        "section": null,
-        "colloquialUrl": null,
         "minCredit": 60,
         "minD": 60,
         "minC": 70,
@@ -38,33 +33,6 @@ define(function (require) {
         "categories": [],
     });
     
-    var rProxyAttrs = [
-        'classCode',
-        'classNumber',
-        'colloquialUrl',
-        'aColor',
-        'bColor',
-        'cColor',
-        'dColor',
-        'fColor',
-        'categories',
-        'roles',
-        'section',
-        'students',
-        'term',
-        'year',
-        'start',
-        'end'
-    ];
-    
-    var rwProxyAttrs = [
-        'aMin',
-        'bMin',
-        'cMin',
-        'dMin',
-        'minCredit'
-    ];
-    
     return DocModel.extend({
         
         idAttribute: "_id",
@@ -73,56 +41,35 @@ define(function (require) {
             return JSON.parse(defaultCourse);
         },
         
-        setupProxyAccessors: function() {
-            _.each(rProxyAttrs, _.partial(proxy.proxyGet, this));
-            _.each(rwProxyAttrs, _.partial(proxy.proxyGetAndSet, this));
-            var self = this;
-            // Object.defineProperty(self, 'findAssignments', {
-            //     enumerable: false,
-            //     configurable: true,
-            //     get: function() {
-            //         var categories = self.get('categories')
-            //         return categories.findAssignments.bind(categories);
-            //     }
-            // });
-        },
-        
         findGraphArray: function(data) {
         
         },
         
         initialize : function (options) {
             this.setupUrl();
-            this.setupProxyAccessors();
 
         },
         
-        constructor: function Course() {
-            DocModel.apply(this, arguments);
-        },
-        
+
         fetch: function(options) {
+            options = options || {};
             if (!this.get("colloquialUrl")) {
                 var msg = "Cannot fetch course. Its colloquialUrl is undefined."
                 throw new Error(msg)
             }
-            var url = this.url;
-            if (options.populate) {
-                this.url = this.url + '?populate=students.user,roles.users'
-                delete options.populate;
-            }
+            this.url = this.url + '?populate=students.user,roles.users'
             var result = DocModel.prototype.fetch.call(this, options);
-            this.url = url;
+            this.url = '/api/courses/' + this.get("colloquialUrl") + "";
             return result;
         },
         
         setupUrl: function() {
             var colloquialUrl = this.get("colloquialUrl");
             if (colloquialUrl) {
-                this.url = '/api/Courses/' + this.get("colloquialUrl");
+                this.url = '/api/courses/' + colloquialUrl + "";
             }
             else {
-                this.url = '/api/Courses'
+                this.url = '/api/courses'
             }
         },
 

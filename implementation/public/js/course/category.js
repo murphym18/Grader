@@ -70,17 +70,21 @@ define(function (require) {
         
         findColSpans: function() {
             var result = {}
-            _.each(this.tree, colSpan);
+            _.each(this.tree(), colSpan);
             return result;
             
             function colSpan(elm) {
-                var sub = _.map(elm.tree, colSpan)
-                var num = _.reduce(sub, sum, 0) | 0;
-                if (elm.has && elm.has('assignments'))
-                    num += elm.get('assignments').size()
-                if (elm.cid)
-                    result[elm.cid] = num;
-                return num;
+                var sub = null;
+                if (elm) {
+                    var sub = elm.tree().map(colSpan);
+                    var num = sub.reduce(sum, 0) | 0;
+                    if (elm.has('assignments'))
+                        num += elm.get('assignments').size()
+                    if (elm.cid)
+                        result[elm.cid] = num;
+                    return num;
+                }
+                return 0;
             }
         },
         
@@ -91,13 +95,15 @@ define(function (require) {
         findRowSpans: function(colspan) {
             var result = {}
             var treeHeight = 1 + this.findHeight();
-            _.each(this.tree, _.partial(registerAll, _, treeHeight))
+            _.each(this.tree(), _.partial(registerAll, _, treeHeight))
             return result;
             
             function registerAll(cat, h) {
                 registerResult(cat, h);
-                cat.get('assignments').map(_.partial(registerResult, _, h - 1));
-                _.map(cat.tree, _.partial(registerAll, _, h - 1));
+                if (cat) {
+                    cat.get('assignments').map(_.partial(registerResult, _, h - 1));
+                    _.map(cat.tree(), _.partial(registerAll, _, h - 1));
+                }
             }
             function registerResult(a, h) {
                 if (a && a.cid) {
@@ -128,7 +134,7 @@ define(function (require) {
             //     colspan: 1,
             //     style: "corner"
             // });
-            this.tree.forEach(_.partial(render, _, result, 0));
+            this.tree().forEach(_.partial(render, _, result, 0));
             return result;
             
             function lookup(table, item) {
@@ -141,7 +147,7 @@ define(function (require) {
                     style: "assignment",
                     colspan: 1,
                     rowspan: rowspan(a),
-                    cid: a.cid,
+                    cid: a,
                 }
             }
             
@@ -170,19 +176,23 @@ define(function (require) {
                     cat.get('assignments').map(mkLeaf);
                 }
                 
-                _.each(cat.tree, renderChild);
+                _.each(cat.tree(), renderChild);
                 appendColumnToRow(rows, rowNum, categoryColumn(cat));
                 return rows;
             }
         },
         
-        constructor: function CategoriesCollection() {
-            DocCollection.apply(this, arguments);
-        },
-        
         findAssignments: findAssignments,
         initialize: function() {
-            mixinTreeProxy(this);
+            this.tree = function() {
+                var subTreeOnly = this.treeFilterFunc.bind(this);
+                return this.filter(subTreeOnly);
+            }
+            this.allAssignments = function() {
+                return this.pluck('assignments').reduce(function(all, cur) {
+                    return all.concat(cur.toArray());
+                }, []);
+            }
         }
     });
     
@@ -200,24 +210,16 @@ define(function (require) {
     }
     
     function mixinTreeProxy(self) {
-        
-        
-        Object.defineProperty(self, 'tree', {
-            get: function() {
-                var subTreeOnly = self.treeFilterFunc.bind(self);
-                var arr = self.models ? self.models : self.collection.models
-                return arr.filter(subTreeOnly);
-            }
-        });
-        
-        Object.defineProperty(self, 'allAssignments', {
-            get: function() {
-                var assignments = self.get('assignments');
-                var models = _.toArray(assignments.models);
-                var subcats = self.tree;
-                return toAssignmentArray(subcats).concat(models);
-            }
-        });
+        self.tree = function() {
+            var subTreeOnly = self.treeFilterFunc.bind(self);
+            return self.collection.filter(subTreeOnly);
+        }
+        self.allAssignments = function() {
+            var assignments = self.get('assignments');
+            var models =assignments
+            var subcats = self.tree();
+            return subcats.reduce(function(all, cur) { return all.concat(cur);});
+        }
     }
     
     function max(a, b) {

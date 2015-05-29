@@ -137,19 +137,22 @@ define(function (require) {
             });
             
             Q(course.fetch({populate: true})).then(function(c) {
+                window.setTimeout(function() {
+                    var navRegion = pageChannel.request('navRegion');
+                    navRegion.show(new NavItemsCollectionView({
+                        collection: navBarCourseSpecificViews
+                    }));
+                    window.x = course;
+                    var mainRegion = pageChannel.request('mainRegion');
+                    mainRegion.show(new GradeBookView());
+                    console.dir(course);
+                    console.log('in load course page',path);
+                }, 1) 
                 courseChannel.reply('current:course', function() {
                     return course;
                 })
 
-                var navRegion = pageChannel.request('navRegion');
-                navRegion.show(new NavItemsCollectionView({
-                    collection: navBarCourseSpecificViews
-                }));
-                window.x = course;
-                var mainRegion = pageChannel.request('mainRegion');
-                mainRegion.show(new GradeBookView());
-                console.dir(course);
-                console.log('in load course page',path);
+                
                
             });
         }
