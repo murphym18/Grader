@@ -1,0 +1,82 @@
+
+
+.assignment {
+    max-width: 64px;
+    width: 64px;
+    min-width: 64px;
+    overflow-x: hidden;
+}
+
+div.gradebook {
+    background-color: white;
+    
+}
+td.grade {
+    text-align: center;
+    width: 64px;
+}
+td.grade > span {
+    text-align: center;
+    opacity: 0.25;
+}
+.gradebook-students > table, .gradebook > table,
+.gradebook-students > table > thead > tr > th.blank, .gradebook table > thead > tr > th.category {
+
+}
+
+.gradebook-students > table {
+    border-top-color: white;
+
+    border-right-width: 0px;
+}
+
+.gradebook-students > table > thead > tr > th.blank {
+    border-top-color: white;
+    border-left-color: white;
+    border-right-color: white;
+    border-bottom-color: white;
+    border-right-width: 0px;
+    
+}
+.gradebook-students > table > thead > tr:last > th.blank {
+    border-top-color:green;
+    border-left-color: white;
+    
+}
+
+.gradebook-students  .blank {
+    opacity: 0;
+
+    /*border-color: white;*/
+}
+
+.studentRowHeader {
+    
+
+    
+    overflow-x: hidden;
+    overflow-style: hidden;
+    white-space: nowrap;
+
+
+        overflow: hidden;
+}
+
+.table {
+  
+}
+/*
+th.student {
+    white-space: nowrap;
+    opacity: 0;
+    left: 0;
+}
+table-layout:fixed;
+
+.table th {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+*/
+

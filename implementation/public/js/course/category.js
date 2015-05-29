@@ -13,6 +13,8 @@ define(function (require) {
     var QueryCollection = window.queryEngine.QueryCollection;
     var courseChannel = Radio.channel('course');
     
+
+    
     var Assignments = DocCollection.extend({
         constructor: function AssignmentCollection() {
              DocCollection.apply(this, arguments);
@@ -62,73 +64,38 @@ define(function (require) {
     return DocCollection.extend({
         model: Category,
         
-        // onQueryCollection: function() {
-        //     var self = this;
-            
-        //     Object.defineProperty(self, 'allAssignments', {
-        //         configurable: true,
-        //         get: function() {
-        //             return toAssignmentArray(self.findAll());
-        //         }
-        //     });
-        //     this.each(function(e) {
-        //         DocCollection.mixinQueryFunctions(e, null, {});
-        //     })
-        // },
-        
         treeFilterFunc: function(model) {
             return /^#[^#]+$/.test(model.get('path'));
         },
         
         findColSpans: function() {
             var result = {}
-            
-            function sum(runningTotal, next){
-                return runningTotal + next;
-            }
+            _.each(this.tree, colSpan);
+            return result;
             
             function colSpan(elm) {
- 
                 var sub = _.map(elm.tree, colSpan)
                 var num = _.reduce(sub, sum, 0) | 0;
-                
                 if (elm.has && elm.has('assignments'))
-                    num += elm.get('assignments').size();
-                
+                    num += elm.get('assignments').size()
                 if (elm.cid)
                     result[elm.cid] = num;
-                    
                 return num;
             }
-            _.each(this.tree, colSpan);
-            
-            return result;
+        },
+        
+        findHeight: function() {
+            return _.reduce(this.map(_.partial(depth)), max, 0)
         },
         
         findRowSpans: function(colspan) {
             var result = {}
-            function max(a, b) {
-                return Math.max(a, b);
-            }
-            
-            var treeHeight = 0;
-            
-            function height(cat) {
-                var h = 0;
-                var tree = cat.tree;
-                if (tree) {
-                    toHeight = _.partial(height, _);
-                    h = 1 + _.reduce(cat.tree.map(toHeight), max, 0);
-                }
-                return h;
-            }
-            
-            treeHeight = height(this);
-            console.log(treeHeight)
+            var treeHeight = 1 + this.findHeight();
+            _.each(this.tree, _.partial(registerAll, _, treeHeight))
+            return result;
             
             function registerAll(cat, h) {
                 registerResult(cat, h);
-                
                 cat.get('assignments').map(_.partial(registerResult, _, h - 1));
                 _.map(cat.tree, _.partial(registerAll, _, h - 1));
             }
@@ -137,23 +104,16 @@ define(function (require) {
                     result[a.cid] = h;
                 }
             }
-            
-            
-            _.each(this.tree, _.partial(registerAll, _, treeHeight))
-            return result;
         },
         
         groupByRow: function() {
             var arr = [];
-            function depth(elm) {
-                return elm.get('path').split('#').length - 1;
-            }
             var groups = this.groupBy(depth);
             var keys = _.keys(groups).sort();
             
             _.map(keys, function(k) {
                 arr.push(groups[k]);
-            })
+            });
             return arr;
         },
         
@@ -162,6 +122,12 @@ define(function (require) {
             var colspan = _.partial(lookup, this.findColSpans())
             var rowspan = _.partial(lookup, this.findRowSpans())
             var result = [];
+            var height = 1 + this.findHeight();
+            // appendColumnToRow(result, 0, {
+            //     rowspan: height,
+            //     colspan: 1,
+            //     style: "corner"
+            // });
             this.tree.forEach(_.partial(render, _, result, 0));
             return result;
             
@@ -208,36 +174,6 @@ define(function (require) {
                 appendColumnToRow(rows, rowNum, categoryColumn(cat));
                 return rows;
             }
-            
-            
-            // for (var i = 0; i < rowCats.length; ++i) {
-            //     if (rows.length <= i) {
-            //         rows.push([]);
-            //     }
-            //     _.each(rowCats[i], function(cat) {
-            //         if (colCats[cat.cid] > 0) {
-            //             rows[i].push({
-            //                 name: cat.get('name'),
-            //                 style: "category",
-            //                 colspan: colCats[cat.cid],
-            //                 rowspan: 1,
-            //                 cid: cat.cid
-            //             })
-                        
-            //         }
-            //     })
-            // }
-            
-            // var height = rows.length;
-            // for (var i = 1; i < rows.length; ++i) {
-            //     height -= 1;
-            //     rows[i].filter(function(e) {
-            //         return e.style === "assignment";
-            //     }).forEach(function (a) {
-            //         a.rowspan = height;
-            //     });
-            // }
-            // return rows;
         },
         
         constructor: function CategoriesCollection() {
@@ -284,4 +220,15 @@ define(function (require) {
         });
     }
     
+    function max(a, b) {
+        return Math.max(a, b);
+    }
+    
+    function depth(elm) {
+        return elm.get('path').split('#').length - 1;
+    }
+    
+    function sum(runningTotal, next){
+        return runningTotal + next;
+    }    
 })
