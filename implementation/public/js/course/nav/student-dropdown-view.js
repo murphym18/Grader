@@ -66,21 +66,14 @@ define(function (require) {
         },
 
         showDeleteStudent: function(domEvent) {
-            //courseChannel.command('showUserCourses');
-            //console.log()
+
             courseChannel.request('select:student').then(function(selectedStudent) {
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.show(new DeleteStudentView({
                     'student': selectedStudent
                 }));
             }).done();
-            //
-            //userChannel.request('user').then(function(user) {
-            //    var modalRegion = pageChannel.request('modalRegion');
-            //    modalRegion.show(new SelectStudentView({user: user}));
-            //
-            //
-            //})
+
 
         },
 
