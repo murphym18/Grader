@@ -22,8 +22,8 @@ define(function (require) {
         template: Hbs.compile(template),
 
         ui: {
-            newClass: ".newClass",
-            manageClass: ".manageClass",
+            newCourse: ".newCourse",
+            manageCourse: ".manageCourse",
             gradeScheme: ".gradeScheme",
             latePolicy: ".latePolicy",
             permissions: ".permissions",
@@ -31,8 +31,8 @@ define(function (require) {
         },
 
         events: {
-            "click @ui.newClass": "showNewClass",
-            "click @ui.manageClass": "showManageClass",
+            "click @ui.newCourse": "showNewCourse",
+            "click @ui.manageCourse": "showManageCourse",
             "click @ui.gradeScheme": "showGradeScheme",
             "click @ui.latePolicy": "showLatePolicy",
             "click @ui.permissions": "showPermissions",
@@ -43,20 +43,20 @@ define(function (require) {
             //this.model = userChannel.request('session');
         },
 
-        showNewClass: function(domEvent) {
+        showNewCourse: function(domEvent) {
             //courseChannel.command('showAllCourses');
             userChannel.request('user').then(function(user) {
-                //console.log('show new class');
+                //console.log('show new Course');
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.show(new CreateCourseView({user: user}));
 
             })
         },
 
-        showManageClass: function(domEvent) {
+        showManageCourse: function(domEvent) {
             //courseChannel.command('showUserCourses');
             userChannel.request('user').then(function(user) {
-                //console.log('show new class');
+                //console.log('show new Course');
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.show(new ManageCourseView());
 
@@ -66,7 +66,7 @@ define(function (require) {
         showGradeScheme: function(domEvent) {
             //courseChannel.command('showUserCourses');
             userChannel.request('user').then(function(user) {
-                //console.log('show new class');
+                //console.log('show new Course');
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.show(new GradeSchemeView());
 
@@ -76,7 +76,7 @@ define(function (require) {
         showLatePolicy: function(domEvent) {
             //courseChannel.command('showUserCourses');
             userChannel.request('user').then(function(user) {
-                //console.log('show new class');
+                //console.log('show new Course');
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.show(new LatePolicyView());
 

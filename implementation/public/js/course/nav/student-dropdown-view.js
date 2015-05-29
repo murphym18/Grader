@@ -11,6 +11,9 @@ define(function (require) {
     var pageChannel = Radio.channel('page');
     var template = require('text!templates/headerStudentDropdownView.hbs');
     var AddNewStudentView = require('app/addNewStudent');
+    var ModifyStudentView = require('app/modifyStudent');
+    var SelectStudentView = require('course/view/select-student-view');
+    var DeleteStudentView = require('course/view/delete-student-view');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -18,7 +21,7 @@ define(function (require) {
 
         ui: {
             newStudent: ".newStudent",
-            manageStudent: ".manageStudent",
+            modifyStudent: ".modifyStudent",
             deleteStudent: ".deleteStudent",
             groupStudents: ".groupStudents"
         },
@@ -27,7 +30,7 @@ define(function (require) {
 
         events: {
             "click @ui.newStudent": "showNewStudent",
-            "click @ui.manageStudent": "showManageStudent",
+            "click @ui.modifyStudent": "showModifyStudent",
             "click @ui.deleteStudent": "showDeleteStudent",
             "click @ui.groupStudents": "showGroupStudents"
         },
@@ -46,13 +49,38 @@ define(function (require) {
             })
         },
 
-        showManageStudent: function(domEvent) {
+        showModifyStudent: function(domEvent) {
             //courseChannel.command('showUserCourses');
+            //userChannel.request('user').then(function(user) {
+            //    var modalRegion = pageChannel.request('modalRegion');
+            //    modalRegion.show(new ModifyStudentView);
+            //
+            //
+            //})
+            courseChannel.request('select:student').then(function(selectedStudent) {
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new ModifyStudentView({
+                    'student': selectedStudent
+                }));
+            }).done();
         },
 
         showDeleteStudent: function(domEvent) {
             //courseChannel.command('showUserCourses');
-
+            //console.log()
+            courseChannel.request('select:student').then(function(selectedStudent) {
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new DeleteStudentView({
+                    'student': selectedStudent
+                }));
+            }).done();
+            //
+            //userChannel.request('user').then(function(user) {
+            //    var modalRegion = pageChannel.request('modalRegion');
+            //    modalRegion.show(new SelectStudentView({user: user}));
+            //
+            //
+            //})
 
         },
 

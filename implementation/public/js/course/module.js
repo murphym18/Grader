@@ -9,7 +9,7 @@ define(function (require) {
     var NavCourseFilterView = require('course/nav/filter-list-view');
     var NavCreateCourseView = require('course/nav/new-course-button-view');
     var NavModifyCourseView = require('course/nav/modify-course-button-view');
-    var NavClassDropdownView = require('course/nav/class-dropdown-view');
+    var NavCourseDropdownView = require('course/nav/course-dropdown-view');
     var NavStudentDropdownView = require('course/nav/student-dropdown-view');
     
     var NavAssignmentDropdownView = require('course/nav/assignment-dropdown-view');
@@ -56,15 +56,12 @@ define(function (require) {
         }),
         new Backbone.Model({
             viewClass: NavCreateCourseView
-        }),
-        new Backbone.Model({
-            viewClass: NavModifyCourseView
         })
     ]);
 
     var navBarCourseSpecificViews = new Backbone.Collection([
         new Backbone.Model({
-            viewClass: NavClassDropdownView
+            viewClass: NavCourseDropdownView
         }),
         new Backbone.Model({
             viewClass: NavStudentDropdownView
