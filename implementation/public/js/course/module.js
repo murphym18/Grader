@@ -19,7 +19,7 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var Course = require('course/course');
     var GradeBookView = require('course/view/gradebook-view');
-    require('course/view/modify-course-view');
+    //require('course/view/modify-course-view');
     var err = function(){throw new Error()};
     courseChannel.request('default', err)
     courseChannel.comply('default', err)

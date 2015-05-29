@@ -13,6 +13,7 @@ define(function (require) {
     var CreateCourseView = require('course/view/new-course-view');
     var ManageCourseView = require('course/view/modify-course-view');
     var GradeSchemeView  = require('course/view/gradescheme-view');
+    var PermissionsView  = require('course/view/course-permissions-view');
     var LatePolicyView  = require('course/view/late-policy-view');
 
 
@@ -85,6 +86,12 @@ define(function (require) {
 
         showPermissions: function(domEvent) {
             //courseChannel.command('showUserCourses');
+            userChannel.request('user').then(function(user) {
+                //console.log('show new Course');
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.show(new PermissionsView());
+
+            })
         },
         
         createMockData: function() {

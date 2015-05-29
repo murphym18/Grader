@@ -8,18 +8,18 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
-    var template = require('text!templates/gradeSchemeView.hbs');
+    var template = require('text!templates/permissionsView.hbs');
     var alertTemplate = require('text!templates/alert-block.hbs');
 
     var Course = require('course/course');
 
     return Mn.ItemView.extend({
         tagName: 'div',
-        className: 'gradeScheme modal-dialog  modal-lg',
+        className: 'permissions modal-dialog  modal-lg',
         template: Hbs.compile(template),
 
         ui: {
-            'saveButton' : '.save'
+           'saveButton' : '.save'
         },
 
         events: {
@@ -38,8 +38,7 @@ define(function (require) {
 
 
         },
-
-        onSaveCourse : function () {
+        onSaveCourse : function() {
             $('.cancel').click();
         }
 
