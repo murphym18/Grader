@@ -117,6 +117,7 @@ define(function (require) {
             _.defer(function() {
                 modalRegion.empty();
             });
+            $('.modal-content').hide();
             //this.$el.data('modal', null);
             //this.remove();
         }

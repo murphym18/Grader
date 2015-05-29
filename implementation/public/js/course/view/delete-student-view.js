@@ -23,7 +23,8 @@ define(function (require) {
 
         ui: {
             //'backButton' : '.backButton',
-            'deleteButton' : '.deleteButton'
+            'deleteButton' : '.deleteButton',
+            'cancel' : '.cancel'
         },
 
         events: {
@@ -73,14 +74,16 @@ define(function (require) {
         },
 
         closeSelectStudent : function() {
-            //$('.modal-content').empty();
+            //$('.cancel').click();
             var modalRegion = pageChannel.request('modalRegion');
             _.defer(function() {
                 modalRegion.empty();
             });
+            $('.modal-content').hide();
             //this.$el.data('modal', null);
             //this.remove();
             //this.$el.modal('hide');
+
 
             //var modalRegion = pageChannel.request('modalRegion');
             //modalRegion.empty();
