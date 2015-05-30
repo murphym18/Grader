@@ -12,12 +12,6 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     var template = require('text!templates/gradebookView.hbs');
-    // var theadTemplate = require('text!templates/gradeBookHeader.hbs');
-    // var tbodyTemplate = require('text!templates/gradeBookBody.hbs');
-    // var tfooterTemplate = require('text!templates/gradeBookFooter.hbs');
-    //var ChartView = require('app/chart');
-    //var gradebookTemplate = require()
-
 
     var ViewState = Backbone.Model.extend({
         initialize: function() {
@@ -36,7 +30,6 @@ define(function (require) {
             thead: "table.gradebook > thead",
             tbody: "table.gradebook > tbody",
             tfoot: "table.gradebook > tfoot",
-            charts: ".charts",
             shead: "table.gradebook-students > thead",
             sbody: "table.gradebook-students > tbody",
             sfoot: "table.gradebook-students > tfoot",
@@ -97,7 +90,6 @@ define(function (require) {
                     console.log(grades)
                     var item = grades.findWhere({assignment: aId});
                     
-                    
                     if (item) {
                         item.model.once('change', doSave);
                         item.set(value)
@@ -108,7 +100,6 @@ define(function (require) {
                         grades.add(value);
                         doSave();
                     }
-                    
 
                     function doSave() {
                         elm.html("<span>"+rawScore+"</span>");

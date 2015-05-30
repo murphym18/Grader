@@ -101,17 +101,17 @@ define(function (require) {
          routes : {}
       }),
       
-      initialize: function() {
+      initialize: function(option) {
          this.modal = new ModalRegion();
-         this.RootRegion = new RootRegion();
-         this.PopupRegion = new PopupRegion();
-         
+         this.RootRegion = new RootRegion();   
+
          var basicView = this.show(new BasicLayoutView);
          var navView = new HeaderNavView;
          basicView.showHeader(navView);
          pageChannel.reply('mainRegion', basicView.getRegion('main'));
          pageChannel.reply('navRegion', navView.getRegion('left'));
          pageChannel.reply('modalRegion', this.modal);
+
       },
    
       /**

@@ -7,10 +7,8 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     var proxy = require('util/prop-proxy');
-    require('query-engine');
     var DocCollection = require('util/doc-collection');
     var DocModel = require('util/doc-model');
-    var QueryCollection = window.queryEngine.QueryCollection;
     var courseChannel = Radio.channel('course');
     
 

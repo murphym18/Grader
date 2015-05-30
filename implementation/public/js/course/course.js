@@ -50,7 +50,6 @@ define(function (require) {
 
         },
         
-
         fetch: function(options) {
             options = options || {};
             if (!this.get("colloquialUrl")) {
@@ -74,26 +73,7 @@ define(function (require) {
         },
 
         // For collections
-        getNestedCollection: function (nestedKey, nestedValue, nestedOptions) {
-            switch (nestedKey) {
-                case 'students':
-                    return new StudentRecord(nestedValue, nestedOptions);
-                    
-                case 'categories':
-                    return new Category(nestedValue, nestedOptions);
-                    
-                case 'roles':
-                    return new RoleManager(nestedValue, nestedOptions);
-                    
-                case 'aColor':
-                case 'bColor':
-                case 'cColor':
-                case 'dColor':
-                case 'fColor':
-                default:
-                    return new DocCollection(nestedValue, nestedOptions);
-            }
-        }
+        getNestedCollection: getNestedCollection
         
     }, {
         createColloquialUrl: createColloquialUrl,
@@ -101,6 +81,27 @@ define(function (require) {
         isValidTerm: isValidTerm,
         isValidYear: isValidYear
     });
+    
+    function getNestedCollection(nestedKey, nestedValue, nestedOptions) {
+        switch (nestedKey) {
+            case 'students':
+                return new StudentRecord(nestedValue, nestedOptions);
+                
+            case 'categories':
+                return new Category(nestedValue, nestedOptions);
+                
+            case 'roles':
+                return new RoleManager(nestedValue, nestedOptions);
+                
+            case 'aColor':
+            case 'bColor':
+            case 'cColor':
+            case 'dColor':
+            case 'fColor':
+            default:
+                return new DocCollection(nestedValue, nestedOptions);
+        }
+    }
     
     function createColloquialUrl(course) {
         var fields = [
