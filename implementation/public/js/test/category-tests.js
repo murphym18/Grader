@@ -8,7 +8,6 @@ define(function(require) {
    require('app/chart');
    require('app/modifyAssignment');
    require('app/modifyCategory');
-   require('app/newAssignment');
    require('app/modifyClass');
    require('app/modifyStudent');
    require('app/addNewStudent')
