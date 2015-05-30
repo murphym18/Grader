@@ -1,3 +1,4 @@
+QUnit.config.autostart = false;
 /** @author Michael Murphy */
 requirejs.config({
    // By default load any module IDs from js/lib
@@ -14,7 +15,8 @@ requirejs.config({
       course: '../course',
       text: 'text',
       templates: '../../templates',
-      api: '../../api'
+      api: '../../api',
+      test: '../test'
    },
    // The shim configuration is simple to use:
    // (1) one states the dependencies (deps), if any, (which may be from the
@@ -33,15 +35,15 @@ requirejs.config({
          exports: 'queryEngine'
       },
       'qunit': {
-         
+          exports: 'QUnit'
       }
    }
 });
 
 // Start the main app logic.
 define(function (require) {
-   var App = require('app/app');
    var Radio = require('backbone.radio');
+   var Q = require('q');
    require('user/module');
    require('course/module');
    require('app/chart');
@@ -52,8 +54,23 @@ define(function (require) {
    require('app/modifyStudent');
    require('app/addNewStudent')
    require('bootstrap');
+   require('test/test-example')
+   var channel = Radio.channel('test');
+   var Course = require('course/course')
    require('domReady!');
-   
+   var QUnit = require('qunit');
+   QUnit.start();
+   channel.reply('qunit', function() {
+      return QUnit;
+   })
+   channel.reply('test-course', function() {
+      return new Course({
+         
+      });
+   })
    App.start({});
+
+   channel.trigger('start')
+
    return App;
 });
