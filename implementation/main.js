@@ -14,10 +14,13 @@ var verboseLog = require('./app/util').verboseLog;
 var mongoose = require('mongoose');
 var Users = require('./model/admin/user');
 var Course = require('./model/course/index');
+var Student = require('./model/course/student');
 
 var routes = require('./routes');
 var restify = require('express-restify-mongoose');
+var SegfaultHandler = require('segfault-handler');
 
+SegfaultHandler.registerHandler();
 /**
  *
  */
@@ -50,9 +53,12 @@ function * main() {
    app.ready();
 }
 
+
+
 function setupDatabase() {
    // A co routine takes a generator function that yields promises. These are
    // great because many co routines can be running concurrently!
+   
    return co(function * initDatabase() {
       // We can use try and catch instead of a node-style-callback
       try {
@@ -96,8 +102,26 @@ function setupDatabase() {
             // Grab the function that makes mock-courses
             var mockCourses = require('./model/course/mock-courses');
             
+            var studentDocs = [];
             // Make mock courses and save them to the Course collection
-            yield Q.all(mockCourses(admin, allUsers).map(toSave(Course)));
+            yield Q.all(mockCourses(admin, allUsers).map(function(course){
+               var students = course.students;
+               delete course.students;
+               studentDocs.push(students);
+               var doc = new Course(course);
+               return Q.ninvoke(doc, 'save');
+            }));
+            var pojso = _.flatten(studentDocs).map(function (student) {
+               student.grades = '';
+               return student;
+            });
+            
+            yield Student.create(pojso);//toSave(Course)));
+            //yield Student.create(studentDocs)
+            // yield Q.all(studentDocs.map(function(data){
+            //    var doc = new Student(data);
+            //    return Q.ninvoke(doc, 'save');
+            // }));
             verboseLog("Loaded mock data");
          }
       }
@@ -128,7 +152,8 @@ function toSave(Model) {
 function clearDatabase() {
    return Q.all([
       Course.remove().exec(),
-      Users.remove().exec()
+      Users.remove().exec(),
+      Student.remove().exec()
    ]);
 }
 

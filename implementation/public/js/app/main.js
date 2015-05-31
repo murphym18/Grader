@@ -14,6 +14,7 @@ requirejs.config({
       course: '../course',
       text: 'text',
       templates: '../../templates',
+      ctemplates: '../course/templates',
       api: '../../api'
    },
    // The shim configuration is simple to use:
@@ -27,14 +28,7 @@ requirejs.config({
    shim: {
       'jquery-ui': ['jquery'],
       'jquery.magnific-popup' : ['jquery', 'jquery-ui'],
-      'bootstrap': ['jquery'],
-      'query-engine': {
-         deps: ['backbone'],
-         exports: 'queryEngine'
-      },
-      'qunit': {
-         
-      }
+      'bootstrap': ['jquery']
    }
 });
 
@@ -43,14 +37,14 @@ define(function (require) {
    var App = require('app/app');
    var Radio = require('backbone.radio');
    require('user/module');
+   require('course/_init');
    require('course/module');
-   //require('app/chart');
-   //require('app/modifyAssignment');
-   //require('app/modifyCategory');
-   //require('app/newAssignment');
-   //require('app/modifyClass');
-   //require('app/modifyStudent');
-   //require('app/addNewStudent')
+   require('app/chart');
+   require('app/modifyAssignment');
+   require('app/modifyCategory');
+   require('app/modifyClass');
+   require('app/modifyStudent');
+   require('app/addNewStudent')
    require('bootstrap');
    require('domReady!');
    

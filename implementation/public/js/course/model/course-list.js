@@ -7,7 +7,7 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     
-    var Course = require('course/course');
+    var Course = require('course/model/course');
     
     return Backbone.Collection.extend({
         tagName: 'ul',

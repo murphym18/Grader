@@ -10,7 +10,7 @@ define(function (require) {
     var CreateCourseView = require('course/view/new-course-view');
     var pageChannel = Radio.channel('page');
     var userChannel = Radio.channel('user');
-    var template = require('text!templates/headerNavNewCourseButton.hbs');
+    var template = require('text!ctemplates/headerNavNewCourseButton.hbs');
     
     return Mn.ItemView.extend({
         tagName: 'li',

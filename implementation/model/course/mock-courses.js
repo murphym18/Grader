@@ -24,7 +24,10 @@ function generateMockCourses(admin, allUsers) {
       for (var y = 0; y < 20; y++) {
          var student = next();
          course.roles[2].users.push(student);
-         course.students.push({user: student});
+         var studentRecord = _.pick(student, 'first', 'last', 'username', 'email', 'major', 'emplId');
+         studentRecord.course = course.colloquialUrl;
+         studentRecord.user = student.id.toString();
+         course.students.push(studentRecord);
       }
       return course;
    }

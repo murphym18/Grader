@@ -15,6 +15,7 @@ requirejs.config({
       course: '../course',
       text: 'text',
       templates: '../../templates',
+      ctemplates: '../course/templates',
       api: '../../api',
       test: '../test'
    },
@@ -30,10 +31,6 @@ requirejs.config({
       'jquery-ui': ['jquery'],
       'jquery.magnific-popup' : ['jquery', 'jquery-ui'],
       'bootstrap': ['jquery'],
-      'query-engine': {
-         deps: ['backbone'],
-         exports: 'queryEngine'
-      },
       'qunit': {
           exports: 'QUnit'
       }
@@ -49,14 +46,13 @@ define(function (require) {
    require('app/chart');
    require('app/modifyAssignment');
    require('app/modifyCategory');
-   require('app/newAssignment');
    require('app/modifyClass');
    require('app/modifyStudent');
    require('app/addNewStudent')
    require('bootstrap');
    require('test/test-example')
    var channel = Radio.channel('test');
-   var Course = require('course/course')
+   var Course = require('course/model/course')
    require('domReady!');
    var QUnit = require('qunit');
    QUnit.start();

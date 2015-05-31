@@ -28,6 +28,7 @@ var config = require('./config').http;
 var headers = require('./http-headers');
 var expressLayouts = require('express-ejs-layouts');
 var path = require('path');
+var methodOverride = require('method-override');
 
 var app = express();
 var server = false;
@@ -37,7 +38,8 @@ app.use(logger('dev'));
 app.use(headers);
 app.use('/', express.static('public'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride());
 app.use(sessionLoader);
 app.use(passport.initialize(), passport.session());
 app.use(expressLayouts);

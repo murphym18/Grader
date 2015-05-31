@@ -8,12 +8,12 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
-    var template = require('text!templates/deleteStudentView.hbs');
-    var alertTemplate = require('text!templates/alert-block.hbs');
+    var template = require('text!ctemplates/deleteStudentView.hbs');
+    var alertTemplate = require('text!ctemplates/alert-block.hbs');
     //var DeleteStudentView = require('course/view/delete-student-view');
     //var SelectStudentView = require('course/view/select-student-view');
 
-    var Course = require('course/course');
+    var Course = require('course/model/course');
     var studentToDelete;
 
     var DeleteStudentView =  Mn.ItemView.extend({

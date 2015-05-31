@@ -19,7 +19,7 @@ define(function(require) {
     require('course/module');
 
     var channel = Radio.channel('test');
-    var Course = require('course/course')
+    var Course = require('course/model/course')
     var tchannel = Radio.channel('test');
     tchannel.once('start', function() {
 

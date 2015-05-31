@@ -10,7 +10,7 @@ define(function (require) {
     var Radio = require('backbone.radio');
     
     var loginTemplate = require('text!templates/login.hbs');
-    var alertTemplate = require('text!templates/alert-block.hbs');
+    var alertTemplate = require('text!ctemplates/alert-block.hbs');
     
     var userChannel = Radio.channel('user');
     

@@ -8,10 +8,10 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
-    var template = require('text!templates/modifyCourseView.hbs');
-    var alertTemplate = require('text!templates/alert-block.hbs');
+    var template = require('text!ctemplates/modifyCourseView.hbs');
+    var alertTemplate = require('text!ctemplates/alert-block.hbs');
 
-    var Course = require('course/course');
+    var Course = require('course/model/course');
 
     return Mn.ItemView.extend({
         tagName: 'div',
@@ -42,35 +42,47 @@ define(function (require) {
             'change @ui.year': "onUpdateYear",
             'click @ui.saveButton': 'onSaveCourse'
         },
+        
+        modelEvents: {
+            'change': 'onShownModal'
+        },
 
         initialize: function(options) {
-
-
-            this.model =  new Course; // courseChannel.request('current:course');
-            console.log('modify course working');
             this.alertTemplate = Hbs.compile(alertTemplate);
-            //console.log(this.model);
-            //this.ui.courseSection.val(model.get('section'));
-            //// TODO: Select Term
-            //this.ui.year.val(model.get('year'));
-
-            this.onSelectWinter = _.bind(this.setTerm, this, 'Winter');
-            this.onSelectSpring = _.bind(this.setTerm, this, 'Spring');
-            this.onSelectSummer = _.bind(this.setTerm, this, 'Summer');
-            this.onSelectFall = _.bind(this.setTerm, this, 'Fall');
-
+            var self = this;
+            _.each(['Winter', 'Spring', 'Summer', 'Fall'], function(term) {
+                self['onSelect' + term] = _.bind(self.setTerm, self, term);
+            });
+            this.ensureModel();
+        },
+        
+        ensureModel: function() {
+            if (!this.model)
+                this.model = courseChannel.request('current:course');
+        },
+        
+        onShow: function() {
+            this.onShownModal();
         },
 
         onShownModal: function() {
-            this.ui.courseCode.focus();
-            this.ui.courseCode.val('CPE'/* TODO: model.get('courseCode') */);
-            this.ui.courseNumber.val('101'/* TODO: model.get('courseNumber')*/);
-            this.ui.courseSection.val('1'/* TODO: model.get('section') */);
-
-            /* TODO: Read term and select button */
-            this.ui.fall.button('toggle');
-
-            this.ui.year.val('2015' /* TODO: model.get('year') */);
+            this.ui.courseCode.val(this.model.get('classCode'));
+            this.ui.courseNumber.val(this.model.get('classNumber'));
+            this.ui.courseSection.val(this.model.get('section'));
+            this.ui.year.val(this.model.get('year'));
+            this.resetTermButton();
+        },
+        
+        resetTermButton: function() {
+            var self = this;
+            var modelValue = this.model.get('term').toLowerCase();
+            
+            _.each(['winter', 'spring', 'summer', 'fall'], function(term) {
+                if (term === modelValue)
+                    self.ui[term].addClass('active');
+                else 
+                    self.ui[term].removeClass('active');
+            });
         },
 
         updateCourseCode: function() {
@@ -98,8 +110,6 @@ define(function (require) {
             this.model.set({
                 term: term,
             });
-           //Errorrrrrrr
-            //this.ui[term.toLowerCase()].se
         },
 
         onUpdateYear: function() {
@@ -127,17 +137,17 @@ define(function (require) {
                     colloquialUrl: urlPath
                 });
             }
-            self = this;
-            Q(this.model.save()).then(function(res) {
-                    console.dir(['new course save result:', res]);
-                    var modalRegion = pageChannel.request('modalRegion');
-                    modalRegion.hideModal();
-                    courseChannel.command('updateCourses');
-                },
-                function(err) {
-                    self.ui.error.html(self.alertTemplate({message: err.responseText}));
-                    self.ui.saveButton.button('reset');
-                }).done();
+            
+            this.model.save().then(function(res) {
+                console.dir(['new course save result:', res]);
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.hideModal();
+                courseChannel.command('updateCourses');
+            },
+            function(err) {
+                self.ui.error.html(self.alertTemplate({message: err.responseText}));
+                self.ui.saveButton.button('reset');
+            }).done();
         }
     });
 });

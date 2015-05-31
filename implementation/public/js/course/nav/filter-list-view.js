@@ -8,7 +8,7 @@ define(function (require) {
     var userChannel = require('user/module');
     var Radio = require('backbone.radio');
     var courseChannel = Radio.channel('course');
-    var template = require('text!templates/headerNavCourseFilter.hbs');
+    var template = require('text!ctemplates/headerNavCourseFilter.hbs');
     
     return Mn.ItemView.extend({
         tagName: 'li',

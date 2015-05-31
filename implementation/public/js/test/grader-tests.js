@@ -49,7 +49,7 @@ define(function(require) {
     require('course/module');
 
     var channel = Radio.channel('test');
-    var Course = require('course/course')
+    var Course = require('course/modelcourse')
     require('domReady!');
     var t1 = require('test/category-tests');
     var t2 = require('test/assignment-tests');

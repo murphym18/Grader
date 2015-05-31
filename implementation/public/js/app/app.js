@@ -12,6 +12,7 @@ define(function (require) {
    var RootRegion = require('util/root-region');
    var BasicLayoutView = require('util/basic-layout-view');
    var HeaderNavView = require('util/header-nav-view');
+   var LoadingView = require('util/loading-promise-view');
    var Radio = require('backbone.radio');
    
    var pageChannel = Radio.channel('page');
@@ -92,8 +93,6 @@ define(function (require) {
        */
       Radio: Backbone.Radio,
    
-      Relational: Backbone.Relational,
-   
       /**
        * A marionette router.
        */
@@ -102,20 +101,21 @@ define(function (require) {
       }),
       
       initialize: function(option) {
-         try{
          this.modal = new ModalRegion();
-         this.RootRegion = new RootRegion();   
-         
+         this.RootRegion = new RootRegion();
          var basicView = this.show(new BasicLayoutView);
          var navView = new HeaderNavView;
          basicView.showHeader(navView);
+
          pageChannel.reply('mainRegion', basicView.getRegion('main'));
          pageChannel.reply('navRegion', navView.getRegion('left'));
          pageChannel.reply('modalRegion', this.modal);
-         }catch(e){}
-
-      },
-   
+         pageChannel.reply('show:loading', function(promise) {
+            var loadingView = new LoadingView({promise: promise});
+            basicView.getRegion('main').show(loadingView);
+            return loadingView;
+         });
+         },
       /**
        * A method to navigate to route in the application.
        */

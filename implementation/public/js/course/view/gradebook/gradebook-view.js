@@ -5,21 +5,16 @@
 define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
-    var App = require('app/app');
-    var Backbone = require('util/backbone-helper');
-    var Hbs = require('handlebars');
-    var Mn = require('backbone.marionette');
     var Q = require('q');
+    var Backbone = require('util/backbone-helper');
     var Radio = require('backbone.radio');
-    var template = require('text!templates/gradebookView.hbs');
-
-    var ViewState = Backbone.Model.extend({
-        initialize: function() {
-
-        }
-    });
+    var Mn = require('backbone.marionette');
+    var Hbs = require('handlebars');
+    var template = require('text!course/view/gradebook/gradebookView.hbs');
+    var adapter = require('course/view/gradebook/gradebook-adapter');
+    var courseRadioChannel = Radio.channel('course');
     
-    return Mn.ItemView.extend({
+    var GradebookView = Mn.ItemView.extend({
         template: Hbs.compile(template),
         
         events: {
@@ -36,7 +31,15 @@ define(function (require) {
         },
         
         modelEvents: {
-
+            'sort': 'onShow',
+            'change': 'onShow',
+            'open': 'onOpen',
+            'sync': 'onShow',
+            'change:students.grades': 'onShow'
+        },
+        
+        initialize: function(){
+            this.listenTo(this.model.students, 'add remove update reset sort sync', this.onShow.bind(this));
         },
         
         editGrade: function(e) {
@@ -53,7 +56,6 @@ define(function (require) {
 
                 this.getCurrentRawScore(aId, sId).then(function(val) {
                     elm.empty();
-                    console.log('got promise val', val);
                     elm.html("<input type='number' value='"+val+"'/>");
                     elm.attr('data-aId', aId);
                     elm.attr('data-sId', sId);
@@ -71,37 +73,30 @@ define(function (require) {
             var rawScore = elm.find('input').val() || "0";
             var aId = elm.attr('data-aId');
             var sId = elm.attr('data-sId');
+            console.log(rawScore)
             var model = this.model;
-            var value = {
-                rawScore: rawScore,
-                assignment: aId
-            }
             setTimeout(function() {
                 doRender()
                 try {
-                    var students = self.model.get('students')
-                    console.log('logging student collection')
-                    console.log(students);
-                    var student = students.findWhere({_id: sId})
+                    var studentCollection = self.model.students;
+                    var student = studentCollection.findWhere({_id: sId})
                     console.log('logging current student', sId);
                     console.log(student);
-                    var grades = student.get('grades');
-                    console.log('logging grades collection')
-                    console.log(grades)
-                    var item = grades.findWhere({assignment: aId});
+                    student.setGrade(aId, rawScore);
+                    student.save();
+                    console.log('savinging student');
+                    // var grades = student.get('grades');
+                    // console.log('logging grades collection')
+                    // console.log(grades)
+                    // var item = grades.findWhere({assignment: aId});
                     
-                    if (item) {
-                        item.model.once('change', doSave);
-                        item.set(value)
-                        item.off('change', doSave);
-                        deferred.resolve(true);
-                    }
-                    else {
-                        grades.add(value);
-                        doSave();
-                    }
+                    // item.model.once('change', doSave);
+                    // item.setGrade(aId, rawScore);
+                    // item.off('change', doSave);
+                    deferred.resolve(true);
 
                     function doSave() {
+                        console.log('here');
                         elm.html("<span>"+rawScore+"</span>");
                         deferred.resolve(self.model.save().then(function(data) {
                             console.log(data);
@@ -131,7 +126,7 @@ define(function (require) {
             var self = this;
             setTimeout(function() {
                 try {
-                    var students = self.model.get('students')
+                    var students = self.model.students
                     console.log('logging student collection')
                     console.log(students);
                     var student = students.findWhere({_id: sId})
@@ -156,57 +151,48 @@ define(function (require) {
             
             return deferred.promise;
         },
-
-        initialize: function(options) {
-            console.log('here');
-            this.model = Radio.channel('course').request('current:course');
-            
-            console.log(this.model == window.x, this.model)
-            this.viewState = new ViewState();
-
+        
+        onOpen: function() {
+            console.log('course opened', this.model.cid);
+            this.onShow();
         },
         
         onShow: function() {
+            console.log('onShow  gradebook');
             var self = this;
             var ui = this.ui;
-            var layout = this.model.get('categories').calculateTableHeaderLayout();
+            var categoriesCollection = this.model.get('categories');
+            var layout = categoriesCollection.calculateTableHeaderLayout();
             var headerHeight = layout.length;
-            var allStudents = this.model.get('students');
-            console.log(allStudents);
-            var students = allStudents.map(function(student) {
-                var user = student.get('user').find(_.identity);
-                var last = user.get('last');
-                var first = user.get('first');
-
+            var studentCollection = this.model.students;
+            var students = studentCollection.map(function(student) {
+                //var user = student.get('user').find(_.identity);
+                var last = student.get('last');
+                var first = student.get('first');
                 var name = last+', '+first;
-                console.log('found name', name);
-                var id = student.id;
-                var grades = student.get('grades');
+                var id = student.get('_id');
                 return {
                     name: name,
                     id: id,
-                    grades: grades
+                    student: student
                 }
             });
 
-            console.log(students)
             var assignments = this.model.get('categories').allAssignments();
             var header = createHeader();
             var body = createBody();
             var tableRowHeaders = createRowHeaders();
-            console.log(ui);
-            ui.thead.empty()
-            ui.shead.empty()
-            ui.tbody.empty()
-            ui.sbody.empty()
+
+            ui.thead.empty();
+            ui.shead.empty();
+            ui.tbody.empty();
+            ui.sbody.empty();
             
             ui.thead.get(0).appendChild(header);
             ui.tbody.get(0).appendChild(body);
-            ui.shead.get(0).appendChild(createRowHeadersColHeader())
+            ui.shead.get(0).appendChild(createRowHeadersColHeader());
             ui.sbody.get(0).appendChild(createRowHeaders());
-            
-            console.log(assignments);
-            
+
             function createHeader() {
                 var docfrag = window.document.createDocumentFragment();
                 _.each(layout, function(row) {
@@ -239,25 +225,21 @@ define(function (require) {
                 var studentRows = _.map(students, function(student) {
                     var grades = [];
                     for(var i = 0; i < assignments.length; ++i) {
-                    
-                        var grade = _.first(student.grades.filter(function(e) {
-                            return assignments[i].id === e.get('assignment');
-                        }))
                         
-                        if (grade)
-                            console.log(grade);
+                        var grade = student.student.getGrade(assignments[i].id);
+                        
                             
                         grades.push({
                             colspan: 1,
                             rowspan: 1,
                             style: "grade",
-                            value: !!grade ? grade.get('rawScore') : "0",
-                            gradeEmpty: !grade,
+                            value: grade,
+                            gradeEmpty: !_.isFinite(grade),
                             aId: assignments[i].id,
-                            sId: student.id
+                            sId: student.student.get('_id')
                         });
                     }
-                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+
                     return grades;
                 });
                 
@@ -298,13 +280,12 @@ define(function (require) {
                     
                     docfrag.appendChild(tr);
                 })
-                console.log("here in making a ")
+
                 return docfrag;
             }
             
             function createRowHeadersColHeader() {
                 var docfrag = window.document.createDocumentFragment();
-                console.log(headerHeight)
                 var row = {
                     rowspan: 1,
                     colspan: 1,
@@ -333,6 +314,7 @@ define(function (require) {
                 }
                 return docfrag;
             }
+            
             function createRowHeaders() {    
                 var docfrag = window.document.createDocumentFragment();
                 var arr = assignments.map(function(cid){
@@ -355,13 +337,22 @@ define(function (require) {
                     td.setAttribute("rowspan", row.rowspan);
                     tr.appendChild(td);
                     docfrag.appendChild(tr);
-                    console.log(name)
                 });
                 return docfrag;
             }
                 
-        },
-        
-        
+        }
     });
+    
+    courseRadioChannel.reply('view:gradebook', function(course) {
+        if (!course) {
+            console.log('here')
+            course = courseRadioChannel.request('current:course');
+        }
+        return new GradebookView({
+            model: course
+        });
+    });
+    
+    
 });

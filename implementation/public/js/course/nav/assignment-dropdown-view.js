@@ -5,14 +5,17 @@ define(function (require) {
     var Hbs = require('handlebars');
     var Mn = require('backbone.marionette');
     var Q = require('q');
-    var userChannel = require('user/module');
     var Radio = require('backbone.radio');
+    var ModalHelpers = require('util/modal-helpers');
     var courseChannel = Radio.channel('course');
     var pageChannel = Radio.channel('page');
-    var template = require('text!templates/headerAssignmentDropdownView.hbs');
+    var userChannel = Radio.channel('user');
+    
     var modifyCategory = require('app/modifyCategory');
     var selectCategory = require('app/selectCategory');
-    var NewAssignmentView = require('course/view/addNewAssignment');
+    var NewAssignmentView = require('course/view/new-assignment-view');
+    
+    var template = require('text!ctemplates/headerAssignmentDropdownView.hbs');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -31,20 +34,11 @@ define(function (require) {
         },
 
         initialize: function(options) {
-            //this.model = userChannel.request('session');
+            ModalHelpers.apply(this);
         },
 
         showNewAssignment: function(domEvent) {
-            //courseChannel.command('showAllCourses');
-            //userChannel.request('user').then(function(user) {
-            //    var modalRegion = pageChannel.request('modalRegion');
-            //    modalRegion.show(new AddAssignmentView);
-            //
-            //})
-            console.log("clicked on add new assignment");
-            var modalRegion = pageChannel.request('modalRegion');
-            //console.log("clicked on add new assignment");
-            modalRegion.show(new NewAssignmentView());
+            this.showModal(new NewAssignmentView());
         },
 
         showNewCategory: function(domEvent) {
@@ -52,9 +46,9 @@ define(function (require) {
         },
 
         showModifyCategory: function(domEvent) {
+            var self = this;
             courseChannel.request('select:category').then(function(selectedCategory) {
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new modifyCategory({
+                self.showModal(new modifyCategory({
                     'category': selectedCategory
                 }));
             }).done();

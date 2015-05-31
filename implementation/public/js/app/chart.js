@@ -5,16 +5,16 @@ define(function (require) {
     var GraphModel = App.Course;
 
     var Backbone = require('util/backbone-helper');
-    var LoadingView = require('util/promise-loading-view');
-    var CourseList = require('course/course-list');
-    var CourseListView = require('course/view/course-list-view');
-    var NavCourseFilterView = require('course/nav/filter-list-view');
-    var NavCreateCourseView = require('course/nav/new-course-button-view')
+    // var LoadingView = require('util/promise-loading-view');
+    // var CourseList = require('course/model/course-list');
+    // var CourseListView = require('course/view/course-list-view');
+    // var NavCourseFilterView = require('course/nav/filter-list-view');
+    // var NavCreateCourseView = require('course/nav/new-course-button-view')
     var Radio = require('backbone.radio');
     var userChannel = require('user/module');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
-    var Course = require('course/course');
+    var Course = require('course/model/course');
     var chartTemplate = require('text!templates/charts.hbs');
     var template1  = require('text!templates/letterGradeGraphics.hbs');
     var template2  = require('text!templates/gradeSchema.hbs');

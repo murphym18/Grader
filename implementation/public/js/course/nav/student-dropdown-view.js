@@ -9,7 +9,7 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var courseChannel = Radio.channel('course');
     var pageChannel = Radio.channel('page');
-    var template = require('text!templates/headerStudentDropdownView.hbs');
+    var template = require('text!ctemplates/headerStudentDropdownView.hbs');
     var AddNewStudentView = require('app/addNewStudent');
     var ModifyStudentView = require('app/modifyStudent');
     var SelectStudentView = require('course/view/select-student-view');

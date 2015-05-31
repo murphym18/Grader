@@ -55,7 +55,8 @@ schema.add({
       match: /[A-Z][-A-Z0-9]*/
    },
    categories: [Category],
-   students: [studentRecord]
+   //students: [studentRecord]
+   //students: []
 });
 schema.add(gradeShema.letterGrade);
 schema.add(gradeShema.creditNoCredit);

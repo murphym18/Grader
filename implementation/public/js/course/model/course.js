@@ -6,14 +6,14 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var Radio = require('backbone.radio');
-    var Category = require('course/category');
-    var StudentRecord = require('course/student');
-    var RoleManager = require('course/role-manager');
+    var Category = require('course/model/category');
+    var RoleManager = require('course/model/role-manager');
     require('backbone-documentmodel');
     var courseChannel = Radio.channel('course');
     
     var DocModel = require('util/doc-model');
     var DocCollection = require('util/doc-collection');
+    
     var adminUserText = require('text!api/Users/admin');
     
     var defaultCourse = JSON.stringify({
@@ -25,7 +25,7 @@ define(function (require) {
         "roles":[
             {
                 "name":"NONE",
-                "users":[JSON.parse(adminUserText)],
+                "users":[JSON.parse(adminUserText)._id],
                 "permissions":[]
             }
         ],
@@ -47,20 +47,24 @@ define(function (require) {
         
         initialize : function (options) {
             this.setupUrl();
+            this.on('all', function() {
+                if (console.warn)
+                    console.warn("DEBUG: ", arguments[0]);
+            });
 
         },
         
-        fetch: function(options) {
-            options = options || {};
-            if (!this.get("colloquialUrl")) {
-                var msg = "Cannot fetch course. Its colloquialUrl is undefined."
-                throw new Error(msg)
-            }
-            this.url = this.url + '?populate=students.user,roles.users'
-            var result = DocModel.prototype.fetch.call(this, options);
-            this.url = '/api/courses/' + this.get("colloquialUrl") + "";
-            return result;
-        },
+        // fetch: function(options) {
+        //     options = options || {};
+        //     if (!this.get("colloquialUrl")) {
+        //         var msg = "Cannot fetch course. Its colloquialUrl is undefined."
+        //         throw new Error(msg)
+        //     }
+        //     //this.url = this.url + '?populate=students.user,roles.users'
+        //     var result = DocModel.prototype.fetch.call(this, options);
+        //     this.url = '/api/courses/' + this.get("colloquialUrl") + "";
+        //     return result;
+        // },
         
         setupUrl: function() {
             var colloquialUrl = this.get("colloquialUrl");
@@ -84,9 +88,6 @@ define(function (require) {
     
     function getNestedCollection(nestedKey, nestedValue, nestedOptions) {
         switch (nestedKey) {
-            case 'students':
-                return new StudentRecord(nestedValue, nestedOptions);
-                
             case 'categories':
                 return new Category(nestedValue, nestedOptions);
                 

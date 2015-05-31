@@ -74,7 +74,7 @@ define(['app/app', 'text!templates/modifyAssignmentView.hbs', ], function(App, t
 
                 categories[1].assignments[0].name = ui.assignmentName.val();
                 categories[1].assignments[0].rawPoints = ui.assignmentTotalScore.val();
-                Backbone.emulateHTTP = true;
+                //Backbone.emulateHTTP = true;
                 course.save();
             });
             this.closeModifyAssignment();

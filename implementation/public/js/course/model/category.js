@@ -78,8 +78,8 @@ define(function (require) {
                     var num = sub.reduce(sum, 0) | 0;
                     if (elm.has('assignments'))
                         num += elm.get('assignments').size()
-                    if (elm.cid)
-                        result[elm.cid] = num;
+                    if (elm.id)
+                        result[elm.id] = num;
                     return num;
                 }
                 return 0;
@@ -104,8 +104,8 @@ define(function (require) {
                 }
             }
             function registerResult(a, h) {
-                if (a && a.cid) {
-                    result[a.cid] = h;
+                if (a && a.id) {
+                    result[a.id] = h;
                 }
             }
         },
@@ -136,7 +136,7 @@ define(function (require) {
             return result;
             
             function lookup(table, item) {
-                return table[item.cid];
+                return table[item.id];
             }
             
             function assignmentColumn(a) {
@@ -145,7 +145,8 @@ define(function (require) {
                     style: "assignment",
                     colspan: 1,
                     rowspan: rowspan(a),
-                    cid: a,
+                    id: a.id,
+                    assignment: a
                 }
             }
             
@@ -155,7 +156,7 @@ define(function (require) {
                     style: "category",
                     colspan: colspan(cat),
                     rowspan: 1,
-                    cid: cat.cid
+                    id: cat.id
                 }
             }
             

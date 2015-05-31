@@ -10,7 +10,7 @@ define(function (require) {
     var ModifyCourseView = require('course/view/modify-course-view');
     var pageChannel = Radio.channel('page');
     var userChannel = Radio.channel('user');
-    var template = require('text!templates/headerNavModifyCourseButton.hbs');
+    var template = require('text!ctemplates/headerNavModifyCourseButton.hbs');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -21,9 +21,7 @@ define(function (require) {
                 userChannel.request('user').then(function(user) {
                     var modalRegion = pageChannel.request('modalRegion');
                     modalRegion.show(new ModifyCourseView({user: user}));
-
                 })
-
             }
         }
     });

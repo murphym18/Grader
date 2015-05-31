@@ -1,29 +1,26 @@
 define(function (require) {
-    var $ = require('jquery');
-    var _ = require('underscore');
     var App = require('app/app');
     var Backbone = require('util/backbone-helper');
     var Hbs = require('handlebars');
     var Mn = require('backbone.marionette');
-    var Q = require('q');
+
     var Radio = require('backbone.radio');
+    var courseListItemTemplate = require('text!ctemplates/courseListing.hbs');
     
-    var courseListItemTemplate = require('text!templates/courseListing.hbs');
-    
-    CourseListItemView = Mn.ItemView.extend({
+    var CourseListItemView = Mn.ItemView.extend({
         tagName: "div",
         className: "col-md-4",
-        template: App.Handlebars.compile(courseListItemTemplate),
+        template: Hbs.compile(courseListItemTemplate),
         
         modelEvents: {
             "change": "render"
         },
         
         events: {
-            'click a': "openGradebook"
+            'click a': "openCourse"
         },
         
-        openGradebook: function loadGradebookPage(domEvent) {
+        openCourse: function loadGradebookPage(domEvent) {
             App.go('/courses/'+this.model.get('colloquialUrl'));
             domEvent.preventDefault();
         }
@@ -33,9 +30,19 @@ define(function (require) {
         template: Hbs.compile("")
     });
     
-    return Mn.CollectionView.extend({
+    var CourseListView = Mn.CollectionView.extend({
         className: "row",
         childView: CourseListItemView,
         emptyView: EmptyCourseListView,
+    })
+    
+    var courseChannel = Radio.channel('course');
+    courseChannel.reply('view:list', function(courseList) {
+        if (!courseList) {
+            courseList = courseChannel.request('current:list');
+        }
+        return new CourseListView({collection: courseList});
     });
+    
+    return CourseListView;
 });

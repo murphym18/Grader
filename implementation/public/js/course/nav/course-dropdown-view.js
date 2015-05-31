@@ -1,22 +1,21 @@
 define(function (require) {
-    var $ = require('jquery');
     var _ = require('underscore');
-    var Backbone = require('util/backbone-helper');
     var Hbs = require('handlebars');
     var Mn = require('backbone.marionette');
-    var Q = require('q');
-    var userChannel = require('user/module');
     var Radio = require('backbone.radio');
-    var courseChannel = Radio.channel('course');
-    var pageChannel = Radio.channel('page');
-    var template = require('text!templates/headerCourseDropdownView.hbs');
+    var ModalHelpers = require('util/modal-helpers');
+    
     var CreateCourseView = require('course/view/new-course-view');
     var ManageCourseView = require('course/view/modify-course-view');
     var GradeSchemeView  = require('course/view/grade-scheme-view');
     var PermissionsView  = require('course/view/course-permissions-view');
     var LatePolicyView  = require('course/view/late-policy-view');
-
-
+    
+    var template = require('text!ctemplates/headerCourseDropdownView.hbs');
+    
+    var userChannel = Radio.channel('user');
+    var courseChannel = Radio.channel('course');
+    var pageChannel = Radio.channel('page');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -39,59 +38,32 @@ define(function (require) {
             "click @ui.permissions": "showPermissions",
             "click @ui.mockdata": "createMockData"
         },
-
-        initialize: function(options) {
-            //this.model = userChannel.request('session');
+        
+        initialize: function() {
+            ModalHelpers.call(this);
         },
 
         showNewCourse: function(domEvent) {
-            //courseChannel.command('showAllCourses');
+            var self = this;
             userChannel.request('user').then(function(user) {
-                //console.log('show new Course');
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new CreateCourseView({user: user}));
-
-            })
+                self.showModal(new CreateCourseView({user: user}));
+            });
         },
 
         showManageCourse: function(domEvent) {
-            //courseChannel.command('showUserCourses');
-            userChannel.request('user').then(function(user) {
-                //console.log('show new Course');
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new ManageCourseView());
-
-            })
+            this.ensureLoginThenShowModal(new ManageCourseView());
         },
 
         showGradeScheme: function(domEvent) {
-            //courseChannel.command('showUserCourses');
-            userChannel.request('user').then(function(user) {
-                //console.log('show new Course');
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new GradeSchemeView());
-
-            })
+            this.ensureLoginThenShowModal(new GradeSchemeView())
         },
 
         showLatePolicy: function(domEvent) {
-            //courseChannel.command('showUserCourses');
-            userChannel.request('user').then(function(user) {
-                //console.log('show new Course');
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new LatePolicyView());
-
-            })
+            this.ensureLoginThenShowModal(new LatePolicyView())
         },
 
         showPermissions: function(domEvent) {
-            //courseChannel.command('showUserCourses');
-            userChannel.request('user').then(function(user) {
-                //console.log('show new Course');
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new PermissionsView());
-
-            })
+            this.ensureLoginThenShowModal(new PermissionsView())
         },
         
         createMockData: function() {
@@ -108,7 +80,6 @@ define(function (require) {
             })});
             x.save();
             console.log('mock data created')
-            //.then(function(){});
         }
     });
 });

@@ -8,11 +8,11 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
-    var template = require('text!templates/selectStudentView.hbs');
-    var alertTemplate = require('text!templates/alert-block.hbs');
+    var template = require('text!ctemplates/selectStudentView.hbs');
+    var alertTemplate = require('text!ctemplates/alert-block.hbs');
     var DeleteStudentView = require('course/view/delete-student-view');
 
-    var Course = require('course/course');
+    var Course = require('course/model/course');
     var studentObjects = [];
 
     dynamicSort = function (property) {

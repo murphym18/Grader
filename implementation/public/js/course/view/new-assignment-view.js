@@ -8,10 +8,10 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
-    var template = require('text!templates/addNewAssignmentView.hbs');
-    var alertTemplate = require('text!templates/alert-block.hbs');
+    var template = require('text!ctemplates/addNewAssignmentView.hbs');
+    var alertTemplate = require('text!ctemplates/alert-block.hbs');
 
-    var Course = require('course/course');
+    var Course = require('course/model/course');
     //var currentAssignment;
 
     var NewAssignmentView = Mn.ItemView.extend({

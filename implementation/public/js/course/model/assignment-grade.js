@@ -6,13 +6,10 @@ define(function (require) {
     var Mn = require('backbone.marionette');
     var Q = require('q');
     var Radio = require('backbone.radio');
-    
     require('backbone-documentmodel');
     var DocModel = Backbone.DocumentModel;
     var DocCollection = Backbone.DocumentCollection;
     
-    return DocModel.extend({
-        
-    });
+    return DocModel;
     
 });

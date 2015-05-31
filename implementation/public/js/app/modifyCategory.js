@@ -9,9 +9,9 @@ define(function (require) {
     var pageChannel = Radio.channel('page');
     var courseChannel = Radio.channel('course');
     var template = require('text!templates/modifyCategory.hbs');
-    var alertTemplate = require('text!templates/alert-block.hbs');
+    var alertTemplate = require('text!ctemplates/alert-block.hbs');
     
-    var Course = require('course/course');
+    var Course = require('course/model/course');
 
     return Mn.ItemView.extend({
         tagName: 'div',
@@ -145,7 +145,7 @@ define(function (require) {
          */
         closeModifyCategory : function() {
             var self = this;
-            Backbone.emulateHTTP = true;
+            //Backbone.emulateHTTP = true;
             Q(this.model.save()).then(function(res) {
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.hideModal();

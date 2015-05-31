@@ -7,7 +7,7 @@ define(function (require) {
     var Q = require('q');
     var Radio = require('backbone.radio');
     
-    var CourseList = require('course/course-list');
+    var CourseList = require('course/model/course-list');
     
     return CourseList.extend({
         initialize: function(options) {

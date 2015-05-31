@@ -9,30 +9,18 @@ function limitOne(val) {
 }
 
 var studentRecordSchema = mongoose.Schema({
-   user: {
-      type:[{
-         type:  mongoose.Schema.Types.ObjectId,
-         ref: 'User',
-         required: false
-      }],
-      validate: [limitOne, '{PATH} can only have 1 member']
-   },
+   user: String,
+   course: String,
    comment: String,
-   extra: {},
-   grades: [{
-      assignment: String,
-      assignmentSubmission: {
-         'type': String,
-         'ref': 'Submission',
-         'required': false
-      },
-      rawScore: {
-         type: Number,
-         min: 0
-      }
-   }]
-}, { _id : true });
+   grades: String
+}, { _id : true, strict: false });
 
 userFields.username.required = false;
-studentRecordSchema.add(userFields)
-module.exports = studentRecordSchema;
+userFields.username = String;
+userFields.emplId = String
+studentRecordSchema.add(userFields);
+
+studentRecordSchema.statics.getRestOptions = function getRestOptions() {
+   return {};
+};
+module.exports = mongoose.model('Student', studentRecordSchema);
