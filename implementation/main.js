@@ -18,9 +18,7 @@ var Student = require('./model/course/student');
 
 var routes = require('./routes');
 var restify = require('express-restify-mongoose');
-var SegfaultHandler = require('segfault-handler');
 
-SegfaultHandler.registerHandler();
 /**
  *
  */
