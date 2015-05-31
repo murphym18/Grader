@@ -1,6 +1,6 @@
 /** @author Michael Murphy */
 var mongoose = require('mongoose');
-var GradedItem = require('./graded-item');
+
 var categorySchema = mongoose.Schema({
    name: {
       type: String,
@@ -14,14 +14,15 @@ var categorySchema = mongoose.Schema({
    },
    path: {
       type:  String,
-      index: {
-         unique: true
-      },
-      required: false,
       select: true
    },
-   assignments: [GradedItem]
-});
+   assignments: String,
+   course: String
+},{ _id : true, save: {w:1}});
+categorySchema.set('autoIndex', true);
+categorySchema.set('strict', false);
 
-
-module.exports = categorySchema;
+categorySchema.statics.getRestOptions = function() {
+   return {};
+};
+module.exports = mongoose.model('Category', categorySchema);

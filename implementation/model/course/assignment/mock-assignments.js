@@ -3,7 +3,7 @@ var generateMockCategory = require('./mock-category');
 
 
 module.exports = function generateMockAssignments() {
-   var categories = [];
+   var categories = new Array();
    function fillSubCategory(parent, descriptions) {
       for (var d of descriptions) {
          var sub = generateMockCategory(d[0], parent.path);
@@ -28,16 +28,11 @@ module.exports = function generateMockAssignments() {
    fillSubCategory(coursework, _.zip(['Homework', 'Classwork'], ['Homework', 'Problem Set'], [5, 4]));
 
    fillSubCategory({path:''}, _.zip(['Labs'], ['Lab'], [6]));
-   categories.sort((a, b) => {
-      return a.path.localeCompare(b.path);
-   });
+   categories.sort((a, b) => {return a.path.localeCompare(b.path);});
 
-   var assignments = _.flatten(categories.map(function(c){
-      return c.assignments;
-   }).reduce(function(pre,cur) {
-          pre.push(cur)
-          return pre
-       }, []))
+   var assignments = _.flatten(categories
+    .map(function(c){return c.assignments;})
+    .reduce(function(pre,cur) {pre.push(cur); return pre}, []))
 
    return categories;
 };

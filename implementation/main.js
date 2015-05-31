@@ -15,9 +15,13 @@ var mongoose = require('mongoose');
 var Users = require('./model/admin/user');
 var Course = require('./model/course/index');
 var Student = require('./model/course/student');
+var Assignment = require('./model/course/assignment/assignment');
+var Category = require('./model/course/assignment/category');
 
 var routes = require('./routes');
 var restify = require('express-restify-mongoose');
+
+var mockCourses = require('./model/course/mock-courses');
 
 /**
  *
@@ -34,7 +38,7 @@ function * main() {
     * This is a hack so that if connects from an external site to path managed by
     * the client side history API the page still works.
     */
-   app.get(/^\/courses.?/, function(req, res, next){
+   app.get(/^\/courses\/?.?/, function(req, res, next){
       res.sendFile(__dirname + '/public/index.html');
       // if(req.accepts(['html', 'application/json']) !== 'html') {
       //    return next();
@@ -98,23 +102,65 @@ function setupDatabase() {
             admin = yield Users.findOne({username: 'admin'}).exec();
             
             // Grab the function that makes mock-courses
-            var mockCourses = require('./model/course/mock-courses');
-            
-            var studentDocs = [];
             // Make mock courses and save them to the Course collection
-            yield Q.all(mockCourses(admin, allUsers).map(function(course){
-               var students = course.students;
-               delete course.students;
-               studentDocs.push(students);
-               var doc = new Course(course);
-               return Q.ninvoke(doc, 'save');
-            }));
-            var pojso = _.flatten(studentDocs).map(function (student) {
-               student.grades = '';
-               return student;
+   
+            var data = mockCourses(admin, allUsers).map(function(arg){
+               arg.categories = arg.categories.map(function(cat){cat.course = arg.colloquialUrl.toString(); return cat;})
+               arg.students.forEach(function(s){s.course = arg.colloquialUrl;})
+               return JSON.stringify(arg);
             });
             
-            yield Student.create(pojso);//toSave(Course)));
+            for (var x = 0; x < data.length; ++x) {
+               
+               var categories = JSON.parse(data[x]).categories;
+               
+               for(var i = 0; i < categories.length; ++i) {
+                  var category = categories[i];
+                  var url = category.course;
+                  var assignments = category.assignments;
+                  if (_.isArray(assignments) && assignments.length > 0) {
+                     var cloned = yield Q.all(category.assignments.map((a)=>{
+                        a.course = url;
+                        var doc = new Assignment(a);
+                        return Q.ninvoke(doc, 'save');
+                     }));
+                     assignments = cloned.filter((arr)=>{return arr.length > 0}).map((arr)=>{return arr[0]});
+                     category.assignments = assignments.map(function(o){return o._id.toString()}).join(',');
+                  }
+                  else {
+                     category.assignments = new String('');
+                  }
+                  new Category(category).save(function(err, doc){
+                     if (err) {
+                        console.warn(err, 'in saving category');
+                     }
+                  });
+               }
+            }
+            var z = 0;
+
+            var coursesSaved = 0;
+
+            while(z < data.length) {
+               new Course((function(){var tmp = JSON.parse(data[z]); delete tmp.categories; delete tmp.students; return tmp;})()).save(function(err, doc){
+                  coursesSaved++;
+                  if (err)
+                     console.warn(err, 'in saving course')
+               });
+               z++;
+            }
+            
+            var z1 = 0;
+            var studentsSaved = 0;
+            while(z1 < data.length) {
+               new Student(JSON.parse(data[z1]).students).save(function(err, doc){
+                  coursesSaved++;
+                  if (err)
+                     console.warn(err, 'in saving student')
+               });
+               z1++;
+            }
+            
             //yield Student.create(studentDocs)
             // yield Q.all(studentDocs.map(function(data){
             //    var doc = new Student(data);
@@ -151,7 +197,9 @@ function clearDatabase() {
    return Q.all([
       Course.remove().exec(),
       Users.remove().exec(),
-      Student.remove().exec()
+      Student.remove().exec(),
+      Assignment.remove().exec(),
+      Category.remove().exec()
    ]);
 }
 
@@ -201,10 +249,11 @@ function mountRestEndpoints(){
       var model = mongoose.models[modelName];
       var options = _.extend({
          version: ''
-      }, model.getRestOptions ? model.getRestOptions(): {});
+      }, _.isFunction(model.getRestOptions) ? model.getRestOptions(): {});
       if (modelName === "User") {
 
       }
+      console.log("mounting endpoint for " + modelName)
       restify.serve(app, model, options);
    });
 };

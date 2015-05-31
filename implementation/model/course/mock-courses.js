@@ -3,47 +3,45 @@ var MockAssignments = require('./assignment/mock-assignments')();
 var COURSE_ABBREVIATION = require('./abbreviations');
 var TERMS = ['Winter', 'Spring', 'Summer', 'Fall'];
 
-module.exports = generateMockCourses;
+
 function generateMockCourses(admin, allUsers) {
    var i = 0;
-   allUsers = _.shuffle(allUsers);
-
-   function next() {
-      return allUsers[i++ % allUsers.length];
-   }
+   
 
    function addUsers(course) {
       for (var w = 0; w < 1; w++) {
-         course.roles[0].users.push(next());
+         course.roles[0].users.push(allUsers[i++ % allUsers.length]);
       }
 
       for (var x = 0; x < 2; x++) {
-         course.roles[1].users.push(next());
+         course.roles[1].users.push(allUsers[i++ % allUsers.length]);
       }
 
       for (var y = 0; y < 20; y++) {
-         var student = next();
+         var student = allUsers[i++ % allUsers.length];
          course.roles[2].users.push(student);
          var studentRecord = _.pick(student, 'first', 'last', 'username', 'email', 'major', 'emplId');
-         studentRecord.course = course.colloquialUrl;
+
          studentRecord.user = student.id.toString();
          course.students.push(studentRecord);
       }
       return course;
    }
-   var arr = new Array(50).fill(0);
-   return arr.map(_.partial(generateMockCourse, admin)).map(addUsers)
+   var arr = new Array(50);
+   for (var index = 0; index < 50; index++) {
+      arr[index] = addUsers(generateCourse(admin));
+   }
+   return arr;
 }
 
-function generateMockCourse(admin) {
-   var defaultRoles = [
-      {name: "INSTRUCTOR", permissions: [], users: []},
-      {name: "TEACHER_ASSISTANT", permissions: [], users: []},
-      {name: "STUDENT", permissions: [], users: []},
-      {name: "NONE", permissions: [], users: [admin.id]}
-   ];
+function generateCourse(admin) {
+   var defaultRoles = new Array(4);
+   defaultRoles[0] = {name: "INSTRUCTOR", permissions: new Array(), users: new Array()},
+   defaultRoles[1] = {name: "TEACHER_ASSISTANT", permissions: new Array(), users: new Array()},
+   defaultRoles[2] = {name: "STUDENT", permissions: new Array(), users: new Array()},
+   defaultRoles[3] = {name: "NONE", permissions: new Array(), users: (function(){var a = new Array(); a[0] = admin.id.toString();})()};
 
-   function COURSE_CODE_GENERATOR() {
+   function course_code_generator() {
       return COURSE_ABBREVIATION[randomInt(COURSE_ABBREVIATION.length)];
    }
 
@@ -69,17 +67,17 @@ function generateMockCourse(admin) {
          'Fall': date(8, 22, 11, 12)
       }[term];
    }
-
-   var result = {
-      classCode: COURSE_CODE_GENERATOR(),
-      classNumber: COURSE_NUMBER_GENERATOR(),
-      section: COURSE_SECTION_GENERATOR(),
-      roles: defaultRoles,
-      term: TERMS[Math.floor(Math.random() * TERMS.length)],
-      year: 2014 + Math.ceil(Math.random() * 3),
-      categories: MockAssignments,
-      students: []
-   };
+   
+   
+   var result = new Object();
+   result.classCode = course_code_generator.call();
+   result.classNumber = COURSE_NUMBER_GENERATOR.call();
+   result.section = COURSE_SECTION_GENERATOR.call();
+   result.roles = defaultRoles;
+   result.term = TERMS[Math.floor(Math.random() * TERMS.length)];
+   result.year = 2014 + Math.ceil(Math.random() * 3);
+   result.categories = MockAssignments;
+   result.students = new Array();
    _.extend(result, genDates(result.term, Number(result.year)));
    result.colloquialUrl =  result.classCode + "-" + result.classNumber + "-" + result.section + "-" + result.term + result.year;
 
@@ -101,3 +99,5 @@ function genStr(alphabet, len) {
    }
    return result;
 }
+
+module.exports = generateMockCourses;

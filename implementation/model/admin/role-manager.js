@@ -70,7 +70,7 @@ var roleManagerSchema = mongoose.Schema({
       permissions: [String],
       users: [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'User'}]
    }]
-}, {save: {w:1}, strict: false});
+}, {save: {w:1}, strict: false, safe: true});
 
 roleManagerSchema.method('findAllUserIds', function() {
    function toUsers(role) {

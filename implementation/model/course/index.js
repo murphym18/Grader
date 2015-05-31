@@ -54,7 +54,7 @@ schema.add({
       select: true,
       match: /[A-Z][-A-Z0-9]*/
    },
-   categories: [Category],
+   //categories: [Category],
    //students: [studentRecord]
    //students: []
 });
