@@ -13,10 +13,19 @@ define(function(require) {
     var template = require('text!course/view/gradebook/gradebookView.hbs');
     var adapter = require('course/view/gradebook/gradebook-adapter');
     var courseRadioChannel = Radio.channel('course');
-
+    
     function mkGradeSorter(aId) {
-        return function gradeSort(student) {
-            return student.getGrade(aId);
+        if (this.sortKey !== aId) {
+            this.sortKey = aId;
+            return function gradeSort(student) {
+                return student.getGrade(aId);
+            }
+        }
+        else {
+            this.sortKey = "-"+ aId
+            return function gradeSort(student) {
+                return -1 * student.getGrade(aId);
+            }
         }
     }
 
@@ -89,8 +98,6 @@ define(function(require) {
                 self.model.students.comparator = mkGradeSorter(aId);
                 self.model.students.sort();
             }
-
-
         },
 
         saveRawScoreInput: function() {
