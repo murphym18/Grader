@@ -22,12 +22,17 @@ define(function (require) {
         },
         
         ui: {
-            thead: "table.gradebook > thead",
-            tbody: "table.gradebook > tbody",
-            tfoot: "table.gradebook > tfoot",
             shead: "table.gradebook-students > thead",
             sbody: "table.gradebook-students > tbody",
             sfoot: "table.gradebook-students > tfoot",
+            
+            thead: "table.gradebook > thead",
+            tbody: "table.gradebook > tbody",
+            tfoot: "table.gradebook > tfoot",
+            
+            ehead: "table.gradebook-total > thead",
+            ebody: "table.gradebook-total > tbody",
+            efoot: "table.gradebook-total > tfoot",
         },
         
         modelEvents: {
@@ -40,6 +45,8 @@ define(function (require) {
         
         initialize: function(){
             this.listenTo(this.model.students, 'add remove update reset sort sync', this.onShow.bind(this));
+            this.listenTo(this.model.assignments, 'add remove update reset sort sync', this.onShow.bind(this));
+            this.listenTo(this.model.categories, 'add remove update reset sort sync', this.onShow.bind(this));
         },
         
         editGrade: function(e) {
@@ -79,7 +86,7 @@ define(function (require) {
                 doRender()
                 try {
                     var studentCollection = self.model.students;
-                    var student = studentCollection.findWhere({id: sId})
+                    var student = studentCollection.get(sId)
                     console.log('logging current student', sId);
                     console.log(student);
                     student.setGrade(aId, rawScore);
@@ -126,16 +133,16 @@ define(function (require) {
             var self = this;
             setTimeout(function() {
                 try {
-                    var students = self.model.students
+                    var students = self.model.students;
                     console.log('logging student collection')
                     console.log(students);
-                    var student = students.findWhere({id: sId})
+                    var student = students.get(sId)
                     console.log('logging current student', sId);
                     console.log(student);
                     var grades = student.get('grades');
                     console.log('logging grades collection')
                     console.log(grades)
-                    var item = grades.findWhere({assignment: aId});
+                    var item = grades.getGrade(aId);
                     console.log('logging assignment grade')
                     console.log(item)
                     var value = item.get('rawScore') || "0"
@@ -176,22 +183,27 @@ define(function (require) {
                     student: student
                 }
             });
-
+            
+            var assignmentOrder = [];
             var assignments = this.model.assignments;
             var header = createHeader();
+            console.log('assignment order: ', assignmentOrder);
             var body = createBody();
             var tableRowHeaders = createRowHeaders();
 
-            ui.thead.empty();
             ui.shead.empty();
-            ui.tbody.empty();
+            ui.thead.empty();
+            ui.ehead.empty();
+            
             ui.sbody.empty();
+            ui.tbody.empty();
+            ui.ebody.empty();
             
             ui.thead.get(0).appendChild(header);
             ui.tbody.get(0).appendChild(body);
             ui.shead.get(0).appendChild(createRowHeadersColHeader());
             ui.sbody.get(0).appendChild(createRowHeaders());
-
+            
             function createHeader() {
                 var docfrag = window.document.createDocumentFragment();
                 _.each(layout, function(row) {
@@ -204,6 +216,13 @@ define(function (require) {
                         }
                         else {
                             td.appendChild(document.createTextNode(cell.name));
+                        }
+                        if (cell.style === "assignment") {
+                            assignmentOrder.push(cell.id);
+                            
+                        }
+                        if (cell.id) {
+                            td.setAttribute('data-id', cell.id);
                         }
                         td.setAttribute("colspan", cell.colspan);
                         td.setAttribute("rowspan", cell.rowspan);
@@ -221,16 +240,16 @@ define(function (require) {
                 var docfrag = window.document.createDocumentFragment();
                 var studentRows = _.map(students, function(student) {
                     var grades = [];
-                    for(var i = 0; i < assignments.size(); ++i) {
+                    for(var i = 0; i < assignmentOrder.length; ++i) {
                         
-                        var grade = student.student.getGrade(assignments.at(i).id);
+                        var grade = student.student.getGrade(assignmentOrder[i]);
                         grades.push({
                             colspan: 1,
                             rowspan: 1,
                             style: "grade",
                             value: grade,
                             gradeEmpty: !_.isFinite(grade),
-                            aId: assignments.at(i).id,
+                            aId: assignmentOrder[i],
                             sId: student.student.id
                         });
                     }
@@ -341,7 +360,6 @@ define(function (require) {
     
     courseRadioChannel.reply('view:gradebook', function(course) {
         if (!course) {
-            console.log('here')
             course = courseRadioChannel.request('current:course');
         }
         return new GradebookView({

@@ -23,7 +23,8 @@ define(function (require) {
             newStudent: ".newStudent",
             modifyStudent: ".modifyStudent",
             deleteStudent: ".deleteStudent",
-            groupStudents: ".groupStudents"
+            groupStudents: ".groupStudents",
+            mockData: ".mockData"
         },
 
 
@@ -32,11 +33,12 @@ define(function (require) {
             "click @ui.newStudent": "showNewStudent",
             "click @ui.modifyStudent": "showModifyStudent",
             "click @ui.deleteStudent": "showDeleteStudent",
-            "click @ui.groupStudents": "showGroupStudents"
+            "click @ui.groupStudents": "showGroupStudents",
+            "click @ui.mockData":"createMockGradeData"
         },
 
         initialize: function(options) {
-            //this.model = userChannel.request('session');
+            this.model = courseChannel.request('current:course');
         },
 
         showNewStudent: function(domEvent) {
@@ -79,6 +81,18 @@ define(function (require) {
 
         showGroupStudents: function(domEvent) {
             //courseChannel.command('showUserCourses');
+        },
+        
+        createMockGradeData: function() {
+            console.log('creating mock grade data...')
+            var students = this.model.students;
+            var assignments = this.model.assignments;
+            students.each(function(student) {
+                assignments.each(function(a) {
+                    var rawScore = Math.round(60 + Math.random()*40);
+                    student.setGrade(a.id, rawScore);
+                })
+            })
         }
 
     });

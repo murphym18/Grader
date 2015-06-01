@@ -75,7 +75,7 @@ define(function (require) {
          * @author Matt Bleifer
          */
         render: function() {
-            var students = this.model.get('students');
+            var students = this.model.students;
             var first, last, index = 0;
 
             studentObjects = [];

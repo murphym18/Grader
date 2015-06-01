@@ -115,6 +115,9 @@ define(function(require) {
             }
 
             function render(cat, rows, rowNum) {
+                if (colspan(cat) < 1) {
+                    return;
+                }
                 var addBelow = _.partial(appendColumnToRow, rows, rowNum + 1);
                 var renderChild = _.partial(render, _, rows, rowNum + 1);
                 var arr = cat.getAssignmentsArray();

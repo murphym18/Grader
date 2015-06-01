@@ -11,6 +11,10 @@ define(function (require) {
         idAttribute: '_id',
         urlRoot: '/api/students',
         
+        defaults: {
+            grades: ''
+        },
+        
         initialize: function(options) {
             if (!this.isNew())
                 this.url = this.urlRoot + '/' + this.get('_id');
