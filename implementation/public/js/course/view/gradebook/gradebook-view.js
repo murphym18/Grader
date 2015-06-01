@@ -158,7 +158,6 @@ define(function (require) {
         },
         
         onShow: function() {
-            console.log('onShow  gradebook');
             var self = this;
             var ui = this.ui;
             var categoriesCollection = this.model.categories;
@@ -210,8 +209,6 @@ define(function (require) {
                         td.setAttribute("rowspan", cell.rowspan);
                         var styles = [""]
                         td.setAttribute("class", cell.style + " text-nowrap col-md-" + cell.colspan);
-                        
-                        
                  
                         tr.appendChild(td);
                     });
@@ -227,8 +224,6 @@ define(function (require) {
                     for(var i = 0; i < assignments.size(); ++i) {
                         
                         var grade = student.student.getGrade(assignments.at(i).id);
-                        
-                            
                         grades.push({
                             colspan: 1,
                             rowspan: 1,

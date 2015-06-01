@@ -23,7 +23,7 @@ define(function(require) {
 
         initialize: function(options) {
             if (!this.isNew()) {
-                this.url = this.urlRoot + '/' + this.get('id');
+                this.url = this.urlRoot + '/' + this.id;
             }
         },
 

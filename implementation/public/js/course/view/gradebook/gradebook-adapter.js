@@ -26,7 +26,6 @@ define(function(require) {
             var categories = channel.request('current:course').categories;
             var result = {}
             var treeHeight = 1 + categories.findHeight();
-            console.log(treeHeight);
             _.each(categories.tree(), _.partial(registerAll, _, treeHeight))
             return result;
 
@@ -34,7 +33,6 @@ define(function(require) {
                 registerResult(cat, h);
                 if (cat) {
                     var arr = cat.getAssignmentsArray()
-                    console.log(arr, 'h-1 = ', h -  1);
                     if (arr. length > 0)
                     arr.map(_.partial(registerResult, _, h - 1));
                     _.map(cat.tree(), _.partial(registerAll, _, h - 1));

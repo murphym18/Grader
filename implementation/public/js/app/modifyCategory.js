@@ -134,6 +134,7 @@ define(function (require) {
                 name : ui.categoryName.val(),
                 weight : ui.categoryWeight.val()
             });
+            category.save();
             self.closeModifyCategory();
         },
         /**
