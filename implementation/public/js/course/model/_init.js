@@ -1,5 +1,5 @@
 define(function(require) {
-    require('course/model/assignment-grade');
+    require('course/model/assignment');
     require('course/model/category');
     require('course/model/course-list');
     require('course/model/course');

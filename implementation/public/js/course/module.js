@@ -52,16 +52,29 @@ define(function (require) {
                 colloquialUrl: path
             });
             var students = courseChannel.request('students', course);
-             console.log(students)
-            var fetchStudents = students.fetch();
-            var fetchCourse = course.fetch();
-            courseChannel.request('set:current:course', course);
-            pageChannel.request('show:loading', fetchCourse);
+            var categories = courseChannel.request('categories', course);
+            var assignments = courseChannel.request('assignments', course);
             
-            return Q.all([fetchCourse, fetchStudents]).spread(function(c, s) {
+            
+            var loadingTasks = [
+                course.fetch(),
+                students.fetch(),
+                categories.fetch(),
+                assignments.fetch()
+            ];
+            
+            var loadAllPromise = Q.all(loadingTasks);
+            courseChannel.request('set:current:course', course);
+            pageChannel.request('show:loading', loadAllPromise);
+            
+            return loadAllPromise.then(function() {
                 course.students = students;
+                course.categories = categories;
+                course.assignments = assignments;
+                
                 var menu = courseChannel.request('view:menu');
                 var gradebook = courseChannel.request('view:gradebook');
+                
                 pageChannel.request('navRegion').show(menu);
                 pageChannel.request('mainRegion').show(gradebook);
                 course.trigger('open');

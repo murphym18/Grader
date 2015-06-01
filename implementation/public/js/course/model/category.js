@@ -1,235 +1,124 @@
-define(function (require) {
+define(function(require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('util/backbone-helper');
     var Hbs = require('handlebars');
     var Mn = require('backbone.marionette');
-    var Q = require('q');
     var Radio = require('backbone.radio');
-    var proxy = require('util/prop-proxy');
-    var DocCollection = require('util/doc-collection');
-    var DocModel = require('util/doc-model');
     var courseChannel = Radio.channel('course');
-    
 
-    
-    var Assignments = DocCollection.extend({
-        constructor: function AssignmentCollection() {
-             DocCollection.apply(this, arguments);
-        },
-        model: DocModel.extend({
-            idAttribute: 'id',
-            constructor: function Assignment() {
-                 DocModel.apply(this, arguments);
-            },
-        })
-    });
-
-    var Category = DocModel.extend({
+    var Category = Backbone.Model.extend({
         idAttribute: '_id',
-        queryProperty: 'tree',
-        
+        urlRoot: '/api/categories',
+
         treeFilterFunc: function(model) {
-            var regex = new RegExp('^'+this.get('path')+'#[^#]+$')
+            var regex = new RegExp('^' + this.get('path') + '#[^#]+$')
             return regex.test(model.get('path'));
         },
-        
-        initializeQueryCollection: function() {
-            var name = this.filterName;
-            var func = this.filterFunc.bind(this);
-            console.log('here');
-            return this.collection.query.findAllLive().setFilter(name, func);
+
+        tree: function() {
+            var subTreeOnly = this.treeFilterFunc.bind(this);
+            return this.collection.filter(subTreeOnly);
         },
-        
-        constructor: function Category() {
-            DocModel.apply(this, arguments);
-        },
-        
+
         initialize: function(options) {
-            mixinTreeProxy(this)
-        },
-        
-        getNestedCollection: function (nestedKey, nestedValue, nestedOptions) {
-            switch (nestedKey) {
-                case 'assignments':
-                    return new Assignments(nestedValue, nestedOptions);
-                default:
-                    return new DocCollection(nestedValue, nestedOptions);
+            if (!this.isNew()) {
+                this.url = this.urlRoot + '/' + this.get('id');
             }
+        },
+
+        countOwnAssignments: function() {
+            var a = this.get('assignments')
+            if (_.isString(a) && a.length > 0)
+                return a.split(",").length;
+                
+            return 0;
+        },
+
+        addAssignment: function(assignment) {
+            var inputId = this.errorCheckAssignmentId(assignment);
+            var assignments = this.getAssignmentsArray();
+            assignments.push(inputId);
+            var value = _.uniq(assignments);
+            this.set({
+                assignments: value.join(',')
+            });
+        },
+
+        removeAssignment: function(assignment) {
+            var inputId = this.errorCheckAssignmentId(assignment);
+            var currentAssignments = this.getAssignmentsArray();
+            var after = _.without(currentAssignments, inputId);
+            this.set({
+                assignments: after.join(',')
+            });
+        },
+
+        getAssignmentsArray: function() {
+            var assignments = this.get('assignments');
+            var arr = []
+            if (_.isString(assignments))
+                 arr = _.compact(assignments.split(","));
+            return arr;
+        },
+
+        errorCheckAssignmentId: function(assignment) {
+            var idToAdd = assignment;
+            if (_.isObject(assignment) && _.isFunction(assignment.get)) {
+                idToAdd = assignment.get('id');
+            }
+
+            if (idToAdd.indexOf(',') !== -1) {
+                throw new Error('assignment id cannot have a "," in it');
+            }
+
+            return idToAdd;
         }
     });
-    
-    return DocCollection.extend({
+
+    var CategoriesCollection = Backbone.Collection.extend({
         model: Category,
-        
+        url: '/api/categories',
+
         treeFilterFunc: function(model) {
             return /^#[^#]+$/.test(model.get('path'));
         },
-        
-        findColSpans: function() {
-            var result = {}
-            _.each(this.tree(), colSpan);
-            return result;
-            
-            function colSpan(elm) {
-                var sub = null;
-                if (elm) {
-                    var sub = elm.tree().map(colSpan);
-                    var num = sub.reduce(sum, 0) | 0;
-                    if (elm.has('assignments'))
-                        num += elm.get('assignments').size()
-                    if (elm.id)
-                        result[elm.id] = num;
-                    return num;
-                }
-                return 0;
-            }
-        },
-        
+
         findHeight: function() {
             return _.reduce(this.map(_.partial(depth)), max, 0)
         },
-        
-        findRowSpans: function(colspan) {
-            var result = {}
-            var treeHeight = 1 + this.findHeight();
-            _.each(this.tree(), _.partial(registerAll, _, treeHeight))
-            return result;
-            
-            function registerAll(cat, h) {
-                registerResult(cat, h);
-                if (cat) {
-                    cat.get('assignments').map(_.partial(registerResult, _, h - 1));
-                    _.map(cat.tree(), _.partial(registerAll, _, h - 1));
-                }
-            }
-            function registerResult(a, h) {
-                if (a && a.id) {
-                    result[a.id] = h;
-                }
-            }
-        },
-        
-        groupByRow: function() {
-            var arr = [];
-            var groups = this.groupBy(depth);
-            var keys = _.keys(groups).sort();
-            
-            _.map(keys, function(k) {
-                arr.push(groups[k]);
-            });
-            return arr;
-        },
-        
-        calculateTableHeaderLayout: function() {
-            var rowCats = this.groupByRow();
-            var colspan = _.partial(lookup, this.findColSpans())
-            var rowspan = _.partial(lookup, this.findRowSpans())
-            var result = [];
-            var height = 1 + this.findHeight();
-            // appendColumnToRow(result, 0, {
-            //     rowspan: height,
-            //     colspan: 1,
-            //     style: "corner"
-            // });
-            this.tree().forEach(_.partial(render, _, result, 0));
-            return result;
-            
-            function lookup(table, item) {
-                return table[item.id];
-            }
-            
-            function assignmentColumn(a) {
-                return {
-                    name: a.get('name'),
-                    style: "assignment",
-                    colspan: 1,
-                    rowspan: rowspan(a),
-                    id: a.id,
-                    assignment: a
-                }
-            }
-            
-            function categoryColumn(cat) {
-                return {
-                    name: cat.get('name'),
-                    style: "category",
-                    colspan: colspan(cat),
-                    rowspan: 1,
-                    id: cat.id
-                }
-            }
-            
-            function appendColumnToRow(rows, rowNum, column) {
-                while (rows.length <= rowNum) {
-                    rows.push([]);
-                }
-                rows[rowNum].push(column);
-            }
 
-            function render(cat, rows, rowNum) {
-                var addBelow = _.partial(appendColumnToRow, rows, rowNum + 1);
-                var renderChild = _.partial(render, _, rows, rowNum + 1);
-                if (cat.has('assignments')) {
-                    var mkLeaf = _.compose(addBelow, assignmentColumn);
-                    cat.get('assignments').map(mkLeaf);
-                }
-                
-                _.each(cat.tree(), renderChild);
-                appendColumnToRow(rows, rowNum, categoryColumn(cat));
-                return rows;
-            }
-        },
-        
-        findAssignments: findAssignments,
-        initialize: function() {
+        initialize: function(options) {
             this.tree = function() {
                 var subTreeOnly = this.treeFilterFunc.bind(this);
                 return this.filter(subTreeOnly);
             }
-            this.allAssignments = function() {
-                return this.pluck('assignments').reduce(function(all, cur) {
-                    return all.concat(cur.toArray());
-                }, []);
-            }
-        }
+            this.url = this.url + '?course=' + options.restQueryParam;
+        },
+        depth: depth
     });
-    
-    function toAssignmentArray(categoryList) {
-        var listOfAssignmentLists = categoryList.pluck('assignments');
-        var arrs = _.map(listOfAssignmentLists, _.property('models'));
-        return _.flatten(arrs);
-    }
-    
-    function findAssignments(pathRegEx) {
-        if (_.isString(pathRegEx)) {
-            pathRegEx =  new RegExp(pathRegEx)
+
+    courseChannel.reply('categories', function(course) {
+        var url = null;
+        if (!course) {
+            url = courseChannel.request('current:course').get('colloquialUrl');
         }
-        return toAssignmentArray(this.findAll({path: pathRegEx}));
-    }
-    
-    function mixinTreeProxy(self) {
-        self.tree = function() {
-            var subTreeOnly = self.treeFilterFunc.bind(self);
-            return self.collection.filter(subTreeOnly);
+        else if (_.isString(course)) {
+            url = course;
         }
-        self.allAssignments = function() {
-            var assignments = self.get('assignments');
-            var models =assignments
-            var subcats = self.tree();
-            return subcats.reduce(function(all, cur) { return all.concat(cur);});
+        else if (_.isObject(course) && _.isFunction(course.get)) {
+            url = course.get('colloquialUrl');
         }
-    }
-    
-    function max(a, b) {
-        return Math.max(a, b);
-    }
-    
+        return new CategoriesCollection({
+            restQueryParam: url
+        });
+    })
+
     function depth(elm) {
         return elm.get('path').split('#').length - 1;
     }
-    
-    function sum(runningTotal, next){
-        return runningTotal + next;
-    }    
+
+    function max(a, b) {
+        return Math.max(a, b);
+    }
 })

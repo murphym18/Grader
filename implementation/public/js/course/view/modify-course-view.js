@@ -40,7 +40,16 @@ define(function (require) {
             'click @ui.summer': 'onSelectSummer',
             'click @ui.fall': 'onSelectFall',
             'change @ui.year': "onUpdateYear",
-            'click @ui.saveButton': 'onSaveCourse'
+            'click @ui.saveButton': {
+                event: 'onSaveCourse',
+                preventDefault: false,
+                stopPropagation: false
+            },
+            'click .cancel': {
+                event: 'resetModel',
+                preventDefault: false,
+                stopPropagation: false
+            }
         },
         
         modelEvents: {
@@ -59,6 +68,7 @@ define(function (require) {
         ensureModel: function() {
             if (!this.model)
                 this.model = courseChannel.request('current:course');
+            this.originalState = this.model.toJSON();
         },
         
         onShow: function() {
@@ -148,6 +158,10 @@ define(function (require) {
                 self.ui.error.html(self.alertTemplate({message: err.responseText}));
                 self.ui.saveButton.button('reset');
             }).done();
+        },
+        
+        resetModel: function() {
+            this.model.set(this.originalState);
         }
     });
 });

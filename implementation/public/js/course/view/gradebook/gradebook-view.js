@@ -79,7 +79,7 @@ define(function (require) {
                 doRender()
                 try {
                     var studentCollection = self.model.students;
-                    var student = studentCollection.findWhere({_id: sId})
+                    var student = studentCollection.findWhere({id: sId})
                     console.log('logging current student', sId);
                     console.log(student);
                     student.setGrade(aId, rawScore);
@@ -129,7 +129,7 @@ define(function (require) {
                     var students = self.model.students
                     console.log('logging student collection')
                     console.log(students);
-                    var student = students.findWhere({_id: sId})
+                    var student = students.findWhere({id: sId})
                     console.log('logging current student', sId);
                     console.log(student);
                     var grades = student.get('grades');
@@ -161,8 +161,8 @@ define(function (require) {
             console.log('onShow  gradebook');
             var self = this;
             var ui = this.ui;
-            var categoriesCollection = this.model.get('categories');
-            var layout = categoriesCollection.calculateTableHeaderLayout();
+            var categoriesCollection = this.model.categories;
+            var layout = adapter.calculateTableHeaderLayout();
             var headerHeight = layout.length;
             var studentCollection = this.model.students;
             var students = studentCollection.map(function(student) {
@@ -170,7 +170,7 @@ define(function (require) {
                 var last = student.get('last');
                 var first = student.get('first');
                 var name = last+', '+first;
-                var id = student.get('_id');
+                var id = student.id;
                 return {
                     name: name,
                     id: id,
@@ -178,7 +178,7 @@ define(function (require) {
                 }
             });
 
-            var assignments = this.model.get('categories').allAssignments();
+            var assignments = this.model.assignments;
             var header = createHeader();
             var body = createBody();
             var tableRowHeaders = createRowHeaders();
@@ -224,9 +224,9 @@ define(function (require) {
                 var docfrag = window.document.createDocumentFragment();
                 var studentRows = _.map(students, function(student) {
                     var grades = [];
-                    for(var i = 0; i < assignments.length; ++i) {
+                    for(var i = 0; i < assignments.size(); ++i) {
                         
-                        var grade = student.student.getGrade(assignments[i].id);
+                        var grade = student.student.getGrade(assignments.at(i).id);
                         
                             
                         grades.push({
@@ -235,8 +235,8 @@ define(function (require) {
                             style: "grade",
                             value: grade,
                             gradeEmpty: !_.isFinite(grade),
-                            aId: assignments[i].id,
-                            sId: student.student.get('_id')
+                            aId: assignments.at(i).id,
+                            sId: student.student.id
                         });
                     }
 

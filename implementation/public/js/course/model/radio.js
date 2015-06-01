@@ -4,7 +4,6 @@ define(function (require) {
     var Backbone = require('util/backbone-helper');
     var Radio = require('backbone.radio');
     var Course = require('course/model/course');
-    var Student = require('course/model/student');
     var CourseList = require('course/model/course-list');
     
     var channel = Radio.channel('course');
@@ -25,26 +24,11 @@ define(function (require) {
     channel.comply('register', function(doc) {
         registry.add(doc);
     });
-    var StudentCollection = Backbone.Collection.extend({
-            model: Student,
-            comparator: 'last',
-            initialize: function(options){
-                this.url = '/api/students?course='+options.path.toString() +'';
-                
-            }
-        });
-    channel.reply('students', function(course) {
-        var path;
-        if (!course) {
-            path = channel.request('current:course').get('colloquialUrl');
-        }
-        else {
-            path = course.get('colloquialUrl');
-        }
-        
-        return new StudentCollection({path: path})
-        
-    })
+    
+    channel.request('register', function() {
+        return registry;
+    });
+
 
     channel.reply('current:course', function(course) {
         return currentState.get('course');

@@ -45,7 +45,7 @@ define(function (require) {
 
             var reqCatPath = this.category;
 
-            var categories = this.model.get('categories');
+            var categories = this.model.categories;
             var category = categories.findWhere({"path" : reqCatPath});
 
             categories.comparator = function(a, b) {
@@ -108,7 +108,7 @@ define(function (require) {
 
             var reqCatPath = this.category;
 
-            var categories = this.model.get('categories');
+            var categories = this.model.categories;
             var category = categories.findWhere({"path" : reqCatPath});
             catPath = category.get("path");
 

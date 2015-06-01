@@ -10,7 +10,6 @@ define(function (require) {
     var Course = require('course/model/course');
     
     return Backbone.Collection.extend({
-        tagName: 'ul',
         className: 'courseList',
         model: Backbone.Model,
         url: '/api/Courses?populate=roles.users',

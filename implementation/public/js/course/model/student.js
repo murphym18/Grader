@@ -4,18 +4,18 @@ define(function (require) {
     var Backbone = require('util/backbone-helper');
     var Hbs = require('handlebars');
     var Mn = require('backbone.marionette');
-    var Q = require('q');
     var Radio = require('backbone.radio');
-    var proxy = require('util/prop-proxy');
-    var DocCollection = require('util/doc-collection');
-    var DocModel = require('util/doc-model');
-
+    var courseChannel = Radio.channel('course');
+    
     var StudentRecord = Backbone.Model.extend({
-        idProperty: '_id',
+        idAttribute: '_id',
         urlRoot: '/api/students',
         
         initialize: function(options) {
-            this.url = this.urlRoot + '/' + this.get('_id');
+            if (!this.isNew())
+                this.url = this.urlRoot + '/' + this.get('_id');
+            else
+                this.url = this.urlRoot;
         },
         
         getGrade: function(aId) {
@@ -53,6 +53,25 @@ define(function (require) {
             });
             return map;
         }
+    })
+    
+    var StudentCollection = Backbone.Collection.extend({
+        model: StudentRecord,
+        comparator: 'last',
+        initialize: function(options){
+            this.url = '/api/students?course='+options.path.toString() +'';
+        }
+    });
+    
+    courseChannel.reply('students', function(course) {
+        var url;
+        if (!course) {
+            url = courseChannel.request('current:course').get('colloquialUrl');
+        }
+        else {
+            url = course.get('colloquialUrl');
+        }
+        return new StudentCollection({path: url})
     })
     
     return StudentRecord;

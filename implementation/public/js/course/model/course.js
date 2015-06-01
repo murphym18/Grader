@@ -33,9 +33,9 @@ define(function (require) {
         "categories": [],
     });
     
-    return DocModel.extend({
-        
+    return Backbone.Model.extend({
         idAttribute: "_id",
+        urlRoot: '/api/courses',    
         
         defaults: function() {
             return JSON.parse(defaultCourse);
@@ -47,10 +47,11 @@ define(function (require) {
         
         initialize : function (options) {
             this.setupUrl();
-            this.on('all', function() {
+            this.listenTo(this, 'all', function() {
                 if (console.warn)
                     console.warn("DEBUG: ", arguments[0]);
             });
+            
 
         },
         

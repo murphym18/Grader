@@ -39,7 +39,7 @@ define(function (require) {
         onBeforeShow : function(){
             var ui = this.ui;
 
-            var categories = this.model.get('categories');
+            var categories = this.model.categories;
             var self = this;
 
             categories.comparator = function(a, b) {

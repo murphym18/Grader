@@ -153,7 +153,8 @@ function setupDatabase() {
             var z1 = 0;
             var studentsSaved = 0;
             while(z1 < data.length) {
-               new Student(JSON.parse(data[z1]).students).save(function(err, doc){
+               
+               Student.create(JSON.parse(data[z1]).students,function(err, doc){
                   coursesSaved++;
                   if (err)
                      console.warn(err, 'in saving student')
