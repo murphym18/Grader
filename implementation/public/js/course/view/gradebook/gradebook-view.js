@@ -18,13 +18,13 @@ define(function(require) {
         if (this.sortKey !== aId) {
             this.sortKey = aId;
             return function gradeSort(student) {
-                return student.getGrade(aId);
+                return Number(student.getGrade(aId));
             }
         }
         else {
             this.sortKey = "-"+ aId
             return function gradeSort(student) {
-                return -1 * student.getGrade(aId);
+                return -1 * Number(student.getGrade(aId));
             }
         }
     }
