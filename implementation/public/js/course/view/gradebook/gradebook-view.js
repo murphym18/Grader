@@ -30,9 +30,9 @@ define(function (require) {
             tbody: "table.gradebook > tbody",
             tfoot: "table.gradebook > tfoot",
             
-            ehead: "table.gradebook-total > thead",
-            ebody: "table.gradebook-total > tbody",
-            efoot: "table.gradebook-total > tfoot",
+            ehead: "table.gradebook-summary > thead",
+            ebody: "table.gradebook-summary > tbody",
+            efoot: "table.gradebook-summary > tfoot",
         },
         
         modelEvents: {
@@ -137,19 +137,19 @@ define(function (require) {
                     console.log('logging student collection')
                     console.log(students);
                     var student = students.get(sId)
-                    console.log('logging current student', sId);
-                    console.log(student);
-                    var grades = student.get('grades');
-                    console.log('logging grades collection')
-                    console.log(grades)
-                    var item = grades.getGrade(aId);
-                    console.log('logging assignment grade')
-                    console.log(item)
-                    var value = item.get('rawScore') || "0"
-                    console.log('logging value of raw score');
-                    console.log(value);
+                    // console.log('logging current student', sId);
+                    // console.log(student);
+                    // var grades = student.get('grades');
+                    // console.log('logging grades collection')
+                    // console.log(grades)
+                    // var item = student.getGrade(aId);
+                    // console.log('logging assignment grade')
+                    // console.log(item)
+                    // var value = item.get('rawScore') || "0"
+                    // console.log('logging value of raw score');
+                    // console.log(value);
                     console.log('resolving promise');
-                    deferred.resolve(value);
+                    deferred.resolve(student.getGrade(aId));
                 }
                 catch(e) {
                     deferred.resolve("0");
@@ -187,7 +187,7 @@ define(function (require) {
             var assignmentOrder = [];
             var assignments = this.model.assignments;
             var header = createHeader();
-            console.log('assignment order: ', assignmentOrder);
+            //console.log('assignment order: ', assignmentOrder);
             var body = createBody();
             var tableRowHeaders = createRowHeaders();
 
@@ -203,6 +203,9 @@ define(function (require) {
             ui.tbody.get(0).appendChild(body);
             ui.shead.get(0).appendChild(createRowHeadersColHeader());
             ui.sbody.get(0).appendChild(createRowHeaders());
+            var headerHeight = layout.length;
+            ui.ehead.get(0).appendChild(createRowHeadersColHeader());
+            ui.ebody.get(0).appendChild(createRowSummaries());
             
             function createHeader() {
                 var docfrag = window.document.createDocumentFragment();
@@ -352,6 +355,29 @@ define(function (require) {
                     tr.appendChild(td);
                     docfrag.appendChild(tr);
                 });
+                return docfrag;
+            }
+            
+            function createRowSummaries() {
+                var students = studentCollection;
+                var docfrag = window.document.createDocumentFragment();
+                for(var i = 0; i < students.size(); ++i) {
+                    console.log('hello...')
+                    var student = students.at(i);
+                    
+                    // console.log(self.model);
+                    var totalGrade = self.model.calculateGrade(student);
+                    // console.log(totalGrade);
+                    totalGrade = Math.round(totalGrade * 100)/100
+                    var tr = window.document.createElement("tr");
+                    var td = window.document.createElement("th");
+                    td.appendChild(document.createTextNode(totalGrade));
+                    td.setAttribute("class", "total");
+                    td.setAttribute("colspan", 1);
+                    td.setAttribute("rowspan", 1);
+                    tr.appendChild(td);
+                    docfrag.appendChild(tr);
+                }
                 return docfrag;
             }
                 

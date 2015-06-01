@@ -24,7 +24,11 @@ define(function (require) {
         
         getGrade: function(aId) {
             var map = this.getGradeMap();
-            return map[aId] || 0;
+            var value = map[aId];
+            if (_.isFinite(Number(value)))
+                return Number(value);
+            else
+                return 0;
         },
         
         setGrade: function(aId, rawScore) {
@@ -56,7 +60,8 @@ define(function (require) {
                 }
             });
             return map;
-        }
+        },
+        
     })
     
     var StudentCollection = Backbone.Collection.extend({

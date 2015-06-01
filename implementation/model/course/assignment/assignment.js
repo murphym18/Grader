@@ -10,6 +10,12 @@ var Assignment = mongoose.Schema({
       required: true,
       default: 100
    },
+   weight: {
+      type: Number,
+      min: 0,
+      max: 1,
+      default: 1
+   },
    course: {
       type: String,
       index: true

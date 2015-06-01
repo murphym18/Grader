@@ -10,15 +10,29 @@ define(function (require) {
     
     var Assignment = Backbone.Model.extend({
         idAttribute: '_id',
+        defaults: {
+            weight: 1
+        },
+        getWeight: function(){
+            var w = this.get('weight');
+            if (_.isFinite(Number(w))){
+                return Number(w);
+            }
+            else {
+                return 0;
+            }
+        },
         
     });
     var AssignmentCollection = Backbone.Collection.extend({
         idAttribute: '_id',
         model: Assignment,
         
+        
         initialize: function(options){
             this.url = '/api/assignments?course='+options.path.toString() +'';
-        }
+        },
+        
     });
     
     courseChannel.reply('assignments', function(course) {

@@ -10,6 +10,19 @@ define(function(require) {
     var Category = Backbone.Model.extend({
         idAttribute: '_id',
         urlRoot: '/api/categories',
+        
+        defaults: {
+            weight: 1
+        },
+        
+        getWeight: function() {
+            var w = this.get('weight')
+            if (_.isFinite(Number(w)))
+            return Number(w);
+            else {
+                return 0;
+            }
+        },
 
         treeFilterFunc: function(model) {
             var regex = new RegExp('^' + this.get('path') + '#[^#]+$')
