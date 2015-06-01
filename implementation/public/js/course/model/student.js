@@ -80,7 +80,7 @@ define(function (require) {
         else {
             url = course.get('colloquialUrl');
         }
-        return new StudentCollection({path: url})
+        return new StudentCollection({path: url});
     })
     
     return StudentRecord;
