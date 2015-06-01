@@ -13,21 +13,8 @@ define(function(require) {
     var template = require('text!course/view/gradebook/gradebookView.hbs');
     var adapter = require('course/view/gradebook/gradebook-adapter');
     var courseRadioChannel = Radio.channel('course');
-    
-    function mkGradeSorter(aId) {
-        if (this.sortKey !== aId) {
-            this.sortKey = aId;
-            return function gradeSort(student) {
-                return Number(student.getGrade(aId));
-            }
-        }
-        else {
-            this.sortKey = "-"+ aId
-            return function gradeSort(student) {
-                return -1 * Number(student.getGrade(aId));
-            }
-        }
-    }
+
+
 
     var GradebookView = Mn.ItemView.extend({
         template: Hbs.compile(template),
@@ -90,13 +77,56 @@ define(function(require) {
         },
 
         setSortColumn: function(e) {
+            
             e.preventDefault();
             var elm = $(e.currentTarget);
             var self = this
             if (elm.attr('data-aid')) {
                 var aId = elm.attr('data-aid');
-                self.model.students.comparator = mkGradeSorter(aId);
+                self.model.students.comparator = assignmentSorter(aId);
                 self.model.students.sort();
+            }
+            else if (elm.attr('data-cat-id')) {
+                var catId = elm.attr('data-cat-id');
+                self.model.students.comparator = catagorySorter(catId);
+            }
+            function assignmentSorter(aId) {
+                if (this.sortKey !== aId) {
+                    this.sortKey = aId;
+                    return function gradeSort(student) {
+                        return Number(student.getGrade(aId));
+                    }
+                }
+                else {
+                    this.sortKey = "-" + aId
+                    return function reverseGradeSort(student) {
+                        return -1 * Number(student.getGrade(aId));
+                    }
+                }
+                self.model.students.sort();
+            }
+
+            function catagorySorter(catId) {
+                var categoryScore;
+                var category = self.model.categories.get(catId);
+                console.log(category)
+                console.log('here')
+                if (this.sortKey !== catId) {
+                    this.sortKey = catId;
+                    console.log('normal order')
+                    return function categorySort(student) {
+                        categoryScore = self.model.calculateCategoryGrade(category, student)
+                        return Number(categoryScore)
+                    }
+                }
+                else {
+                    console.log('showing reverse order')
+                    return function reversecategorySort(student) {
+                        categoryScore = self.model.calculateCategoryGrade(category, student)
+                        console.log(categoryScore);
+                        return -1*Number(categoryScore)
+                    }
+                }
             }
         },
 
