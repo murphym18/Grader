@@ -83,10 +83,6 @@ define(function (require) {
             else
                 newAssignment.weight = ui.weight.val();
 
-            if(ui.weight.val() == null)
-                console.log('error');
-            else
-                newAssignment.weight = ui.weight.val();
 
             if(ui.totalScore.val() == null)
                 console.log('error');
@@ -103,6 +99,8 @@ define(function (require) {
 
             //TODO Input value checking above!!
             //TODO Please save this to DB
+
+            $('.cancel').click()
         }
 
         /**

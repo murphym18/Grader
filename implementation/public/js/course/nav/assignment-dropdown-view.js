@@ -14,6 +14,7 @@ define(function (require) {
     var modifyCategory = require('app/modifyCategory');
     var selectCategory = require('app/selectCategory');
     var NewAssignmentView = require('course/view/new-assignment-view');
+    var NewCategoryView = require('course/view/new-category-view');
     
     var template = require('text!ctemplates/headerAssignmentDropdownView.hbs');
 
@@ -38,20 +39,23 @@ define(function (require) {
         },
 
         showNewAssignment: function(domEvent) {
-            this.showModal(new NewAssignmentView());
+            this.ensureLoginThenShowModal(new NewAssignmentView());
         },
 
         showNewCategory: function(domEvent) {
             //courseChannel.command('showUserCourses');
+            this.ensureLoginThenShowModal(new NewCategoryView());
         },
 
         showModifyCategory: function(domEvent) {
             var self = this;
-            courseChannel.request('select:category').then(function(selectedCategory) {
-                self.showModal(new modifyCategory({
-                    'category': selectedCategory
-                }));
-            }).done();
+            userChannel.request('user').then(function(user) {
+                courseChannel.request('select:category').then(function (selectedCategory) {
+                    self.showModal(new modifyCategory({
+                        'category': selectedCategory
+                    }));
+                }).done();
+            })
         }
     });
 });
