@@ -16,6 +16,7 @@ define(function (require) {
     var ModifyStudentView = require('app/modifyStudent');
     var SelectStudentView = require('course/view/select-student-view');
     var DeleteStudentView = require('course/view/delete-student-view');
+    var GroupStudentsView = require('course/view/group-students-view');
 
     return Mn.ItemView.extend({
         tagName: 'li',
@@ -88,6 +89,10 @@ define(function (require) {
 
         showGroupStudents: function(domEvent) {
             //courseChannel.command('showUserCourses');
+            userChannel.request('user').then(function(user) {
+                    var modalRegion = pageChannel.request('modalRegion');
+                    modalRegion.show(new GroupStudentsView());
+            })
         },
         
         createMockGradeData: function() {
