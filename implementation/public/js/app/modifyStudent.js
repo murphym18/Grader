@@ -52,12 +52,12 @@ define(function (require) {
         },
         // Grant Campanelli Added
         render: function() {
-            var students = this.model.get('students');
+            var students = this.model.students;
             var self = this;
             var studentToModify = [];
             students.each(function(s){
-                if(self.options.student == s.get('user').at(0).get('emplId')) {
-                    studentToModify = s.get('user').at(0);
+                if(self.options.student == s.get('emplId')) {
+                    studentToModify = s;
                 }
             });
 

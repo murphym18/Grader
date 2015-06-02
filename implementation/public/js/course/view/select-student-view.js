@@ -12,7 +12,7 @@ define(function (require) {
     var alertTemplate = require('text!ctemplates/alert-block.hbs');
     var DeleteStudentView = require('course/view/delete-student-view');
 
-    var Course = require('course/model/course');
+    //var Course = require('course/model/course');
     var studentObjects = [];
 
     dynamicSort = function (property) {
@@ -80,10 +80,10 @@ define(function (require) {
 
             studentObjects = [];
             students.each(function(s){
-                //console.log(s.get('user').at(0).get('em'))
-                first = s.get('user').at(0).get('first');
-                last = s.get('user').at(0).get('last');
-                emplId =  s.get('user').at(0).get('emplId');
+                console.log(s.get('first'));
+                first = s.get('first');
+                last = s.get('last');
+                emplId =  s.get('emplId');
                 studentObjects.push({
                     first: first,
                     last: last,

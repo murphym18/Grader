@@ -45,9 +45,7 @@ define(function (require) {
 
         showNewCourse: function(domEvent) {
             var self = this;
-            userChannel.request('user').then(function(user) {
-                self.showModal(new CreateCourseView({user: user}));
-            });
+            this.ensureLoginThenShowModal(new CreateCourseView());
         },
 
         showManageCourse: function(domEvent) {

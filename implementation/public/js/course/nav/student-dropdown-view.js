@@ -5,10 +5,12 @@ define(function (require) {
     var Hbs = require('handlebars');
     var Mn = require('backbone.marionette');
     var Q = require('q');
-    var userChannel = require('user/module');
     var Radio = require('backbone.radio');
+    var userChannel =  Radio.channel('user');
+
     var courseChannel = Radio.channel('course');
     var pageChannel = Radio.channel('page');
+    var ModalHelpers = require('util/modal-helpers');
     var template = require('text!ctemplates/headerStudentDropdownView.hbs');
     var AddNewStudentView = require('app/addNewStudent');
     var ModifyStudentView = require('app/modifyStudent');
@@ -39,6 +41,7 @@ define(function (require) {
 
         initialize: function(options) {
             this.model = courseChannel.request('current:course');
+            ModalHelpers.call(this);
         },
 
         showNewStudent: function(domEvent) {
@@ -59,22 +62,26 @@ define(function (require) {
             //
             //
             //})
-            courseChannel.request('select:student').then(function(selectedStudent) {
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new ModifyStudentView({
-                    'student': selectedStudent
-                }));
-            }).done();
+            userChannel.request('user').then(function(user) {
+                courseChannel.request('select:student').then(function(selectedStudent) {
+                    var modalRegion = pageChannel.request('modalRegion');
+                    modalRegion.show(new ModifyStudentView({
+                        'student': selectedStudent
+                    }));
+                }).done()
+            })
         },
 
         showDeleteStudent: function(domEvent) {
 
-            courseChannel.request('select:student').then(function(selectedStudent) {
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.show(new DeleteStudentView({
-                    'student': selectedStudent
-                }));
-            }).done();
+            userChannel.request('user').then(function(user) {
+                courseChannel.request('select:student').then(function (selectedStudent) {
+                    var modalRegion = pageChannel.request('modalRegion');
+                    modalRegion.show(new DeleteStudentView({
+                        'student': selectedStudent
+                    }));
+                }).done();
+            })
 
 
         },

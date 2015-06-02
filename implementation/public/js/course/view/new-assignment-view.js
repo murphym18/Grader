@@ -20,11 +20,11 @@ define(function (require) {
         template: Hbs.compile(template),
         ui: {
             //'newAssignmentButton' : '.newAssignmentButton',
-            'ok' : '.ok',
+            'save' : '.save',
             'cancel' : '.cancel',
             'name' : '.name',
             'weight' : '.weight',
-            'total-score' : '.total-score',
+            'totalScore' : '.total-score',
             'category' : '.category'
         },
         /**
@@ -32,16 +32,77 @@ define(function (require) {
          */
 
         events : {
-            //'click @ui.ok' :  'saveNewAssignment',
-            //'click @ui.cancel' :  'closeNewAssignment'
+            'click @ui.save' :  'saveNewAssignment',
+            'click @ui.cancel' :  'closeNewAssignment'
         },
+        traverseCat : function(indent, o) {
+
+            for (i in o) {
+                if (o[i] &&
+                    typeof o[i].tree === 'function'
+                    && typeof(o[i].tree()) == "object") {
+                    this.categoryList.push({
+                        name: indent + " " + o[i].get('name'),
+                        cid: o[i].cid
+                    });
+                    this.traverseCat(indent + "---", o[i].tree());
+                }
+            }
+
+        },
+
         initialize : function() {
             this.model = courseChannel.request('current:course');
             this.alertTemplate = Hbs.compile(alertTemplate);
-            //this.model.options = options;
         },
-        render : function() {
+        onShow : function() {
             var categories = this.model.categories;
+            var categoryTree = categories.tree();
+            this.categoryList = [];
+            var self = this;
+
+            self.traverseCat("", categoryTree);
+
+            var optionString;
+            this.categoryList.forEach(function(c) {
+                optionString = '<option value="' + c.cid +'" >'+ c.name + '</option>';
+                $('#new-assignment-category').append(optionString);
+            });
+        },
+        saveNewAssignment : function() {
+            var ui = this.ui;
+            var newAssignment = [];
+
+            if(ui.name.val() == null)
+                console.log('error');
+            else
+                newAssignment.name = ui.name.val();
+
+            if(ui.weight.val() == null)
+                console.log('error');
+            else
+                newAssignment.weight = ui.weight.val();
+
+            if(ui.weight.val() == null)
+                console.log('error');
+            else
+                newAssignment.weight = ui.weight.val();
+
+            if(ui.totalScore.val() == null)
+                console.log('error');
+            else
+                newAssignment.totalScore = ui.totalScore.val();
+
+            if(ui.category.val() == null)
+                console.log('error');
+            else
+                newAssignment.category = ui.category.val();
+
+
+            console.log(newAssignment);
+
+            //TODO Input value checking above!!
+            //TODO Please save this to DB
         }
 
         /**

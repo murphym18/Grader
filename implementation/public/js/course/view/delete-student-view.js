@@ -32,13 +32,13 @@ define(function (require) {
             'click @ui.deleteButton': 'onDeleteButton'
         },
         render: function() {
-            var students = this.model.get('students');
+            var students = this.model.students;
             var self = this;
             //console.log(this.options.student);
             students.each(function(s){
-                if(self.options.student == s.get('user').at(0).get('emplId')) {
+                if(self.options.student == s.get('emplId')) {
                     console.log("Match "+self.options.student);
-                    studentToDelete = s.get('user').at(0);
+                    studentToDelete = s;
                 }
             });
 
