@@ -29,23 +29,22 @@ define(function (require) {
             'dMin' : '#grade-scheme-min-d',
             'passMin' : '#grade-scheme-min-pass',
             'buttonGraded' : '#grade-scheme-graded',
-            'buttonPassFail' : '#grade-scheme-pass-fail'
+            'buttonPassFail' : '#grade-scheme-pass-fail',
+            'graded' : '.graded',
+            'passFail' : '.pass-fail'
         },
 
         events: {
-            'change @ui.classCode': "updateClassCode",
-            'change @ui.classNumber': "updateClassNumber",
-            'change @ui.classSection': "updateClassSection",
-            'click @ui.winter': 'onSelectWinter',
-            'click @ui.spring': 'onSelectSpring',
-            'click @ui.summer': 'onSelectSummer',
-            'click @ui.fall': 'onSelectFall',
-            'change @ui.year': "onUpdateYear",
             'click @ui.saveButton': 'onSaveGradeScheme',
             'change @ui.aMin' : 'updateMinimumA',
             'change @ui.bMin' : 'updateMinimumB',
             'change @ui.cMin' : 'updateMinimumC',
-            'change @ui.dMin' : 'updateMinimumD'
+            'change @ui.dMin' : 'updateMinimumD',
+            'change @ui.passMin' : 'updateMinimumPassing',
+            'click @ui.graded': 'updateSchemeGraded',
+            'click @ui.passFail': 'updateSchemePassFail'
+            //'change @ui.grade-scheme-buttons': 'updateGradeScheme'
+
         },
 
         initialize: function(options) {
@@ -53,11 +52,16 @@ define(function (require) {
             //this.model = courseChannel.request('current:course');
             //console.log(this.model);
 
+
         },
         onShow : function() {
 
             //this.model = this.model.course;
             console.log(this.model.get('minA'));
+
+            // TODO make this pull from db whether graded or pass fail
+            $('.graded').addClass('active');
+            $('#graded').attr('checked',true);
 
 
             var ui = this.ui;
@@ -84,6 +88,7 @@ define(function (require) {
             }
 
             this.model.set('minA', parseInt(newAMin))
+            this.model.save();
             //self.model.save()
             //self.updatePieChart();
             //this.model.set('minA', newAMin).then(this.model.save());
@@ -105,6 +110,7 @@ define(function (require) {
             }
 
             this.model.set('minB', parseInt(newBMin))
+            this.model.save()
             //self.model.save();
             //self.updatePieChart();
             //this.model.set('minB', newBMin).then(this.model.save());
@@ -126,11 +132,28 @@ define(function (require) {
             }
 
             this.model.set('minC', parseInt(newCMin))
+            this.model.save()
             //self.model.save();
             //self.updatePieChart();
             //this.model.set('minC', newCMin).then(this.model.save());
             this.ui.cMin.val(newCMin);
 
+        },
+
+        updateMinimumPassing : function() {
+            var newMinPass = this.ui.passMin.val();
+            var self = this;
+
+            if(newMinPass < 0 || newMinPass > 100) {
+                console.log('Minimum passing grade must be between 0 and 100')
+                this.ui.passMin.val(this.model.get('minCredit'))
+                return;
+            }
+            console.log("minPass Change -----", parseInt(newMinPass))
+            this.model.set('minCredit', parseInt(newMinPass))
+            this.model.save();
+
+            this.ui.passMin.val(newMinPass);
         },
         updateMinimumD : function () {
             var newDMin = this.ui.dMin.val();
@@ -142,13 +165,24 @@ define(function (require) {
             }
 
             this.model.set('minD', parseInt(newDMin))
-            //self.model.save();
 
-
+            this.model.save();
             this.ui.dMin.val(newDMin);
 
-            //this.model.save();
         },
+
+        updateSchemeGraded : function() {
+            console.log("made it updateSchemeGraded")
+            this.model.set('GradeScheme', 'graded');
+            this.model.save();
+        },
+
+        updateSchemePassFail : function () {
+            console.log("made it updateSchemePassFail")
+            this.model.set('GradeScheme', 'pass-fail');
+            this.model.save();
+        },
+
 
         onSaveGradeScheme : function () {
             //this.setNewMinimums();

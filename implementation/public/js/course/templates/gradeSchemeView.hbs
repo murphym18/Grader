@@ -6,16 +6,16 @@
     </div>
     <div class="modal-body">
         <div class="container-fluid">
-            <form class=gradeScheme form-horizontal col-sm-12">
+            <form id="gradeSchemeForm" class=gradeScheme form-horizontal col-sm-12">
 
 
 
             <div class="form-group col-sm-12">
                 <label class="col-sm-3 col-sm-offset-3 control-label">Course Scheme</label>
 
-                <div class="col-sm-6 btn-group" data-toggle="buttons" aria-label="Course Scheme">
-                    <label class="col-sm-3 graded btn btn-default"><input id="grade-scheme-graded" type="radio" autocomplete="on">Graded</input></label>
-                    <label class="col-sm-3 pass-fail btn btn-default"><input id="grade-scheme-pass-fail" type="radio" autocomplete="off">Pass / Fail</input></label>
+                <div class="col-sm-6 btn-group grade-scheme-buttons" data-toggle="buttons" aria-label="Course Scheme">
+                    <label class="col-sm-3 graded btn btn-default"><input  id="graded" name="grade-scheme" value="1" type="radio" autocomplete="off">Graded</input></label>
+                    <label class="col-sm-3 pass-fail btn btn-default"><input id="pass-fail" name="grade-scheme" value="0" type="radio" autocomplete="off">Pass / Fail</input></label>
                 </div>
             </div>
 

@@ -105,6 +105,8 @@ module.exports = {
          this.fColor = darkRed;
       }
 
+
+
       if (this.minB > this.minA) {
          next('Invalid minimum score for B. The score must not be larger than A.');
       }
