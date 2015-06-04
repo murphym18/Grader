@@ -22,7 +22,11 @@ define(function(require) {
 
         events: {
             "click td.grade": "editGrade",
-            "click th": "setSortColumn"
+            "click th": "setSortColumn",
+            'change @ui.aMin' : 'updateMinimumA',
+            'change @ui.bMin' : 'updateMinimumB',
+            'change @ui.cMin' : 'updateMinimumC',
+            'change @ui.dMin' : 'updateMinimumD'
         },
 
         ui: {
@@ -51,13 +55,6 @@ define(function(require) {
             'open': 'onOpen',
             'sync': 'updateGradeBook',
             'change:students.grades': 'updateGradeBook'
-
-        },
-        events : {
-            'change @ui.aMin' : 'updateMinimumA',
-            'change @ui.bMin' : 'updateMinimumB',
-            'change @ui.cMin' : 'updateMinimumC',
-            'change @ui.dMin' : 'updateMinimumD'
         },
 
         initialize: function() {
