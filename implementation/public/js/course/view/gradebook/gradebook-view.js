@@ -57,6 +57,10 @@ define(function(require) {
             'change:students.grades': 'updateGradeBook'
         },
 
+        //onShow : function() {
+        //    this.initialGradeMinimums();
+        //},
+
         initialize: function() {
             this.listenTo(this.model.students, 'add remove update reset sort sync', this.onShow.bind(this));
             this.listenTo(this.model.assignments, 'add remove update reset sort sync', this.onShow.bind(this));
@@ -250,7 +254,8 @@ define(function(require) {
 
         onShow : function () {
             this.updateGradeBook();
-            this.initialGradeMinimums();
+            //this.initialGradeMinimums();
+            this.initializeCharts();
         },
         updateGradeBook: function() {
             var self = this;
@@ -483,10 +488,6 @@ define(function(require) {
                 return docfrag;
             }
 
-            //Call Create Bar Chart
-            this.createCharts();
-            this.initialGradeMinimums();
-
         },
 
         ///////////
@@ -498,49 +499,46 @@ define(function(require) {
             this.pieCtx = this.$('.pie-chart-canvas')[0].getContext('2d');
         },
 
+        initializeCharts : function() {
+            if(this.pieChart || this.barChart)
+                console.log("pieChart and barChart are there")
+            else  {
+                this.initialGradeMinimums();
+                this.createCharts();
+            }
+
+
+        },
 
         createCharts : function() {
-            //console.log("createBarChart");
             var self = this;
-            if (!this.barCtx) {
-                //console.log("no bar CTX")
+            if (!this.barCtx || !this.pieCtx) {
                 return;
             }
             var students = this.model.students;
             var totalGrade, student, totalGrades = [], individualGrades = [];
             for (var i = 0; i < students.size(); ++i) {
-                //console.log('hello...')
                 student = students.at(i);
-
-                // console.log(self.model);
                 totalGrade = self.model.calculateGrade(student);
-                // console.log(totalGrade);
                 totalGrade = Math.round(totalGrade);
                 totalGrades.push(totalGrade);
                 if(!individualGrades[totalGrade])
                     individualGrades[totalGrade] = 1;
                 else
                     individualGrades[totalGrade]++;
-                //console.log(totalGrade);
             }
             this.totalGrades = totalGrades;
             this.individualGrades = individualGrades;
-            //console.log(aT);
-            //console.log([[50, 55, 60, 65, 68, 70, 71, 75, 78, 79, 80, 83, 88, 89, 90, 91, 94], [1, 2, 3, 1, 2, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1, 3, 4]])
-            barGraphData = this.createBarData(individualGrades);
+            //var barGraphData = ;
 
 
-
-            //console.log(this.model)
-
-
-            this.letterGradesStats = this.calculateLetterGradeStats(totalGrades);
             //console.log('letterGrades', this.letterGradesStats)
 
             // render bar chart
-            this.barChart = new Chart(this.barCtx).Bar(barGraphData, null);
+            this.barChart = new Chart(this.barCtx).Bar(this.createBarData(), null);
 
             // render pie chart
+            //console.log("pie chart data" , this.pieChart.data)
             this.pieChart = new Chart(this.pieCtx).Pie(this.createPieData(),null);
 
             this.updateBarColors();
@@ -667,7 +665,8 @@ define(function(require) {
 
         ////// PIE CHART
         createPieData : function () {
-            var letterGrades = this.letterGradesStats;// = this.calculateLetterGradeStats(this.totalGrades);
+            var letterGrades = this.calculateLetterGradeStats(this.totalGrades);
+            //var letterGrades = this.letterGradesStats;// = this.calculateLetterGradeStats(this.totalGrades);
             //console.log("made it to createPieData")
             var course = this.model;
             var data = [
@@ -710,26 +709,33 @@ define(function(require) {
             var course = this.model;
             var ui = this.ui;
 
-            ui.aMin.val(course.get('minA'));
-            ui.bMin.val(course.get('minB'));
-            ui.cMin.val(course.get('minC'));
-            ui.dMin.val(course.get('minD'));
+            if(!ui.aMin.val()) {
+                ui.aMin.val(course.get('minA'));
+                ui.bMin.val(course.get('minB'));
+                ui.cMin.val(course.get('minC'));
+                ui.dMin.val(course.get('minD'));
+            }
         },
 
         updateMinimumA : function () {
             var newAMin = this.ui.aMin.val();
+            var self = this;
             if(newAMin <= this.ui.bMin.val()) {
                 console.log('A Minimum cannot be lower than B Minimum')
                 this.ui.aMin.val(this.model.get('minA'))
                 return;
             }
 
-            this.model.set('minA', newAMin);
+            this.model.set('minA', newAMin)
+            self.model.save().then(self.updateCharts())
+            //self.updatePieChart();
+            //this.model.set('minA', newAMin).then(this.model.save());
             this.ui.aMin.val(newAMin);
             //this.model.save();
         },
         updateMinimumB : function () {
             var newBMin = this.ui.bMin.val();
+            var self = this;
             if(newBMin <= this.ui.cMin.val()) {
                 console.log('B Minimum cannot be lower than C Minimum')
                 this.ui.bMin.val(this.model.get('minB'))
@@ -741,12 +747,16 @@ define(function(require) {
                 return;
             }
 
-            this.model.set('minB', newBMin);
+            this.model.set('minB', newBMin)
+            self.model.save().then(self.updateCharts());
+            //self.updatePieChart();
+            //this.model.set('minB', newBMin).then(this.model.save());
             this.ui.bMin.val(newBMin);
             //this.model.save();
         },
         updateMinimumC : function () {
             var newCMin = this.ui.cMin.val();
+            var self = this;
             if(newCMin <= this.ui.dMin.val()) {
                 console.log('C Minimum cannot be lower than D Minimum')
                 this.ui.cMin.val(this.model.get('minC'))
@@ -758,21 +768,42 @@ define(function(require) {
                 return;
             }
 
-            this.model.set('minC', newCMin);
+            this.model.set('minC', newCMin)
+            self.model.save().then(self.updateCharts());
+            //self.updatePieChart();
+            //this.model.set('minC', newCMin).then(this.model.save());
             this.ui.cMin.val(newCMin);
-            //this.model.save();
+
         },
         updateMinimumD : function () {
             var newDMin = this.ui.dMin.val();
+            var self = this;
             if(newDMin >= this.ui.cMin.val()) {
                 console.log('D Minimum cannot be higher than C Minimum')
                 this.ui.dMin.val(this.model.get('minD'))
                 return;
             }
 
-            this.model.set('minD', newDMin);
+            this.model.set('minD', newDMin)
+            self.model.save().then(self.updateCharts());
+
+
             this.ui.dMin.val(newDMin);
+
             //this.model.save();
+        },
+
+        updateCharts : function() {
+            this.pieChart.destroy();
+            //this.pieCtx = this.$('.pie-chart-canvas')[0].getContext('2d');
+            //var ctx = document.getElementById("myChartLine").getContext("2d");
+           // myLineChart = new Chart(ctx).Line(data, options);
+            this.pieChart = new Chart(this.pieCtx).Pie(this.createPieData(),null);
+
+            this.updateBarColors();
+            //this.barChart.destroy();
+            // render bar chart
+            //this.barChart = new Chart(this.barCtx).Bar(this.createBarData(), null);
         }
 
 

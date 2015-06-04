@@ -146,15 +146,15 @@ define(function(require) {
         },
 
         getLetterGrade: function(totalScore, course) {
-            console.log("made it to getLetterGrade");
+            //console.log("made it to getLetterGrade");
             //var course = this.model.get('course');
-            console.log("got course");
-            console.log(course)
+            //console.log("got course");
+            //console.log(course)
             var minA = course.get('minA');
             var minB = course.get('minB');
             var minC = course.get('minC');
             var minD = course.get('minD');
-            console.log("got minimums")
+            //console.log("got minimums")
             if(totalScore >= minA) {
                 return "A"
             }
