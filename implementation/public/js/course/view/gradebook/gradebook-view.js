@@ -62,10 +62,14 @@ define(function(require) {
         //},
 
         initialize: function() {
+            this.course = courseRadioChannel.request('current:course');
             this.listenTo(this.model.students, 'add remove update reset sort sync', this.onShow.bind(this));
             this.listenTo(this.model.assignments, 'add remove update reset sort sync', this.onShow.bind(this));
             this.listenTo(this.model.categories, 'add remove update reset sort sync', this.onShow.bind(this));
-            this.course = courseRadioChannel.request('current:course');
+            this.listenTo(this.course, 'add remove update reset sort sync', this.onShow.bind(this));
+
+
+
 
 
             var lightRed =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
@@ -726,7 +730,7 @@ define(function(require) {
                 return;
             }
 
-            this.model.set('minA', newAMin)
+            this.model.set('minA', parseInt(newAMin))
             self.model.save().then(self.updateCharts())
             //self.updatePieChart();
             //this.model.set('minA', newAMin).then(this.model.save());
@@ -747,7 +751,7 @@ define(function(require) {
                 return;
             }
 
-            this.model.set('minB', newBMin)
+            this.model.set('minB', parseInt(newBMin))
             self.model.save().then(self.updateCharts());
             //self.updatePieChart();
             //this.model.set('minB', newBMin).then(this.model.save());
@@ -768,7 +772,7 @@ define(function(require) {
                 return;
             }
 
-            this.model.set('minC', newCMin)
+            this.model.set('minC', parseInt(newCMin))
             self.model.save().then(self.updateCharts());
             //self.updatePieChart();
             //this.model.set('minC', newCMin).then(this.model.save());
@@ -784,7 +788,7 @@ define(function(require) {
                 return;
             }
 
-            this.model.set('minD', newDMin)
+            this.model.set('minD', parseInt(newDMin))
             self.model.save().then(self.updateCharts());
 
 
