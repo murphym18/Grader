@@ -63,6 +63,17 @@ define(function(require) {
             this.listenTo(this.model.categories, 'add remove update reset sort sync', this.onShow.bind(this));
             this.course = courseRadioChannel.request('current:course');
 
+
+            var lightRed =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
+            var darkRed =  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"];
+            var orange = ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"];
+            var yellow =  ["rgba(255, 255, 0,0.5)", "rgba(255, 255, 0,0.8)", "rgba(255, 255, 0,0.75)", "rgba(255, 255, 0,1)"];
+            var green = ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rgba(0,255,0,1)"];
+            this.model.set('aColor', green);
+            this.model.set('bColor', yellow);
+            this.model.set('cColor', orange);
+            this.model.set('dColor', lightRed)
+            this.model.set('fColor', darkRed)
             //console.log("grant === ");
             //console.log(this.model)
         },
