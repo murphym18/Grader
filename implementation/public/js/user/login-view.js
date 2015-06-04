@@ -52,8 +52,15 @@ define(function (require) {
          this.ui.button.button('loading')
          domEvent.preventDefault();
          this.model.login();
+          this.removeModal();
+
       },
-      
+
+        removeModal : function() {
+            this.destroy();
+            $( 'body' ).removeClass( "modal-open" );
+            $('.modal-backdrop').remove()
+        },
       updateUser: function() {
          var input = this.ui.username.val();
          this.model.set({"username": input});

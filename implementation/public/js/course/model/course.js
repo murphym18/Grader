@@ -145,6 +145,34 @@ define(function(require) {
             
         },
 
+        getLetterGrade: function(totalScore, course) {
+            console.log("made it to getLetterGrade");
+            //var course = this.model.get('course');
+            console.log("got course");
+            console.log(course)
+            var minA = course.get('minA');
+            var minB = course.get('minB');
+            var minC = course.get('minC');
+            var minD = course.get('minD');
+            console.log("got minimums")
+            if(totalScore >= minA) {
+                return "A"
+            }
+            else if(totalScore >= minB) {
+                return "B"
+            }
+            else if(totalScore >= minC) {
+                return "C"
+            }
+            else if(totalScore >= minD) {
+                return "D"
+            }
+            else {
+                return "F"
+            }
+
+        },
+
         setupUrl: function() {
             var colloquialUrl = this.get("colloquialUrl");
             if (colloquialUrl) {
