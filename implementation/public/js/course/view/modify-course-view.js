@@ -28,6 +28,7 @@ define(function (require) {
             fall: '.fall',
             year: '.courseYear',
             saveButton: '.save',
+            cancelButton: '.cancel',
             error: '.error'
         },
 
@@ -40,21 +41,21 @@ define(function (require) {
             'click @ui.summer': 'onSelectSummer',
             'click @ui.fall': 'onSelectFall',
             'change @ui.year': "onUpdateYear",
-            'click @ui.saveButton': {
-                event: 'onSaveCourse',
-                preventDefault: false,
-                stopPropagation: false
-            },
-            'click .cancel': {
-                event: 'resetModel',
-                preventDefault: false,
-                stopPropagation: false
-            }
+            'click @ui.saveButton': 'onSaveButton', // {
+            //    event: 'onSaveCourse',
+            //    preventDefault: false,
+            //    stopPropagation: false
+            //},
+            'click @ui.cancelButton': 'onCancelButton' // {
+            //    event: 'onCancelButton',
+            //    preventDefault: false,
+            //    stopPropagation: false
+            //}
         },
         
-        modelEvents: {
-            'change': 'onShownModal'
-        },
+        //modelEvents: {
+        //    'change': 'onShownModal'
+        //},
 
         initialize: function(options) {
             this.alertTemplate = Hbs.compile(alertTemplate);
@@ -69,6 +70,8 @@ define(function (require) {
             if (!this.model)
                 this.model = courseChannel.request('current:course');
             this.originalState = this.model.toJSON();
+            console.log('verify the original state');
+            console.log(this.originalState);
         },
         
         onShow: function() {
@@ -97,16 +100,28 @@ define(function (require) {
 
         updateCourseCode: function() {
             var value = this.ui.courseCode.val().toString();
+            console.log('setting course code to ' + value);
             this.model.set({
-                courseCode: value
+                classCode: value
             });
+            console.log('course code now ' + this.model.get('classCode'));
+            console.log(this.model);
+
+            console.log('verify the original state');
+            console.log(this.originalState);
         },
 
         updateCourseNumber: function() {
             var value = this.ui.courseNumber.val().toString();
+            console.log('setting course # to ' + value);
             this.model.set({
-                courseNumber: value
+                classNumber: value
             });
+            console.log('course # now ' + this.model.get('classNumber'));
+            console.log(this.model);
+
+            console.log('verify the original state');
+            console.log(this.originalState);
         },
 
         updateCourseSection: function() {
@@ -118,7 +133,7 @@ define(function (require) {
 
         setTerm: function(term) {
             this.model.set({
-                term: term,
+                term: term
             });
         },
 
@@ -131,30 +146,32 @@ define(function (require) {
         },
 
         updateCourseDates: function() {
-            var term = this.model.get('term')
-            var year = this.model.get('year')
+            var term = this.model.get('term');
+            var year = this.model.get('year');
             if (Course.isValidTerm(term) && Course.isValidYear(year)) {
                 this.model.set(Course.findTermDates(term, year));
             }
         },
 
-        onSaveCourse: function() {
+        onSaveButton: function() {
             var self = this;
+            var ui = this.ui;
             this.updateCourseDates.call(this);
             var urlPath = Course.createColloquialUrl(this.model);
-            if (urlPath) {
-                this.model.set({
-                    colloquialUrl: urlPath
-                });
-            }
+            console.log('url to be changed to: ' + urlPath);
+            //if (urlPath) {
+            //    this.model.set({
+            //        colloquialUrl: urlPath
+            //    });
+            //}
 
-            if(ui.classCode.val().length ===0 ){
+            if(ui.courseCode.val().length ===0 ){
                 self.ui.error.html(self.alertTemplate({
                     message: "Course Abbreviation can not be empty"
                 }));
                 return;
             }
-            if(ui.classNumber.val().length ===0 ){
+            if(ui.courseNumber.val().length ===0 ){
                 self.ui.error.html(self.alertTemplate({
                     message: "Course Number can not be empty"
                 }));
@@ -167,13 +184,13 @@ define(function (require) {
                 }));
                 return;
             }
-            if(isNaN(ui.classNumber.val())){
+            if(isNaN(ui.courseNumber.val())){
                 self.ui.error.html(self.alertTemplate({
                     message: "Course Number must be a number"
                 }));
                 return;
             }
-            if(isNaN(ui.classSection.val())){
+            if(isNaN(ui.courseSection.val())){
                 self.ui.error.html(self.alertTemplate({
                     message: "Section must be a number"
                 }));
@@ -185,13 +202,13 @@ define(function (require) {
                 }));
                 return;
             }
-            if(ui.classSection.val().length ===0 ){
+            if(ui.courseSection.val().length ===0 ){
                 self.ui.error.html(self.alertTemplate({
                     message: "Section can not be empty"
                 }));
                 return;
             }
-            if(!isNaN(ui.classCode.val())){
+            if(!isNaN(ui.courseCode.val())){
                 self.ui.error.html(self.alertTemplate({
                     message: "Course Abbreviation can not be number"
                 }));
@@ -209,9 +226,17 @@ define(function (require) {
                 self.ui.saveButton.button('reset');
             }).done();
         },
-        
-        resetModel: function() {
+
+        onCancelButton: function() {
+            console.log('cancel clicked');
             this.model.set(this.originalState);
-        }
+            //this.model.set({
+            //    attributes: this.originalState
+            //});
+            console.log('current');
+            console.log(this.model);
+            console.log('original');
+            console.log(this.originalState);
+        },
     });
 });
