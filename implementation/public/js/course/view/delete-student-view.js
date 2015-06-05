@@ -43,7 +43,7 @@ define(function (require) {
             });
 
             if(!self.studentToDelete) {
-                console.log("DELETE STUDENT");
+
                 console.log("error, student wasnt found for delete");
             }
 
@@ -59,8 +59,6 @@ define(function (require) {
             var ui = this.ui;
             var self = this;
             var reqStudentPath = this.student;
-
-
 
             //var student = students.findWhere({"path" : reqStudentPath});
 

@@ -34,11 +34,13 @@ define(function (require) {
             'studentNickname' : '.studentNickname',
             'studentGroup' : '.studentGroup',
             'studentEmail' : '.studentEmail',
-            'studentPhone' : '.studentPhone'
+            'studentPhone' : '.studentPhone',
+            'error': '.error'
 
         },
         initialize : function () {
              this.model = courseChannel.request('current:course');
+             this.alertTemplate = Hbs.compile(alertTemplate);
         },
 
         /**
@@ -86,34 +88,85 @@ define(function (require) {
             //var email = this.ui.studentEmail.val();
             //var phone = this.ui.studentPhone;
 
+            var ui = this.ui;
+            var self = this;
+
             var newStudent = {};
             newStudent.course = this.model.get('colloquialUrl');
-            if (this.ui.studentFirstName.val())
+
+            if (this.ui.studentFirstName.val()) {
+
                 newStudent.first = this.ui.studentFirstName.val();
+            }
 
-            if (this.ui.studentLastName.val())
+            if (this.ui.studentFirstName.val().length === 0) {
+                    self.ui.error.html(self.alertTemplate({
+                        message: "Student first name can not be empty"
+                    }));
+                    
+                    return;
+            }
+
+            if (this.ui.studentLastName.val()) {
+
                 newStudent.last = this.ui.studentLastName.val();
+            }
 
-            if (this.ui.studentID.val())
+            if (this.ui.studentLastName.val().length === 0) {
+                    self.ui.error.html(self.alertTemplate({
+                        message: "Student last name can not be empty"
+                    }));
+
+                    return;
+            }
+
+            if (this.ui.studentID.val()) {
                 newStudent.emplId = this.ui.studentID.val();
+            }
 
-            if (this.ui.studentNickname.val())
+            if (isNaN(this.ui.studentID.val()) || this.ui.studentID.val().length !== 8) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Student ID must be 8 digits"
+                }));
+
+                return;
+            }
+
+            if (this.ui.studentNickname.val()) {
                 newStudent.nickname = this.ui.studentNickname.val();
+            }
 
             if (this.ui.studentGroup.val())
                 newStudent.group = this.ui.studentGroup.val();
 
-            if (this.ui.studentEmail.val())
+            if (this.ui.studentEmail.val()) {
                 newStudent.email = this.ui.studentEmail.val();
+            }
 
-            if (this.ui.studentPhone.val())
+            if (this.ui.studentEmail.val().length === 0) {
+                    self.ui.error.html(self.alertTemplate({
+                        message: "Student email can not be empty"
+                    }));
+
+                    return;
+            }
+
+            if (this.ui.studentPhone.val()) {
                 newStudent.phone = this.ui.studentPhone.val();
+            }
+
+            if (this.ui.studentPhone.val().length !== 10 || isNaN(this.ui.studentPhone.val())) {
+                    self.ui.error.html(self.alertTemplate({
+                        message: "Student phone number must be 10 digits"
+                    }));
+
+                    return;
+            }
 
             //this.model.students.push(newStudent);
             var student = new StudentRecord(newStudent);
             student.save()
             this.model.students.push(student);
-
 
 
 

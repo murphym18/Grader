@@ -25,7 +25,8 @@ define(function (require) {
             'name' : '.name',
             'weight' : '.weight',
             'totalScore' : '.total-score',
-            'category' : '.category'
+            'category' : '.category',
+            'error': '.error'
         },
         /**
          * Hides the dialog on initial load
@@ -70,19 +71,52 @@ define(function (require) {
             });
         },
         saveNewAssignment : function() {
+            var self = this;
             var ui = this.ui;
             var newAssignment = [];
 
-            if(ui.name.val() == null)
-                console.log('error');
-            else
+            if(ui.name.val() == null || ui.name.val().length === 0) {
+                self.ui.error.html(self.alertTemplate({
+                        message: "Invalid assignment name"
+                    }));
+                    
+                return;
+            }
+            else {
                 newAssignment.name = ui.name.val();
+            }
 
-            if(ui.weight.val() == null)
-                console.log('error');
-            else
+            if(ui.weight.val() == null || ui.weight.val().length === 0 || isNaN(ui.weight.val())) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Weight must be a number"
+                }));
+                    
+                return;
+            }
+            else {
                 newAssignment.weight = ui.weight.val();
+            }
 
+            /*
+
+            ADDING THESE LINES CAUSES ERROR IN CONSOLE, EITHER CANNOT READ PROPERTY OR IS NOT A FUNCTION
+
+            if(ui.totalScore.val() == null || isNaN(ui.totalScore.val())) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Total score must be a number"
+                }));
+            else {
+                newAssignment.totalScore = ui.totalScore.val();
+            }
+
+            if(ui.category.val() == null || !isNaN(ui.categor.val())) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Category must be a valid category"
+                }));
+            else {
+                newAssignment.category = ui.category.val();
+            }
+            */
 
             if(ui.totalScore.val() == null)
                 console.log('error');
@@ -102,6 +136,7 @@ define(function (require) {
 
             $('.cancel').click()
         }
+
 
         /**
          * Shows the new Assignment dialog on click.

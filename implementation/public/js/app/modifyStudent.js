@@ -36,8 +36,8 @@ define(function (require) {
             'studentNickname': '.studentNickname',
             'studentGroup': '.studentGroup',
             'studentEmail': '.studentEmail',
-            'studentPhone': '.studentPhone'
-
+            'studentPhone': '.studentPhone',
+            'error': '.error'
         },
 
         events: {
@@ -55,6 +55,7 @@ define(function (require) {
         initialize: function(options) {
             this.model = courseChannel.request('current:course');
             this.student = options.student;
+            this.alertTemplate = Hbs.compile(alertTemplate);
             console.log(this.student);
         },
         // Grant Campanelli Added
@@ -111,17 +112,52 @@ define(function (require) {
 
         //updateStudentInfo : function() {},
         updateStudentFirstName : function() {
+            var self = this;
+            var ui = this.ui;
+
             newValue = $('.studentFirstName').val();
+            if (this.ui.studentFirstName.val().length === 0) {
+
+                self.ui.error.html(self.alertTemplate({
+                    message: "Student first name can not be empty"
+                }));
+
+                return;
+            }
             this.setStudentValue('first', newValue);
             //this.model.save();
             console.log("Saved New Name", newValue)
             //console.log($('.studentFirstName').val())
         },
         updateStudentLastName : function() {
+            var self = this;
+            var ui = this.ui;
+
+            if (this.ui.studentLastName.val().length === 0) {
+
+                self.ui.error.html(self.alertTemplate({
+                    message: "Student last name can not be empty"
+                }));
+
+                return;
+            }
+
             if (this.ui.studentLastName.val())
                 this.model.get('students')[1].last = this.ui.studentLastName.val();
         },
         updateStudentID  : function() {
+            var self = this;
+            var ui = this.ui;
+
+            if (this.ui.studentID.val().length !== 8 || isNaN(this.ui.studentID.val())) {
+
+                self.ui.error.html(self.alertTemplate({
+                    message: "Student ID must be 8 digits"
+                }));
+
+                return;
+            }
+
             if (this.ui.studentID.val())
                 this.model.get('students')[1].emplId = this.ui.studentID.val();
         },
@@ -134,10 +170,34 @@ define(function (require) {
                 this.model.get('students')[1].group = this.ui.studentGroup.val();
         },
         updateStudentEmail : function() {
+            var self = this;
+            var ui = this.ui;
+
+            if (this.ui.studentEmail.val().length === 0) {
+
+                self.ui.error.html(self.alertTemplate({
+                    message: "Student email can not be empty"
+                }));
+
+                return;
+            }
+
             if (this.ui.studentEmail.val())
                 this.model.get('students')[1].email = this.ui.studentEmail.val();
         },
         updateStudentPhone : function() {
+            var self = this;
+            var ui = this.ui;
+
+            if (this.ui.studentPhone.val().length !== 10 || isNaN(this.ui.studentPhone.val())) {
+
+                self.ui.error.html(self.alertTemplate({
+                    message: "Student phone number must be 10 digits"
+                }));
+
+                return;
+            }
+
             if (this.ui.studentPhone.val())
                 this.model.get('students')[1].phone = this.ui.studentPhone.val();
         },
