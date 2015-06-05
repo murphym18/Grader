@@ -206,14 +206,23 @@ define(function (require) {
             this.model.save();
         },
 
+        closeModal : function () {
+            var modalRegion = pageChannel.request('modalRegion');
+            this.model.save().then(modalRegion.hideModal())
+            window.location.reload();
+        },
+
 
         onSaveGradeScheme : function () {
             //this.setNewMinimums();
             var self = this;
-            var modalRegion = pageChannel.request('modalRegion');
-            this.model.save().then(modalRegion.hideModal())
-            var gradebook = courseRadioChannel.request('view:gradebook');
-            pageChannel.request('mainRegion').show(gradebook);
+
+            var newAMin = this.ui.aMin.val();
+            var newBMin = this.ui.bMin.val();
+            var newCMin = this.ui.cMin.val();
+            var newDMin = this.ui.dMin.val();
+            var newMinPass = this.ui.passMin.val();
+
             //var gradeBookRegion = pageChannel.request('mainRegion');
             //gradeBookRegion.show();
 
@@ -223,7 +232,7 @@ define(function (require) {
                 }));
                 console.log('A Minimum cannot be lower than B Minimum')
                 this.ui.aMin.val(this.model.get('minA'))
-                return;
+                return 1;
             }
             if(newBMin <= this.ui.cMin.val()) {
                 self.ui.error.html(self.alertTemplate({
@@ -231,14 +240,14 @@ define(function (require) {
                 }));
                 console.log('B Minimum cannot be lower than C Minimum')
                 this.ui.bMin.val(this.model.get('minB'))
-                return;
+                return 1;
             }
             if(newBMin >= this.ui.aMin.val()) {
                 self.ui.error.html(self.alertTemplate({
                     message: "B Minimum cannot be higher than A Minimum"
                 }));
                 this.ui.bMin.val(this.model.get('minB'))
-                return;
+                return 1;
             }
             if(newCMin <= this.ui.dMin.val()) {
                 self.ui.error.html(self.alertTemplate({
@@ -246,7 +255,7 @@ define(function (require) {
                 }));
                 console.log('C Minimum cannot be lower than D Minimum')
                 this.ui.cMin.val(this.model.get('minC'))
-                return;
+                return 1;
             }
             if(newCMin >= this.ui.bMin.val()) {
                 self.ui.error.html(self.alertTemplate({
@@ -254,7 +263,7 @@ define(function (require) {
                 }));
                 console.log('C Minimum cannot be higher than B Minimum')
                 this.ui.cMin.val(this.model.get('minC'))
-                return;
+                return 1;
             }
             if(newMinPass < 0 || newMinPass > 100) {
                 self.ui.error.html(self.alertTemplate({
@@ -262,7 +271,7 @@ define(function (require) {
                 }));
                 console.log('Minimum passing grade must be between 0 and 100')
                 this.ui.passMin.val(this.model.get('minCredit'))
-                return;
+                return 1;
             }
             if(newDMin >= this.ui.cMin.val()) {
                 self.ui.error.html(self.alertTemplate({
@@ -270,8 +279,10 @@ define(function (require) {
                 }));
                 console.log('D Minimum cannot be higher than C Minimum')
                 this.ui.dMin.val(this.model.get('minD'))
-                return;
+                return 1;
             }
+
+            this.closeModal();
 
             //$('.cancel').click();
         }
