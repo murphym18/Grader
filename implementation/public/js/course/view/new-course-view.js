@@ -176,7 +176,7 @@ define(function (require) {
 
             this.createBlankCourseData(this);
             Q(this.model.save()).then(function(res) {
-                console.dir(['new class save result:', res]);
+                    console.dir(['new class save result:', res]);
                 var modalRegion = pageChannel.request('modalRegion');
                 modalRegion.hideModal();
                 courseChannel.command('updateCourses');

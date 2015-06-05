@@ -129,32 +129,12 @@ define(function (require) {
 
             var modalRegion = pageChannel.request('modalRegion');
             this.model.save().then(modalRegion.hideModal())
-            //this.model.save()
-            //window.location.reload();
+            window.location.reload();
 
 
-            //TODO Input value checking above!!
-            //TODO Please save this to DB
 
-
-            //$('.cancel').click()
         }
     })
 
     return NewCategoryView;
 });
-
-//
-//module.exports = function generateMockCategory(name, parentPath) {
-//    var path = parentPath + pathSeparator + name;
-//
-//    var result = new Object();
-//
-//    result.name = name
-//    result.weight = 1
-//    result.assignments = new Array()
-//    result.path = path
-//
-//    return result;
-//
-//}
