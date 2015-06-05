@@ -71,8 +71,9 @@ define(function (require) {
         saveNewCategory: function () {
             var ui = this.ui;
             self = this;
-            var newCategory = [];
+            var newCategory = {};
 
+            newCategory.course = this.model.get('colloquialUrl');
             if (ui.name.val().length === 0){
                 self.ui.error.html(self.alertTemplate({
                     message: "Category name can not be empty"
@@ -111,13 +112,33 @@ define(function (require) {
 
             console.log(newCategory);
 
+            //var category = new Category(newCategory);
+            //category.save()
+            this.model.categories.push(newCategory);
+            this.model.categories.save()
+
             //TODO Input value checking above!!
             //TODO Please save this to DB
 
-            $('.cancel').click()
+
+            //$('.cancel').click()
         }
     })
 
     return NewCategoryView;
 });
 
+//
+//module.exports = function generateMockCategory(name, parentPath) {
+//    var path = parentPath + pathSeparator + name;
+//
+//    var result = new Object();
+//
+//    result.name = name
+//    result.weight = 1
+//    result.assignments = new Array()
+//    result.path = path
+//
+//    return result;
+//
+//}

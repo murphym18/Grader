@@ -44,7 +44,8 @@ define(function (require) {
                     && typeof(o[i].tree()) == "object") {
                     this.categoryList.push({
                         name: indent + " " + o[i].get('name'),
-                        cid: o[i].cid
+                        cid: o[i].cid,
+                        path: o[i].get('path')
                     });
                     this.traverseCat(indent + "---", o[i].tree());
                 }
@@ -58,6 +59,7 @@ define(function (require) {
         },
         onShow : function() {
             var categories = this.model.categories;
+            console.log(categories)
             var categoryTree = categories.tree();
             this.categoryList = [];
             var self = this;
@@ -66,7 +68,8 @@ define(function (require) {
 
             var optionString;
             this.categoryList.forEach(function(c) {
-                optionString = '<option value="' + c.cid +'" >'+ c.name + '</option>';
+
+                optionString = '<option value="' + c.path +'" >'+ c.name + '</option>';
                 $('#new-assignment-category').append(optionString);
             });
         },
