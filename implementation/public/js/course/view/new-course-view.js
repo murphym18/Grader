@@ -108,6 +108,8 @@ define(function (require) {
                 this.model.set(Course.findTermDates(term, year));
             }
         },
+
+        createBlankCourseData : function(){},
         
         onSaveCourse: function() {
             var self = this;
@@ -119,16 +121,19 @@ define(function (require) {
                 });
             }
             var self = this;
-            Q(this.model.save()).then(function(res) {
-                console.dir(['new class save result:', res]);
-                var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.hideModal();
-                courseChannel.command('updateCourses');
-            },
-            function(err) {
-                self.ui.error.html(self.alertTemplate({message: err.responseText}));
-                self.ui.saveButton.button('reset');
-            }).done();
+              console.log(this);
+        console.log(this.model)
+            //this.createBlankCourseData(this);
+            //Q(this.model.save()).then(function(res) {
+            //    console.dir(['new class save result:', res]);
+            //    var modalRegion = pageChannel.request('modalRegion');
+            //    modalRegion.hideModal();
+            //    courseChannel.command('updateCourses');
+            //},
+            //function(err) {
+            //    self.ui.error.html(self.alertTemplate({message: err.responseText}));
+            //    self.ui.saveButton.button('reset');
+            //}).done();
         }
     });
 });

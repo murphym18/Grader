@@ -16,6 +16,7 @@ define(function (require) {
     var alertTemplate = require('text!ctemplates/alert-block.hbs');
 
     var Course = require('course/model/course');
+    var StudentRecord = require('course/model/student');
 
 
     return Mn.ItemView.extend({
@@ -24,7 +25,7 @@ define(function (require) {
         template: Hbs.compile(template),
         ui: {
             'addStudentButton' : '.addStudentButton',
-            'ok' : '.ok',
+            'save' : '.save',
             'cancel' : '.cancel',
             'dialog' : '.popup-dialog',
             'studentFirstName' : '.studentFirstName',
@@ -35,6 +36,9 @@ define(function (require) {
             'studentEmail' : '.studentEmail',
             'studentPhone' : '.studentPhone'
 
+        },
+        initialize : function () {
+             this.model = courseChannel.request('current:course');
         },
 
         /**
@@ -47,7 +51,7 @@ define(function (require) {
         //},
         events : {
             'click @ui.addStudentButton' :  'showAddStudent',
-            'click @ui.ok' :  'addStudentInfo',
+            'click @ui.save' :  'addStudentInfo',
             'click @ui.cancel' :  'closeAddStudent'
         },
 
@@ -83,7 +87,7 @@ define(function (require) {
             //var phone = this.ui.studentPhone;
 
             var newStudent = {};
-
+            newStudent.course = this.model.get('colloquialUrl');
             if (this.ui.studentFirstName.val())
                 newStudent.first = this.ui.studentFirstName.val();
 
@@ -105,14 +109,22 @@ define(function (require) {
             if (this.ui.studentPhone.val())
                 newStudent.phone = this.ui.studentPhone.val();
 
-            //this.model.get('students').push(newStudent);
+            //this.model.students.push(newStudent);
+            var student = new StudentRecord(newStudent);
+            student.save()
+            this.model.students.push(student);
+
+
+
 
             //this.ui.dialog.hide();
             //Backbone.emulateHTTP = true;
-            var self = this;
-            this.model.save();
-            this.model.close();
+            //var self = this;
+            //this.model.save().then(self.closeModal());
         },
+        closeModal : function () {
+
+        }
 
         /**
          * Closes the add student dialog without any changes to information.

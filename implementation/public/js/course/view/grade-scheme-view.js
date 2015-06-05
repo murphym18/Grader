@@ -31,7 +31,9 @@ define(function (require) {
             'buttonGraded' : '#grade-scheme-graded',
             'buttonPassFail' : '#grade-scheme-pass-fail',
             'graded' : '.graded',
-            'passFail' : '.pass-fail'
+            'passFail' : '.pass-fail',
+            'error': '.error'
+
         },
 
         events: {
@@ -49,6 +51,7 @@ define(function (require) {
 
         initialize: function(options) {
             this.model = courseRadioChannel.request('current:course');
+            this.alertTemplate = Hbs.compile(alertTemplate);
             //this.model = courseChannel.request('current:course');
             //console.log(this.model);
 
@@ -104,7 +107,9 @@ define(function (require) {
                 return;
             }
             if(newBMin >= this.ui.aMin.val()) {
-                console.log('B Minimum cannot be higher than A Minimum')
+                self.ui.error.html(self.alertTemplate({
+                    message: "B Minimum cannot be higher than A Minimum"
+                }));
                 this.ui.bMin.val(this.model.get('minB'))
                 return;
             }

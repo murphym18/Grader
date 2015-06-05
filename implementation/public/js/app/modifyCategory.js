@@ -130,11 +130,11 @@ define(function (require) {
                 }
             });
 
-            category.set({
+            //category.set();
+            category.save({
                 name : ui.categoryName.val(),
                 weight : ui.categoryWeight.val()
             });
-            category.save();
             self.closeModifyCategory();
         },
         /**
@@ -149,9 +149,9 @@ define(function (require) {
             //Backbone.emulateHTTP = true;
             Q(this.model.save()).then(function(res) {
                 var modalRegion = pageChannel.request('modalRegion');
-                modalRegion.hideModal();
+               window.location.reload();
                 //self.trigger("close");
-                courseChannel.command('updateCourses');
+                //courseChannel.command('updateCourses');
             },
             function(err) {
                 self.ui.error.html(self.alertTemplate({message: err.responseText}));

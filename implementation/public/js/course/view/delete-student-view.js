@@ -38,17 +38,17 @@ define(function (require) {
             students.each(function(s){
                 if(self.options.student == s.get('emplId')) {
                     console.log("Match "+self.options.student);
-                    studentToDelete = s;
+                    self.studentToDelete = s;
                 }
             });
 
-            if(!studentToDelete) {
+            if(!self.studentToDelete) {
                 console.log("error, student wasnt found for delete");
             }
 
             //console.log(studentToDelete.get('last'));
 
-            this.$el.html(this.template({ first : studentToDelete.get('first'), last : studentToDelete.get('last')}));
+            this.$el.html(this.template({ first : self.studentToDelete.get('first'), last : self.studentToDelete.get('last')}));
 
             return this;
 
@@ -74,22 +74,13 @@ define(function (require) {
         },
 
         closeSelectStudent : function() {
-            //$('.cancel').click();
+            this.studentToDelete.destroy();
+
             var modalRegion = pageChannel.request('modalRegion');
-            _.defer(function() {
-                modalRegion.empty();
-            });
-            $('.cancel').click();
-            //this.$el.data('modal', null);
-            //this.remove();
-            //this.$el.modal('hide');
+            modalRegion.hideModal()
+            var gradebook = courseChannel.request('view:gradebook');
+            pageChannel.request('mainRegion').show(gradebook);
 
-
-            //var modalRegion = pageChannel.request('modalRegion');
-            //modalRegion.empty();
-            ////_.defer(function() {
-            ////    modalRegion.empty();
-            ////});
         },
         backToSelect : function() {
             //var self = this;
