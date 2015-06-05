@@ -49,7 +49,7 @@ define(function (require) {
         },
         
         initialize: function(options) {
-            this.model = new Course
+            this.model = new Course;
             this.model.get('roles').push({
                 "name":"INSTRUCTOR",
                 "users":[options.user],
