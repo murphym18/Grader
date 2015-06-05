@@ -101,28 +101,30 @@ define(function (require) {
                 newAssignment.weight = ui.weight.val();
             }
 
-            /*
+            
 
-            ADDING THESE LINES CAUSES ERROR IN CONSOLE, EITHER CANNOT READ PROPERTY OR IS NOT A FUNCTION
+            //ADDING THESE LINES CAUSES ERROR IN CONSOLE, EITHER CANNOT READ PROPERTY OR IS NOT A FUNCTION
 
-            if(ui.totalScore.val() == null || isNaN(ui.totalScore.val())) {
+            if(ui.totalScore.val() == null || ui.totalScore.val().length === 0 || isNaN(ui.totalScore.val())) {
                 self.ui.error.html(self.alertTemplate({
                     message: "Total score must be a number"
                 }));
+            }
             else {
                 newAssignment.totalScore = ui.totalScore.val();
             }
 
-            if(ui.category.val() == null || !isNaN(ui.categor.val())) {
+            if(ui.category.val() == null || ui.category.val().length === 0 || !isNaN(ui.categor.val())) {
                 self.ui.error.html(self.alertTemplate({
                     message: "Category must be a valid category"
                 }));
+            }
             else {
                 newAssignment.category = ui.category.val();
             }
-            */
+            
 
-            if(ui.totalScore.val() == null)
+            /*if(ui.totalScore.val() == null)
                 console.log('error');
             else
                 newAssignment.totalScore = ui.totalScore.val();
@@ -131,7 +133,7 @@ define(function (require) {
                 console.log('error');
             else
                 newAssignment.category = ui.category.val();
-
+            */
 
             console.log(newAssignment);
 
