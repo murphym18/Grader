@@ -43,6 +43,7 @@ define(function (require) {
             });
 
             if(!self.studentToDelete) {
+                console.log("DELETE STUDENT");
                 console.log("error, student wasnt found for delete");
             }
 
