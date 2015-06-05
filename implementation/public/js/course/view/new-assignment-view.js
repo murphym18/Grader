@@ -90,9 +90,10 @@ define(function (require) {
                 newAssignment.name = ui.name.val();
             }
 
-            if(ui.weight.val() == null || ui.weight.val().length === 0 || isNaN(ui.weight.val())) {
+            if(ui.weight.val() == null || ui.weight.val().length === 0 || isNaN(ui.weight.val())
+                || ui.weight.val() < 0 || ui.weight.val() > 1) {
                 self.ui.error.html(self.alertTemplate({
-                    message: "Weight must be a number"
+                    message: "Weight must be a number between 0 and 1"
                 }));
                     
                 return;
@@ -102,9 +103,6 @@ define(function (require) {
             }
 
             
-
-            //ADDING THESE LINES CAUSES ERROR IN CONSOLE, EITHER CANNOT READ PROPERTY OR IS NOT A FUNCTION
-
             if(ui.totalScore.val() == null || ui.totalScore.val().length === 0 || isNaN(ui.totalScore.val())) {
                 self.ui.error.html(self.alertTemplate({
                     message: "Total score must be a number"
