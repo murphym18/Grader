@@ -39,6 +39,7 @@ define(function (require) {
         },
         initialize : function () {
              this.model = courseChannel.request('current:course');
+             console.log("NEW STUDENT");
         },
 
         /**
