@@ -645,23 +645,24 @@ define(function(require) {
             this.barChart.datasets[0].bars[bar].highlightStroke =  color[3];
         },
         updateBarColors : function() {
-            //var gradesArray = this.model.get('findGraphArray')()[0];
-            //console.log('updateBarColors')
             var gradesArray = this.createGradeArray()[0];
-            //console.log(gradesArray[0]);
             var course = this.model;
-            //console.log(course.get('aColor'));
+            var lightRed =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
+            var darkRed =  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"];
+            var orange = ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"];
+            var yellow =  ["rgba(255, 255, 0,0.5)", "rgba(255, 255, 0,0.8)", "rgba(255, 255, 0,0.75)", "rgba(255, 255, 0,1)"];
+            var green = ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rgba(0,255,0,1)"];
             for(var x = 0; x < gradesArray.length; x++) {
                 if (gradesArray[x] >= course.get('minA'))
-                    this.changeSingleBarColor(x, course.get('aColor'));
+                    this.changeSingleBarColor(x, green);
                 else if (gradesArray[x] >= course.get('minB'))
-                    this.changeSingleBarColor(x, course.get('bColor'));
+                    this.changeSingleBarColor(x, yellow);
                 else if (gradesArray[x] >= course.get('minC'))
-                    this.changeSingleBarColor(x, course.get('cColor'));
+                    this.changeSingleBarColor(x, orange);
                 else if (gradesArray[x] >= course.get('minD'))
-                    this.changeSingleBarColor(x, course.get('dColor'));
+                    this.changeSingleBarColor(x, lightRed);
                 else
-                    this.changeSingleBarColor(x, course.get('fColor'));
+                    this.changeSingleBarColor(x, darkRed);
             }
 
             this.barChart.update();
