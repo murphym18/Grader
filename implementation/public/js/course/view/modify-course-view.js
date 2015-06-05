@@ -1,3 +1,7 @@
+/**
+ * Event handler for the modify class view.
+ * @author Mike Ryu
+ */
 define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
