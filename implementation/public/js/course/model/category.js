@@ -78,7 +78,7 @@ define(function(require) {
         errorCheckAssignmentId: function(assignment) {
             var idToAdd = assignment;
             if (_.isObject(assignment) && _.isFunction(assignment.get)) {
-                idToAdd = assignment.get('id');
+                idToAdd = assignment.id;
             }
 
             if (idToAdd.indexOf(',') !== -1) {

@@ -284,6 +284,7 @@ define(function(require) {
             var assignmentOrder = [];
             var assignments = this.model.assignments;
             var header = createHeader();
+            _.each(this.model.categories.tree(), orderAssignments);
             //console.log('assignment order: ', assignmentOrder);
             var body = createBody();
             var tableRowHeaders = createRowHeaders();
@@ -304,6 +305,14 @@ define(function(require) {
             ui.ehead.get(0).appendChild(createRowHeadersColHeader());
             ui.ebody.get(0).appendChild(createRowSummaries());
 
+            function orderAssignments(cat){
+                _.each(cat.tree(), orderAssignments);
+                _.each(cat.getAssignmentsArray(), function(a) {
+                    console.log(a);
+                    assignmentOrder.push(a)
+                });
+            }
+
             function createHeader() {
                 var docfrag = window.document.createDocumentFragment();
                 _.each(layout, function(row) {
@@ -318,7 +327,7 @@ define(function(require) {
                             td.appendChild(document.createTextNode(cell.name));
                         }
                         if (cell.style === "assignment") {
-                            assignmentOrder.push(cell.id);
+                            //assignmentOrder.push(cell.id);
                             td.setAttribute('data-aid', cell.id);
 
                         }

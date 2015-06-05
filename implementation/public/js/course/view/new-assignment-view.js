@@ -141,14 +141,18 @@ define(function (require) {
                 chosenCategory = self.ui.category.val();
             }
 
-            newAssignment.dueDate = null;
+            //newAssignment.dueDate = null;
 
             var assignment = new Assignment(newAssignment);
             assignment.save().then(function () {
                 categories.each(function(c) {
                     if(c.get('path') == chosenCategory) {
+                       console.log('pushing to category', assignment)
                         c.addAssignment(assignment);
+                        console.log("after AddAssignment")
                         c.save();
+                        console.log("cat")
+                        console.log(c)
                     }
                 })
             })

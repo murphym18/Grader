@@ -101,7 +101,7 @@ define(function (require) {
             var assignments = this.model.assignments;
             students.each(function(student) {
                 assignments.each(function(a) {
-                    var rawScore = Math.round(60 + Math.random()*40);
+                    var rawScore = Math.round(70 + Math.random()*30);
                     student.setGrade(a.id, rawScore);
                 })
             })
