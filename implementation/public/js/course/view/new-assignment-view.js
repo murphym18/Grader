@@ -73,7 +73,8 @@ define(function (require) {
         saveNewAssignment : function() {
             var self = this;
             var ui = this.ui;
-            var newAssignment = [];
+            var newAssignment = {};
+            newAssignment.course = this.model.get('colloquialUrl');
 
             if(ui.name.val() == null || ui.name.val().length === 0) {
                 self.ui.error.html(self.alertTemplate({
