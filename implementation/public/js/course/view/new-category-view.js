@@ -23,7 +23,8 @@ define(function (require) {
             'cancel': '.cancel',
             'name': '.name',
             'weight': '.weight',
-            'category': '.parent-category'
+            'category': '.parent-category',
+            error: '.error'
         },
         /**
          * Hides the dialog on initial load
@@ -69,23 +70,43 @@ define(function (require) {
         },
         saveNewCategory: function () {
             var ui = this.ui;
+            self = this;
             var newCategory = [];
 
-            if (ui.name.val() == null)
-                console.log('error');
+            if (ui.name.val().length === 0){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Category name can not be empty"
+                }));
+                return;
+            }
             else
                 newCategory.name = ui.name.val();
 
-            if (ui.weight.val() == null)
-                console.log('error');
+            if (ui.weight.val().length === 0){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Category weight can not be empty"
+                }));
+                return;
+            }
             else
                 newCategory.weight = ui.weight.val();
 
 
-            if (ui.category.val() == null)
-                console.log('error');
+            if (ui.category.val() == null){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Course Abbreviation can not be empty"
+                }));
+                return;
+            }
             else
                 newCategory.parentCategory = ui.category.val();
+
+            if (isNaN(ui.weight.val()) || ui.weight.val() < 0 || ui.weight.val() > 1) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Category weight must be a number between 0 and 1"
+                }));
+                return;
+            }
 
 
             console.log(newCategory);

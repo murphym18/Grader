@@ -32,7 +32,7 @@ define(function (require) {
             'buttonPassFail' : '#grade-scheme-pass-fail',
             'graded' : '.graded',
             'passFail' : '.pass-fail',
-            'error': '.error'
+            error: '.error'
 
         },
 
@@ -85,6 +85,9 @@ define(function (require) {
             var newAMin = this.ui.aMin.val();
             var self = this;
             if(newAMin <= this.ui.bMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "A Minimum cannot be lower than B Minimum"
+                }));
                 console.log('A Minimum cannot be lower than B Minimum')
                 this.ui.aMin.val(this.model.get('minA'))
                 return;
@@ -102,6 +105,9 @@ define(function (require) {
             var newBMin = this.ui.bMin.val();
             var self = this;
             if(newBMin <= this.ui.cMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "B Minimum cannot be lower than C Minimum"
+                }));
                 console.log('B Minimum cannot be lower than C Minimum')
                 this.ui.bMin.val(this.model.get('minB'))
                 return;
@@ -126,11 +132,17 @@ define(function (require) {
             var newCMin = this.ui.cMin.val();
             var self = this;
             if(newCMin <= this.ui.dMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "C Minimum cannot be lower than D Minimum"
+                }));
                 console.log('C Minimum cannot be lower than D Minimum')
                 this.ui.cMin.val(this.model.get('minC'))
                 return;
             }
             if(newCMin >= this.ui.bMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "C Minimum cannot be higher than B Minimum"
+                }));
                 console.log('C Minimum cannot be higher than B Minimum')
                 this.ui.cMin.val(this.model.get('minC'))
                 return;
@@ -150,6 +162,9 @@ define(function (require) {
             var self = this;
 
             if(newMinPass < 0 || newMinPass > 100) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Minimum passing grade must be between 0 and 100"
+                }));
                 console.log('Minimum passing grade must be between 0 and 100')
                 this.ui.passMin.val(this.model.get('minCredit'))
                 return;
@@ -164,6 +179,9 @@ define(function (require) {
             var newDMin = this.ui.dMin.val();
             var self = this;
             if(newDMin >= this.ui.cMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "D Minimum cannot be higher than C Minimum"
+                }));
                 console.log('D Minimum cannot be higher than C Minimum')
                 this.ui.dMin.val(this.model.get('minD'))
                 return;
@@ -191,7 +209,7 @@ define(function (require) {
 
         onSaveGradeScheme : function () {
             //this.setNewMinimums();
-
+            var self = this;
             var modalRegion = pageChannel.request('modalRegion');
             this.model.save().then(modalRegion.hideModal())
             var gradebook = courseRadioChannel.request('view:gradebook');
@@ -199,8 +217,61 @@ define(function (require) {
             //var gradeBookRegion = pageChannel.request('mainRegion');
             //gradeBookRegion.show();
 
-
-
+            if(newAMin <= this.ui.bMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "A Minimum cannot be lower than B Minimum"
+                }));
+                console.log('A Minimum cannot be lower than B Minimum')
+                this.ui.aMin.val(this.model.get('minA'))
+                return;
+            }
+            if(newBMin <= this.ui.cMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "B Minimum cannot be lower than C Minimum"
+                }));
+                console.log('B Minimum cannot be lower than C Minimum')
+                this.ui.bMin.val(this.model.get('minB'))
+                return;
+            }
+            if(newBMin >= this.ui.aMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "B Minimum cannot be higher than A Minimum"
+                }));
+                this.ui.bMin.val(this.model.get('minB'))
+                return;
+            }
+            if(newCMin <= this.ui.dMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "C Minimum cannot be lower than D Minimum"
+                }));
+                console.log('C Minimum cannot be lower than D Minimum')
+                this.ui.cMin.val(this.model.get('minC'))
+                return;
+            }
+            if(newCMin >= this.ui.bMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "C Minimum cannot be higher than B Minimum"
+                }));
+                console.log('C Minimum cannot be higher than B Minimum')
+                this.ui.cMin.val(this.model.get('minC'))
+                return;
+            }
+            if(newMinPass < 0 || newMinPass > 100) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "Minimum passing grade must be between 0 and 100"
+                }));
+                console.log('Minimum passing grade must be between 0 and 100')
+                this.ui.passMin.val(this.model.get('minCredit'))
+                return;
+            }
+            if(newDMin >= this.ui.cMin.val()) {
+                self.ui.error.html(self.alertTemplate({
+                    message: "D Minimum cannot be higher than C Minimum"
+                }));
+                console.log('D Minimum cannot be higher than C Minimum')
+                this.ui.dMin.val(this.model.get('minD'))
+                return;
+            }
 
             //$('.cancel').click();
         }

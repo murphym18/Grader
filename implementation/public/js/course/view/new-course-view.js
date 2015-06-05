@@ -113,6 +113,7 @@ define(function (require) {
         
         onSaveCourse: function() {
             var self = this;
+            var ui = this.ui;
             this.updateCourseDates.call(this);
             var urlPath = Course.createColloquialUrl(this.model);
             if (urlPath) {
@@ -120,9 +121,57 @@ define(function (require) {
                     colloquialUrl: urlPath
                 });
             }
-            var self = this;
-              console.log(this);
-        console.log(this.model)
+            if(ui.classCode.val().length ===0 ){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Course Abbreviation can not be empty"
+                }));
+                return;
+            }
+            if(ui.classNumber.val().length ===0 ){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Course Number can not be empty"
+                }));
+                return;
+            }
+            
+            if(ui.year.val().length ===0 ){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Year can not be empty"
+                }));
+                return;
+            }
+            if(isNaN(ui.classNumber.val())){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Course Number must be a number"
+                }));
+                return;
+            }
+            if(isNaN(ui.classSection.val())){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Section must be a number"
+                }));
+                return;
+            }
+            if(isNaN(ui.year.val())){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Year must be a number"
+                }));
+                return;
+            }
+            if(ui.classSection.val().length ===0 ){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Section can not be empty"
+                }));
+                return;
+            }
+            if(!isNaN(ui.classCode.val())){
+                self.ui.error.html(self.alertTemplate({
+                    message: "Course Abbreviation can not be number"
+                }));
+                return;
+            }
+            console.log(this);
+            console.log(this.model)
             //this.createBlankCourseData(this);
             //Q(this.model.save()).then(function(res) {
             //    console.dir(['new class save result:', res]);
