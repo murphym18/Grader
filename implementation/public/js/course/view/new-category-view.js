@@ -11,6 +11,8 @@ define(function (require) {
     var template = require('text!ctemplates/addNewCategoryView.hbs');
     var alertTemplate = require('text!ctemplates/alert-block.hbs');
 
+
+    var Category= require('course/model/category');
     var Course = require('course/model/course');
 
     var NewCategoryView = Mn.ItemView.extend({
@@ -66,6 +68,8 @@ define(function (require) {
             self.traverseCat("", categoryTree);
 
             var optionString;
+            optionString = '<option value="" > No Parent </option>';
+            $('#new-category-parent-category').append(optionString);
             this.categoryList.forEach(function (c) {
                 optionString = '<option value="' + c.path + '" >' + c.name + '</option>';
                 $('#new-category-parent-category').append(optionString);
@@ -116,11 +120,11 @@ define(function (require) {
             newPath = newPath.replace(/\s+/g, '');
             newCategory.path = newCategory.path + "#" + newPath ;
             newCategory.assignments = new Array();
-
+            newCategory.course = this.model.get('colloquialUrl');
             console.log(newCategory);
 
-            //var category = new Category(newCategory);
-            //category.save()
+            var category = new Category(newCategory);
+            category.save()
             this.model.categories.push(newCategory);
 
             var modalRegion = pageChannel.request('modalRegion');

@@ -127,6 +127,8 @@ define(function(require) {
         });
     })
 
+    return Category;
+
     function depth(elm) {
         return elm.get('path').split('#').length - 1;
     }

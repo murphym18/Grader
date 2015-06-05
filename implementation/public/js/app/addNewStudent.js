@@ -168,6 +168,7 @@ define(function (require) {
             student.save()
             this.model.students.push(student);
 
+            this.closeModal();
 
 
             //this.ui.dialog.hide();
@@ -176,7 +177,9 @@ define(function (require) {
             //this.model.save().then(self.closeModal());
         },
         closeModal : function () {
-
+            var modalRegion = pageChannel.request('modalRegion');
+            modalRegion.hideModal()
+            window.location.reload();
         }
 
         /**

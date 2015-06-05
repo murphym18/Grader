@@ -12,6 +12,7 @@ define(function (require) {
     var alertTemplate = require('text!ctemplates/alert-block.hbs');
 
     var Course = require('course/model/course');
+    var Assignment= require('course/model/assignment');
     //var currentAssignment;
 
     var NewAssignmentView = Mn.ItemView.extend({
@@ -42,13 +43,30 @@ define(function (require) {
                 if (o[i] &&
                     typeof o[i].tree === 'function'
                     && typeof(o[i].tree()) == "object") {
-                    this.categoryList.push({
-                        name: indent + " " + o[i].get('name'),
-                        cid: o[i].cid,
-                        path: o[i].get('path')
-                    });
-                    this.traverseCat(indent + "---", o[i].tree());
+
+                    if(o[i].tree().length > 0) {
+                        console.log("traverse")
+                        this.traverseCat(o[i].get('name') + " /", o[i].tree());
+                    }
+                    else {
+                        console.log("push")
+                        this.categoryList.push({
+                            name: indent + " " + o[i].get('name'),
+                            cid: o[i].cid,
+                            path: o[i].get('path')
+                        });
+                    }
                 }
+                //if(o[i] &&
+                //    typeof o[i].tree === 'function'
+                //    && typeof(o[i].tree()) == "object"
+                //    && o[i].tree() == null) {
+                //    this.categoryList.push({
+                //        name: indent + " " + o[i].get('name'),
+                //        cid: o[i].cid,
+                //        path: o[i].get('path')
+                //    });
+                //}
             }
 
         },
@@ -77,6 +95,8 @@ define(function (require) {
             var self = this;
             var ui = this.ui;
             var newAssignment = {};
+            var chosenCategory;
+            var categories = this.model.categories;
             newAssignment.course = this.model.get('colloquialUrl');
 
             if(ui.name.val() == null || ui.name.val().length === 0) {
@@ -109,17 +129,34 @@ define(function (require) {
                 }));
             }
             else {
-                newAssignment.totalScore = ui.totalScore.val();
+                newAssignment.rawPoints = ui.totalScore.val();
             }
 
-            if(ui.category.val() == null || ui.category.val().length === 0 || !isNaN(ui.categor.val())) {
+            if(this.ui.category.val() == null || this.ui.category.val().length === 0 || !isNaN(this.ui.category.val())) {
                 self.ui.error.html(self.alertTemplate({
                     message: "Category must be a valid category"
                 }));
             }
             else {
-                newAssignment.category = ui.category.val();
+                chosenCategory = self.ui.category.val();
             }
+
+            newAssignment.dueDate = null;
+
+            var assignment = new Assignment(newAssignment);
+            assignment.save().then(function () {
+                categories.each(function(c) {
+                    if(c.get('path') == chosenCategory) {
+                        c.addAssignment(assignment);
+                        c.save();
+                    }
+                })
+            })
+
+
+
+
+            console.log(assignment)
             
 
             /*if(ui.totalScore.val() == null)
@@ -138,7 +175,7 @@ define(function (require) {
             //TODO Input value checking above!!
             //TODO Please save this to DB
 
-            $('.cancel').click()
+            //$('.cancel').click()
         }
 
 
