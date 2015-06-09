@@ -26,7 +26,8 @@ define(function(require) {
             'change @ui.aMin' : 'updateMinimumA',
             'change @ui.bMin' : 'updateMinimumB',
             'change @ui.cMin' : 'updateMinimumC',
-            'change @ui.dMin' : 'updateMinimumD'
+            'change @ui.dMin' : 'updateMinimumD',
+            'keydown ': 'onKeyDown'
         },
 
         ui: {
@@ -68,10 +69,6 @@ define(function(require) {
             this.listenTo(this.model.categories, 'add remove update reset sort sync', this.onShow.bind(this));
             this.listenTo(this.course, 'add remove update reset sort sync', this.onShow.bind(this));
 
-
-
-
-
             var lightRed =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
             var darkRed =  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"];
             var orange = ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"];
@@ -84,6 +81,14 @@ define(function(require) {
             this.model.set('fColor', darkRed)
             //console.log("grant === ");
             //console.log(this.model)
+        },
+        
+        onKeyDown: function(event) {
+            if (event.keyCode === 13) {
+                this.editGrade(event);
+            }
+            console.log('here');
+            console.log(event)
         },
 
 
@@ -125,6 +130,7 @@ define(function(require) {
                 var catId = elm.attr('data-cat-id');
                 self.model.students.comparator = catagorySorter(catId);
             }
+            self.model.students.sort();
             function assignmentSorter(aId) {
                 if (this.sortKey !== aId) {
                     this.sortKey = aId;
@@ -138,7 +144,7 @@ define(function(require) {
                         return -1 * Number(student.getGrade(aId));
                     }
                 }
-                self.model.students.sort();
+                
             }
 
             function catagorySorter(catId) {
@@ -150,6 +156,7 @@ define(function(require) {
                     this.sortKey = catId;
                     //console.log('normal order')
                     return function categorySort(student) {
+                        console.log('in col sort fun',self);
                         categoryScore = self.model.calculateCategoryGrade(category, student)
                         return Number(categoryScore)
                     }
@@ -308,7 +315,7 @@ define(function(require) {
             function orderAssignments(cat){
                 _.each(cat.tree(), orderAssignments);
                 _.each(cat.getAssignmentsArray(), function(a) {
-                    console.log(a);
+                    // console.log(a);
                     assignmentOrder.push(a)
                 });
             }
