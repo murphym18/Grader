@@ -63,6 +63,7 @@ define(function(require) {
         //},
 
         initialize: function() {
+            this.isSortUp = false;
             this.course = courseRadioChannel.request('current:course');
             this.listenTo(this.model.students, 'add remove update reset sort sync', this.onShow.bind(this));
             this.listenTo(this.model.assignments, 'add remove update reset sort sync', this.onShow.bind(this));
@@ -123,26 +124,38 @@ define(function(require) {
             var self = this
             if (elm.attr('data-aid')) {
                 var aId = elm.attr('data-aid');
+                self.assignmentSortId = aId;
+                self.categorySortId = false;
                 self.model.students.comparator = assignmentSorter(aId);
                 self.model.students.sort();
             }
             else if (elm.attr('data-cat-id')) {
                 var catId = elm.attr('data-cat-id');
+                self.categorySortId = catId;
+                self.assignmentSortId = false;
                 self.model.students.comparator = catagorySorter(catId);
+                this.isSortCol = function(obj) {
+            }
             }
             self.model.students.sort();
+            
+            
             function assignmentSorter(aId) {
                 if (this.sortKey !== aId) {
                     this.sortKey = aId;
+                    self.isSortUp = false;
                     return function gradeSort(student) {
                         return Number(student.getGrade(aId));
                     }
+                    
                 }
                 else {
                     this.sortKey = "-" + aId
+                    self.isSortUp = true;
                     return function reverseGradeSort(student) {
                         return -1 * Number(student.getGrade(aId));
                     }
+                    
                 }
                 
             }
@@ -154,15 +167,18 @@ define(function(require) {
                 //console.log('here')
                 if (this.sortKey !== catId) {
                     this.sortKey = catId;
+                    self.isSortUp = false;
                     //console.log('normal order')
                     return function categorySort(student) {
                         console.log('in col sort fun',self);
                         categoryScore = self.model.calculateCategoryGrade(category, student)
                         return Number(categoryScore)
                     }
+                    seld.isSortUp = false;
                 }
                 else {
                     //console.log('showing reverse order')
+                    self.isSortUp = true;
                     return function reversecategorySort(student) {
                         categoryScore = self.model.calculateCategoryGrade(category, student)
                         //console.log(categoryScore);
@@ -319,6 +335,16 @@ define(function(require) {
                     assignmentOrder.push(a)
                 });
             }
+            
+            function sortIcon(isUp) {
+                var i = window.document.createElement("i");
+                if (isUp)
+                    i.setAttribute("class", 'fa fa-sort-asc');
+                else
+                    i.setAttribute("class", 'fa fa-sort-desc');
+                
+                return i;
+            }
 
             function createHeader() {
                 var docfrag = window.document.createDocumentFragment();
@@ -331,15 +357,20 @@ define(function(require) {
                             td = window.document.createElement("td");
                         }
                         else {
-                            td.appendChild(document.createTextNode(cell.name));
+                            td.appendChild(document.createTextNode(cell.name + " "));
                         }
                         if (cell.style === "assignment") {
                             //assignmentOrder.push(cell.id);
                             td.setAttribute('data-aid', cell.id);
-
+                            if (self.assignmentSortId === cell.id) {
+                                td.appendChild(sortIcon(self.isSortUp));
+                            }
                         }
                         if (cell.id) {
                             td.setAttribute('data-cat-id', cell.id);
+                            if (self.categorySortId === cell.id) {
+                                td.appendChild(sortIcon(self.isSortUp));
+                            }
                         }
                         td.setAttribute("colspan", cell.colspan);
                         td.setAttribute("rowspan", cell.rowspan);
