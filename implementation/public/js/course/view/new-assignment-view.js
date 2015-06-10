@@ -10,6 +10,7 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var template = require('text!ctemplates/addNewAssignmentView.hbs');
     var alertTemplate = require('text!ctemplates/alert-block.hbs');
+    var Assignment = require('course/model/assignment');
 
     var Course = require('course/model/course');
     var Assignment= require('course/model/assignment');
@@ -161,7 +162,6 @@ define(function (require) {
             var modalRegion = pageChannel.request('modalRegion');
             this.model.save().then(modalRegion.hideModal())
             window.location.reload();
-
         }
 
 
