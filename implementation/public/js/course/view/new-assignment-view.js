@@ -10,6 +10,7 @@ define(function (require) {
     var courseChannel = Radio.channel('course');
     var template = require('text!ctemplates/addNewAssignmentView.hbs');
     var alertTemplate = require('text!ctemplates/alert-block.hbs');
+    var Assignment = require('course/model/assignment');
 
     var Course = require('course/model/course');
     //var currentAssignment;
@@ -133,6 +134,9 @@ define(function (require) {
 
             //TODO Input value checking above!!
             //TODO Please save this to DB
+            var assg = new Assignment(newAssignment);
+            assg.save();
+            this.model.assignments.push(assg);
 
             $('.cancel').click()
         }

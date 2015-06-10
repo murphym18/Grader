@@ -1,3 +1,7 @@
+/**
+ * @author Matt Bleifer
+ */
+
 define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
@@ -33,9 +37,8 @@ define(function (require) {
         },
 
         /**
-         * Hide the modify category dialog on initial load. Also,
-         * create a dropdown menu for testing purposes that allows
-         * the user to select which category to modify.
+         * Set up the fields for the modify category dialog with the
+         * selected categorie's values.
          *
          * @author Matt Bleifer
          */
@@ -77,7 +80,7 @@ define(function (require) {
         },
         /**
          * Gather the new values from the modify category dialog and
-         * save them to the database.
+         * set them in the model.
          *
          * @author Matt Bleifer
          */
@@ -138,9 +141,7 @@ define(function (require) {
             self.closeModifyCategory();
         },
         /**
-         * Hide the modify category dialog. Bring the user back to the
-         * screen to select which dialog to modify, and re-fetch
-         * the newly updated data.
+         * Hide the modify category dialog and save the data to the database.
          *
          * @author Matt Bleifer
          */

@@ -1,3 +1,7 @@
+/**
+ * @author Matt Bleifer
+ */
+
 define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
@@ -23,6 +27,11 @@ define(function (require) {
             'error' : '.error'
         },
 
+        /**
+         * Initialize the select category dialog with the proper view.
+         *
+         * @author Matt Bleifer
+         */
         initialize: function(options) {
             this.optionTemplate = Hbs.compile("<option value='{{path}}'>{{path}}</option>");
             this.model = courseChannel.request('current:course');
@@ -30,9 +39,7 @@ define(function (require) {
         },
 
         /**
-         * Hide the modify category dialog on initial load. Also,
-         * create a dropdown menu for testing purposes that allows
-         * the user to select which category to modify.
+         * Populate the dropdown menu for selecting a category.
          *
          * @author Matt Bleifer
          */
@@ -61,8 +68,7 @@ define(function (require) {
             'click @ui.ok' :  'success'
         },
         /**
-         * Gather the new values from the modify category dialog and
-         * save them to the database.
+         * Get the value for the selected category.
          *
          * @author Matt Bleifer
          */
@@ -70,9 +76,7 @@ define(function (require) {
             return $('#category-selected').val();
         },
         /**
-         * Hide the modify category dialog. Bring the user back to the
-         * screen to select which dialog to modify, and re-fetch
-         * the newly updated data.
+         * Hide the select category dialog.
          *
          * @author Matt Bleifer
          */
