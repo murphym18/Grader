@@ -241,6 +241,6 @@ define(function (require) {
             console.log(this.model);
             console.log('original');
             console.log(this.originalState);
-        },
+        }
     });
 });

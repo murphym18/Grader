@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1 align="center">Acceptance Test</h1>
+<h3 align="center">Mike Ryu (doryu@calpoly.edu)</h3>
+
+<h2>Common Steps for All Tests</h2>
+<table align=center border=1 cellpadding=4 width="100%">
+    <tr>
+        <td valign=top><strong>Case No.</strong>
+        <td valign=top><strong>User Inputs and Commands</strong>
+        <td valign=top><strong>Expected Output</strong>
+        <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <td valign=top><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <tr>
+        <td valign=top>
+            1
+        <td valign=top>
+            Navigate to <a href="http://app.nodegrader.com/">http://app.nodegrader.com/</a>
+            on <a href="http://chrome.com/">Google Chrome</a>.
+        <td valign=top>
+            Node Grader's Main UI appears and list of courses are shown.
+        <td valign=top>
+            Testing main UI load.
+        <td valign=top>
+            Pass
+    <tr>
+        <td valign=top>
+            2
+        <td valign=top>
+            Click 'Sign In' on the top right corner, and lon in with the following credentials:
+            <br><b>ID</b>: jsnow, <b>PW</b>: jsnow
+        <td valign=top>
+            The credentials are accepted, and the login dialog closes automatically.
+        <td valign=top>
+            Testing the log in functionality.
+        <td valign=top>
+            Pass
+</table><br>
+
+<h2>Adding a New Course</h2>
+Continues from <b>Common Step for All Tests</b>
+<table align=center border=1 cellpadding=4 width="100%">
+    <tr>
+        <td valign=top><strong>Case No.</strong>
+        <td valign=top><strong>User Inputs and Commands</strong>
+        <td valign=top><strong>Expected Output</strong>
+        <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <td valign=top><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <tr>
+        <td valign=top>
+            3
+        <td valign=top>
+            Click on 'New Course' button on the main navigation bar located at the top of the UI.
+        <td valign=top>
+            'New Course' Dialog opens, 'Course Abbreviation' and 'Course Number' field contains
+            placeholder 'i.e. CPE' and 'i.e. 101', respectively. 'Section,' 'Term,' and 'Year'
+            items also display. There are 'Save' and 'Cancel' buttons at the bottom right corner of the dialog.
+        <td valign=top>
+            Testing the dialog load and composition.
+        <td valign=top>
+            Pass
+    <tr>
+        <td valign=top>
+            4
+        <td valign=top>
+            Click 'Save' with all fields empty.
+        <td valign=top>
+            Error message 'Course Abbreviation can not be empty' displays at the bottom.
+        <td valign=top>
+            Testing empty Course Abbreviation validation.
+        <td valign=top>
+            Pass
+    <tr>
+        <td valign=top>
+            5
+        <td valign=top>
+            Click 'Save' with only the 'Course Abbreviation' filled out but all other fields empty.
+        <td valign=top>
+            Error message 'Course Number can not be empty' displays at the bottom.
+        <td valign=top>
+            Testing empty Course Number validation.
+        <td valign=top>
+            Pass
+    <tr>
+        <td valign=top>
+            6
+        <td valign=top>
+            Click 'Save' with only the 'Course Abbreviation' and 'Course Abbreviation' filled out but all other fields empty.
+        <td valign=top>
+            Error message 'Year can not be empty' displays at the bottom.
+        <td valign=top>
+            Testing year validation.
+        <td valign=top>
+            Pass
+</table><br>
+
+<h2>Modifying an Existing Course</h2>
+Continues from <b>Common Step for All Tests</b>
+<table align=center border=1 cellpadding=4 width="100%">
+    <tr>
+        <td valign=top><strong>Case No.</strong>
+        <td valign=top><strong>User Inputs and Commands</strong>
+        <td valign=top><strong>Expected Output</strong>
+        <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <td valign=top><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <tr>
+        <td valign=top>1
+        <td valign=top>
+            Description of user-supplied inputs, including all keyboard and mouse actions
+            to provide input and perform command execution.
+        <td valign=top>
+            Description of what the user does to see the output, and exactly what the user
+            sees.
+        <td valign=top>
+            Comments about this test case, in particular what it's testing.
+        <td valign=top>
+            Pass or fail, with explanation.
+    <tr>
+        <td valign=top>2
+        <td valign=top>   &nbsp;
+        <td valign=top>   &nbsp;
+        <td valign=top>   &nbsp;
+        <td valign=top>&nbsp;
+    <tr>
+        <td valign=top>3
+        <td valign=top>   &nbsp;
+        <td valign=top>   &nbsp;
+        <td valign=top>   &nbsp;
+        <td valign=top>&nbsp;
+</table><br>
+
+</body>
+</html>
