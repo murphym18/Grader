@@ -66,7 +66,7 @@ define(function (require) {
             var loadAllPromise = Q.all(loadingTasks);
             courseChannel.request('set:current:course', course);
             pageChannel.request('show:loading', loadAllPromise);
-            
+
             return loadAllPromise.then(function() {
                 course.students = students;
                 course.categories = categories;

@@ -13,6 +13,9 @@ define(function (require) {
         defaults: {
             weight: 1
         },
+        initialize: function() {
+            this.url = '/api/assignments'
+        },
         getWeight: function(){
             var w = this.get('weight');
             if (_.isFinite(Number(w))){
@@ -30,11 +33,12 @@ define(function (require) {
         
         
         initialize: function(options){
+
             this.url = '/api/assignments?course='+options.path.toString() +'';
         },
         
     });
-    
+
     courseChannel.reply('assignments', function(course) {
         var url;
         if (!course) {
@@ -45,4 +49,6 @@ define(function (require) {
         }
         return new AssignmentCollection({path: url})
     })
+
+    return Assignment;
 });

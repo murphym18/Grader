@@ -3,13 +3,13 @@ define(function (require) {
     var Radio = require('backbone.radio');
     var NavMenuView = require('util/nav-menu-view');
     
-    var CourseListFilterDropdownMenu = require('course/nav/filter-list-view');
+    //var CourseListFilterDropdownMenu = require('course/nav/filter-list-view');
     var CreateCourseButton = require('course/nav/new-course-button-view');
     
     var courseListMenu = new Backbone.Collection([
-        new Backbone.Model({
-            viewClass: CourseListFilterDropdownMenu
-        }),
+        //new Backbone.Model({
+        //    viewClass: CourseListFilterDropdownMenu
+        //}),
         new Backbone.Model({
             viewClass: CreateCourseButton
         })

@@ -26,7 +26,8 @@ define(function(require) {
             'change @ui.aMin' : 'updateMinimumA',
             'change @ui.bMin' : 'updateMinimumB',
             'change @ui.cMin' : 'updateMinimumC',
-            'change @ui.dMin' : 'updateMinimumD'
+            'change @ui.dMin' : 'updateMinimumD',
+            'keydown ': 'onKeyDown'
         },
 
         ui: {
@@ -62,15 +63,12 @@ define(function(require) {
         //},
 
         initialize: function() {
+            this.isSortUp = false;
             this.course = courseRadioChannel.request('current:course');
             this.listenTo(this.model.students, 'add remove update reset sort sync', this.onShow.bind(this));
             this.listenTo(this.model.assignments, 'add remove update reset sort sync', this.onShow.bind(this));
             this.listenTo(this.model.categories, 'add remove update reset sort sync', this.onShow.bind(this));
             this.listenTo(this.course, 'add remove update reset sort sync', this.onShow.bind(this));
-
-
-
-
 
             var lightRed =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
             var darkRed =  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"];
@@ -84,6 +82,14 @@ define(function(require) {
             this.model.set('fColor', darkRed)
             //console.log("grant === ");
             //console.log(this.model)
+        },
+        
+        onKeyDown: function(event) {
+            if (event.keyCode === 13) {
+                this.editGrade(event);
+            }
+            console.log('here');
+            console.log(event)
         },
 
 
@@ -118,27 +124,40 @@ define(function(require) {
             var self = this
             if (elm.attr('data-aid')) {
                 var aId = elm.attr('data-aid');
+                self.assignmentSortId = aId;
+                self.categorySortId = false;
                 self.model.students.comparator = assignmentSorter(aId);
                 self.model.students.sort();
             }
             else if (elm.attr('data-cat-id')) {
                 var catId = elm.attr('data-cat-id');
+                self.categorySortId = catId;
+                self.assignmentSortId = false;
                 self.model.students.comparator = catagorySorter(catId);
+                this.isSortCol = function(obj) {
             }
+            }
+            self.model.students.sort();
+            
+            
             function assignmentSorter(aId) {
                 if (this.sortKey !== aId) {
                     this.sortKey = aId;
+                    self.isSortUp = false;
                     return function gradeSort(student) {
                         return Number(student.getGrade(aId));
                     }
+                    
                 }
                 else {
                     this.sortKey = "-" + aId
+                    self.isSortUp = true;
                     return function reverseGradeSort(student) {
                         return -1 * Number(student.getGrade(aId));
                     }
+                    
                 }
-                self.model.students.sort();
+                
             }
 
             function catagorySorter(catId) {
@@ -148,14 +167,18 @@ define(function(require) {
                 //console.log('here')
                 if (this.sortKey !== catId) {
                     this.sortKey = catId;
+                    self.isSortUp = false;
                     //console.log('normal order')
                     return function categorySort(student) {
+                        console.log('in col sort fun',self);
                         categoryScore = self.model.calculateCategoryGrade(category, student)
                         return Number(categoryScore)
                     }
+                    seld.isSortUp = false;
                 }
                 else {
                     //console.log('showing reverse order')
+                    self.isSortUp = true;
                     return function reversecategorySort(student) {
                         categoryScore = self.model.calculateCategoryGrade(category, student)
                         //console.log(categoryScore);
@@ -284,6 +307,7 @@ define(function(require) {
             var assignmentOrder = [];
             var assignments = this.model.assignments;
             var header = createHeader();
+            _.each(this.model.categories.tree(), orderAssignments);
             //console.log('assignment order: ', assignmentOrder);
             var body = createBody();
             var tableRowHeaders = createRowHeaders();
@@ -304,6 +328,24 @@ define(function(require) {
             ui.ehead.get(0).appendChild(createRowHeadersColHeader());
             ui.ebody.get(0).appendChild(createRowSummaries());
 
+            function orderAssignments(cat){
+                _.each(cat.tree(), orderAssignments);
+                _.each(cat.getAssignmentsArray(), function(a) {
+                    // console.log(a);
+                    assignmentOrder.push(a)
+                });
+            }
+            
+            function sortIcon(isUp) {
+                var i = window.document.createElement("i");
+                if (isUp)
+                    i.setAttribute("class", 'fa fa-sort-asc');
+                else
+                    i.setAttribute("class", 'fa fa-sort-desc');
+                
+                return i;
+            }
+
             function createHeader() {
                 var docfrag = window.document.createDocumentFragment();
                 _.each(layout, function(row) {
@@ -315,15 +357,20 @@ define(function(require) {
                             td = window.document.createElement("td");
                         }
                         else {
-                            td.appendChild(document.createTextNode(cell.name));
+                            td.appendChild(document.createTextNode(cell.name + " "));
                         }
                         if (cell.style === "assignment") {
-                            assignmentOrder.push(cell.id);
+                            //assignmentOrder.push(cell.id);
                             td.setAttribute('data-aid', cell.id);
-
+                            if (self.assignmentSortId === cell.id) {
+                                td.appendChild(sortIcon(self.isSortUp));
+                            }
                         }
                         if (cell.id) {
                             td.setAttribute('data-cat-id', cell.id);
+                            if (self.categorySortId === cell.id) {
+                                td.appendChild(sortIcon(self.isSortUp));
+                            }
                         }
                         td.setAttribute("colspan", cell.colspan);
                         td.setAttribute("rowspan", cell.rowspan);
@@ -645,23 +692,24 @@ define(function(require) {
             this.barChart.datasets[0].bars[bar].highlightStroke =  color[3];
         },
         updateBarColors : function() {
-            //var gradesArray = this.model.get('findGraphArray')()[0];
-            //console.log('updateBarColors')
             var gradesArray = this.createGradeArray()[0];
-            //console.log(gradesArray[0]);
             var course = this.model;
-            //console.log(course.get('aColor'));
+            var lightRed =  ["rgba(255,0,0,0.5)", "rgba(255,0,0,0.6)", "rgba(255,0,0,0.7)", "rgba(220,220,220,0.7)"];
+            var darkRed =  ["rgba(255,0,0,0.8)", "rgba(255,0,0,0.8)", "rgba(255,0,0,0.9)", "rgba(220,220,220,1)"];
+            var orange = ["rgba(255, 165, 0, 0.5)", "rgba(255, 165, 0, 0.8)", "rgba(255, 165, 0, 0.75)", "rgba(255, 165, 0, 1)"];
+            var yellow =  ["rgba(255, 255, 0,0.5)", "rgba(255, 255, 0,0.8)", "rgba(255, 255, 0,0.75)", "rgba(255, 255, 0,1)"];
+            var green = ["rgba(0,255,0,0.5)", "rgba(0,255,0,0.8)", "rgba(0,255,0,0.75)", "rgba(0,255,0,1)"];
             for(var x = 0; x < gradesArray.length; x++) {
                 if (gradesArray[x] >= course.get('minA'))
-                    this.changeSingleBarColor(x, course.get('aColor'));
+                    this.changeSingleBarColor(x, green);
                 else if (gradesArray[x] >= course.get('minB'))
-                    this.changeSingleBarColor(x, course.get('bColor'));
+                    this.changeSingleBarColor(x, yellow);
                 else if (gradesArray[x] >= course.get('minC'))
-                    this.changeSingleBarColor(x, course.get('cColor'));
+                    this.changeSingleBarColor(x, orange);
                 else if (gradesArray[x] >= course.get('minD'))
-                    this.changeSingleBarColor(x, course.get('dColor'));
+                    this.changeSingleBarColor(x, lightRed);
                 else
-                    this.changeSingleBarColor(x, course.get('fColor'));
+                    this.changeSingleBarColor(x, darkRed);
             }
 
             this.barChart.update();

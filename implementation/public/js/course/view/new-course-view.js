@@ -46,10 +46,11 @@ define(function (require) {
             'click @ui.fall': 'onSelectFall',
             'change @ui.year': "onUpdateYear",
             'click @ui.saveButton': 'onSaveCourse',
+            'click @ui.cancelButton' : 'onCancel'
         },
         
         initialize: function(options) {
-            this.model = new Course
+            this.model = new Course;
             this.model.get('roles').push({
                 "name":"INSTRUCTOR",
                 "users":[options.user],
@@ -171,18 +172,19 @@ define(function (require) {
                 return;
             }
             console.log(this);
-            console.log(this.model)
-            //this.createBlankCourseData(this);
-            //Q(this.model.save()).then(function(res) {
-            //    console.dir(['new class save result:', res]);
-            //    var modalRegion = pageChannel.request('modalRegion');
-            //    modalRegion.hideModal();
-            //    courseChannel.command('updateCourses');
-            //},
-            //function(err) {
-            //    self.ui.error.html(self.alertTemplate({message: err.responseText}));
-            //    self.ui.saveButton.button('reset');
-            //}).done();
+            console.log(this.model);
+
+            this.createBlankCourseData(this);
+            Q(this.model.save()).then(function(res) {
+                    console.dir(['new class save result:', res]);
+                var modalRegion = pageChannel.request('modalRegion');
+                modalRegion.hideModal();
+                courseChannel.command('updateCourses');
+            },
+            function(err) {
+                self.ui.error.html(self.alertTemplate({message: err.responseText}));
+                self.ui.saveButton.button('reset');
+            }).done();
         }
     });
 });
