@@ -1,4 +1,6 @@
-/** @author Michael Murphy, Matt Bleifer-  */
+/** @author Michael Murphy
+    @author Matt Bleifer
+    @author Scotty Beauchamp  */
 
 define(function(require) {
 
