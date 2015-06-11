@@ -90,7 +90,7 @@ define(function (require) {
         
         setTerm: function(term) {
             this.model.set({
-                term: term,
+                term: term
             });
         },
         
@@ -103,8 +103,8 @@ define(function (require) {
         },
         
         updateCourseDates: function() {
-            var term = this.model.get('term')
-            var year = this.model.get('year')
+            var term = this.model.get('term');
+            var year = this.model.get('year');
             if (Course.isValidTerm(term) && Course.isValidYear(year)) {
                 this.model.set(Course.findTermDates(term, year));
             }

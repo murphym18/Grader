@@ -1,24 +1,7 @@
-QUnit.test("hello test", function(assert) {
-   assert.ok(1 == "1", "Passed!");
-});
-
-QUnit.test("courses test", function(assert) {
-   
-   
-   assert.ok(1 == "1", "Passed!");
-});
-
-
-QUnit.test("grant's test", function(assert) {
-    assert.ok(5 == '6', "Passed!");
-});
-
-
-
-
-// THIS IS FOR THE MIDTERM, THIS IS WHAT OUR TEST PLAN SHOULD BE LIKE
 
 /****
+ *
+ * GENERAL TEST PLAN OF NODE GRADER
  *
  * Class ScheduleTest is the companion testing class for class <a href=
  * Schedule.html> Schedule </a>.  It implements the following module test plan:
@@ -40,4 +23,20 @@ QUnit.test("grant's test", function(assert) {
  *     Phase 7: Stress test by scheduling and deleting 100000 items.  -- Do this on creating and deleting categories
  *                                                                        </pre>
  */
+
+QUnit.test("hello test", function(assert) {
+   assert.ok(1 == "1", "Passed!");
+});
+
+QUnit.test("courses test", function(assert) {
+
+   // use course-tests.js
+   assert.ok(1 == "1", "Passed!");
+});
+
+
+QUnit.test("grant's test", function(assert) {
+    assert.ok(5 == '6', "Passed!");
+});
+
 //public class ScheduleTest extends Schedule { }
