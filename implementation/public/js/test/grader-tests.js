@@ -52,6 +52,7 @@ define(function(require) {
     var Course = require('course/modelcourse')
     require('domReady!');
     var t1 = require('test/category-tests');
+    var t3 = require('test/main');
     var t2 = require('test/assignment-tests');
     var QUnit = require('qunit');
     QUnit.start();
